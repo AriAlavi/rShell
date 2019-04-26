@@ -7,22 +7,18 @@
 #include <stdlib.h>
 
 using namespace std;
-// tests echo and git branch using syscalls
+// tests ls and invalid input using syscalls
 int main() {
-    char* args[3];
-    char* args2[3];
-    string cmd = "echo";
-    string cmd2 = "first process";
-    string cmd3 = "git";
-    string cmd4 = "branch";
+    char* args[2];
+    char* args2[2];
+    string cmd = "ls";
+    string cmd2 = "dsafaad"; //invalid command
 //First process
     args[0] = (char*)cmd.c_str();
-    args[1] = (char*)cmd2.c_str();
-    args[2] = NULL;
+    args[1] = NULL;
 //Second Process
-    args2[0] = (char*)cmd3.c_str();
-    args2[1] = (char*)cmd4.c_str();
-    args2[2] = NULL;
+    args2[0] = (char*)cmd2.c_str();
+    args2[1] = NULL;
 
 pid_t pid = fork();
 
