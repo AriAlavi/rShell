@@ -16,23 +16,23 @@ We will iterate through the connectors and we will pass the result (error or not
 ![UML](images/CS100-Assignment_2-UML.jpg)
 # Classes
 
-Command Classes:
-    The command classes are classes which execute the given user's commands. They will store the command, and its arguments. When execute is ran it will execute them using a combination of execvp and fork. 
+**Command Classes**:
+The command classes are classes which execute the given user's commands. They will store the command, and its arguments. When execute is ran it will execute them using a combination of execvp and fork. 
 
-    The system call command subclass will work as stated above.
+*The system call command subclass will work as stated above.
 
-    The exit command subclass will terminate the program.
+*The exit command subclass will terminate the program.
 
-Connector Classes:
-    The connector classes will be the classes which determine if the command will actually be ran. The connector also has a pointer to its next connector and will call its execute with the result of its current execution passed in as an argument. 
+**Connector Classes**:
+The connector classes will be the classes which determine if the command will actually be ran. The connector also has a pointer to its next connector and will call its execute with the result of its current execution passed in as an argument. 
 
-    Fail connector executes its command if it is passed in a false result.
+*Fail connector executes its command if it is passed in a false result.
 
-    Pass connector executes its command if it is passed in a true result.
+*Pass connector executes its command if it is passed in a true result.
 
-    The any connector will always executs its code.
+*The any connector will always executs its code.
 
-    If a connector doesn't execute its command, it will pass in the given result into the next result.
+If a connector doesn't execute its command, it will pass in the given result into the next result.
 
 Result Class:
     A class to store a boolean. It's purpose is to allow for the code to be more easily expanded later on.
