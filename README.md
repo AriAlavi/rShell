@@ -1,6 +1,6 @@
 # CS 100 Programming Project
 > ### Spring 2019
-> ### Malhar Nerurkar (862004989), Arian Alavi (862030914)
+> ### Malhar Nerurkar (862004989) Arian Alavi (862030914)
 
 # Introduction
 Our program will consist of a command shell that
@@ -13,7 +13,7 @@ We will be using a linked-list of connectors, of which there are three diffrent 
 We will iterate through the connectors and we will pass the result (error or not error) into the execute function of the next connector, based on that input the connector will react. The connector's execute function will then run the execute function of the command, with its args.
 
 # Diagrams
-
+![UML](images/CS100-Assignment_2-UML.jpg)
 # Classes
 
 Command Classes:
@@ -58,7 +58,7 @@ Result Class:
 * ***fork()*** : used to continue the program after the first process has been terminated (and to allow for additional processes)
 * ***waitpid()*** :  used to ensure that the processes run one-by-one by waiting until the child process has ended before calling the parent process 
 
-**see prototype for example of this*
+**see prototypes for example of this*
 
 ## **Connectors:**
 **We will be implementing three connectors to separate processes (commands) in our program:**
