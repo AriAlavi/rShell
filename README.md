@@ -42,4 +42,16 @@ will be able to read in bash commands, typically located within PATH directories
 
 
 # Development and Testing Roadmap
+## Malhar will be in charge of:
+* [Parser (1)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/1)
+* [Integration of Connector classes (5)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/2)
+* [Integration of Command classes (6)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/3)
+* [Integration tests (7)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/4)
+
+## Arian will be in charge of: 
+* [Result class (1)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/5)
+* [Command classes (2)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/6)
+* [Connector classes (3)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/7)
+* [Unit tests (4)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/8)
+
 
