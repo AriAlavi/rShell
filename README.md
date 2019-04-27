@@ -4,12 +4,40 @@
 
 # Introduction
 Our program will consist of a command shell that
-will be able to read in bash commands, typically located within PATH directories, and execute them using the fork, execvp, and waitpid syscalls. We will be using the composite pattern for our program. 
+will be able to read in bash commands, typically located within PATH directories, and execute them using the fork, execvp, and waitpid syscalls. We will be using a composite pattern for our classes.
 
-**ADD DESCRIPTION OF HOW INPUTS ARE PROCESSED HERE
+Inputs will be tokenized by spaces and put into an array of strings. From there, they will be broken up by given connectors. The broken up data is put into a command class, storing its command and arguments. Then, the connector is put into a connector class with reference to it's command and the connector that will come next.
+
+We will be using a linked-list of connectors, of which there are three diffrent types. The different types dictate control flow to all the following commands (passed through an argument).
+
+We will iterate through the connectors and we will pass the result (error or not error) into the execute function of the next connector, based on that input the connector will react. The connector's execute function will then run the execute function of the command, with its args.
+
 # Diagrams
 ![UML](images/CS100-Assignment_2-UML.jpg)
 # Classes
+
+**Command Classes**:
+The command classes are classes which execute the given user's commands. They will store the command, and its arguments. When execute is ran it will execute them using a combination of execvp and fork. 
+
+* The system call command subclass will work as stated above.
+
+* The exit command subclass will terminate the program.
+
+**Connector Classes**:
+The connector classes will be the classes which determine if the command will actually be ran. The connector also has a pointer to its next connector and will call its execute with the result of its current execution passed in as an argument. 
+
+* Fail connector executes its command if it is passed in a false result.
+
+* Pass connector executes its command if it is passed in a true result.
+
+* The any connector will always executs its code.
+
+If a connector doesn't execute its command, it will pass in the given result into the next result.
+
+**Result Class**:
+    A class to store a boolean. It's purpose is to allow for the code to be more easily expanded later on.
+
+
 
 # Prototypes/Research
 * **waitpid():** Used to pause the calling process until the appropriate system information about a child process is received. More specifically, it waits until the child process has ended or been terminated. The *pid* value determines which child process the system should wait for.
