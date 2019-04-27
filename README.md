@@ -1,6 +1,6 @@
 # CS 100 Programming Project
 > ### Spring 2019
-> ### Malhar Nerurkar (862004989), Arian Alavi (862030914)
+> ### Malhar Nerurkar (862004989) Arian Alavi (862030914)
 
 # Introduction
 Our program will consist of a command shell that
@@ -8,7 +8,7 @@ will be able to read in bash commands, typically located within PATH directories
 
 **ADD DESCRIPTION OF HOW INPUTS ARE PROCESSED HERE
 # Diagrams
-
+![UML](images/CS100-Assignment_2-UML.jpg)
 # Classes
 
 # Prototypes/Research
@@ -30,7 +30,7 @@ will be able to read in bash commands, typically located within PATH directories
 * ***fork()*** : used to continue the program after the first process has been terminated (and to allow for additional processes)
 * ***waitpid()*** :  used to ensure that the processes run one-by-one by waiting until the child process has ended before calling the parent process 
 
-**see prototype for example of this*
+**see prototypes for example of this*
 
 ## **Connectors:**
 **We will be implementing three connectors to separate processes (commands) in our program:**
