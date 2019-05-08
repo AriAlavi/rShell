@@ -31,7 +31,10 @@ void FailConnector::execute(Result* result){
     
 }
 
+#include <iostream>
+//TODO remove
 void PassConnector::execute(Result* result){
+    cout << "RESULT: " << result -> getResult();
     switch(result -> getResult()){
         case 0:
             this -> next -> execute(result);
