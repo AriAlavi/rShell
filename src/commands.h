@@ -1,3 +1,6 @@
+#ifndef __COMMANDS_H__
+#define __COMMANDS_H__
+
 #include <string>
 #include <vector>
 
@@ -27,3 +30,4 @@ class SysCommand: public Command{
 
 };
 
+#endif
