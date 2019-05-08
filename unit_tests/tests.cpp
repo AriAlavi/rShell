@@ -27,13 +27,13 @@ TEST(Results, ExitResult){
 }
 
 TEST(SysCommands, Basic){
-    Command* test = new SysCommand("echo", "yeet");
+    Command* test = new SysCommand("echo", "ping");
     Result* res = test -> execute();
     EXPECT_EQ(res -> getResult(), 1);
 }
 
 TEST(SysCommands, ErrorCommand){
-    Command* test = new SysCommand("pleaseCrash", "thanks");
+    Command* test = new SysCommand("david's successful solo career", "get it?");
     Result* res = test -> execute();
     EXPECT_EQ(res -> getResult(), 0);   
 }

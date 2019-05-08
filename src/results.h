@@ -8,7 +8,7 @@ class Result{
         Result(bool result){
             this -> result = result;
         }
-        int getResult(){
+        virtual int getResult(){
             //-1 indicates exit, 0 indicates failed command, 1 indicates successful command
             if(this -> result){
                 return 1;
