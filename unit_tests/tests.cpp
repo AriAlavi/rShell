@@ -1,11 +1,35 @@
 #include "../src/results.h"
 #include "../src/commands.h"
+#include "../src/connectors.h"
 
 #include <string>
 
 #include "gtest/gtest.h"
 
 using namespace std;
+
+class Output{
+    public:
+        int result;
+        Output(int result){this -> result = result;};
+};
+
+class ProbeConnector:public Connector{
+    public:
+        Output* output = NULL;
+        ProbeConnector(){};
+        void execute(Result* result){
+            if(this -> output){
+                delete this -> output;
+            }
+            this -> output = new Output(result -> getResult());
+        }
+        int probe(){
+            return this -> output -> result;
+        }
+};
+
+
 
 TEST(CompileTest, Compiles){
     EXPECT_EQ(0, 0);
@@ -48,6 +72,16 @@ TEST(SysCommands, ThreeArgs){
     Command* test = new SysCommand("echo", "ping ping ping");
     Result* res = test -> execute();
     EXPECT_EQ(res -> getResult(), 1);   
+}
+
+TEST(Connectors, AnyConnector){
+    Command* command = new SysCommand("echo", "ping ping ping");
+    ProbeConnector* probe = new ProbeConnector();
+    Connector* test = new AnyConnector(probe, command);
+
+    test -> execute(new Result(0));
+
+    EXPECT_EQ(probe -> probe(), 1);
 }
 
 int main(int argc, char **argv){

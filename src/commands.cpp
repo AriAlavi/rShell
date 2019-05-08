@@ -2,9 +2,6 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-#include <iostream>
-//Todo removes
-
 #include "results.h"
 #include "commands.h"
 
@@ -31,7 +28,7 @@ Result* SysCommand::execute(){
         
     }else{
         int result = execvp(args[0], args);
-        if (result == -1){
+        if(result == -1){
             perror("Error");
             exit(-1);
         }        
