@@ -132,7 +132,7 @@ TEST(Connectors, FailConnectorStopped){
 
     result -> set_probe(10);
 
-    EXPECT_EQ(probe -> probe(), 1);
+    EXPECT_EQ(probe -> getResult(), 1);
     EXPECT_EQ(result -> probe(), 10);
 }
 
