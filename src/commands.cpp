@@ -1,32 +1,39 @@
-#include "commands.h"
-#include "results.h"
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/wait.h>
 
-#include <vector>
+#include <iostream>
+//Todo removes
+
+#include "results.h"
+#include "commands.h"
 
 using namespace std;
 
-class Command{
-    protected:
-        vector<char> command;
-        vector<char> args;
-    public:
-        Command(){};
-        virtual Result* execute();
+
+Result* SysCommand::execute(){
+    char* args[3]; //Thanks for that prototype malhar ;)
+    args[0] = (char*)this -> command.c_str();
+    args[1] = (char*)this -> args.c_str();
+    args[2] = NULL;
+    pid_t pid = fork();
+    if(pid == -1){
+        throw __throw_runtime_error;
+    }
+    else if(pid > 0){
+        int returnval = 0;
+        wait(&returnval);
+        if(returnval != 0){
+            return new Result(false);
+        }else{
+            return new Result(true);
+        }
         
-};
-
-class ExitCommand: private Command{
-    public:
-        ExitCommand(){};
-        Result* execute(){return new ExitResult();}
-        
-};
-
-class SysCommand: public Command{
-    public:
-        SysCommand(vector<char> command, vector<char> args){this -> command = command; 
-                                                            this -> args = args;};
-        Result* execute();
-
+    }else{
+        int result = execvp(args[0], args);
+        if (result == -1){
+            perror("Error");
+            exit(-1);
+        }        
+    }
 }
-
