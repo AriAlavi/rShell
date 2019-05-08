@@ -3,7 +3,7 @@
 
 
 class Result{
-    private:
+    protected:
         bool result;
     public:
         Result(){

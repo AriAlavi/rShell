@@ -8,10 +8,28 @@
 
 using namespace std;
 
+
+class ProbeResult:public Result{
+    public:
+        int probe_value = 0;
+        void set_probe(int probe){
+            this -> probe_value = probe;
+        }
+        ProbeResult(){
+            this -> result = false;
+        }
+        ProbeResult(bool result){
+            this -> result = result;
+        }
+        int probe(){
+            return this -> probe_value;
+        }
+};
+
 class Output{
     public:
-        int result;
-        Output(int result){this -> result = result;};
+        ProbeResult* result;
+        Output(ProbeResult* result){this -> result = result;};
 };
 
 class ProbeConnector:public Connector{
@@ -22,10 +40,20 @@ class ProbeConnector:public Connector{
             if(this -> output){
                 delete this -> output;
             }
-            this -> output = new Output(result -> getResult());
+            this -> output = new Output(new ProbeResult(result));
+        }
+        void execute(ProbeResult* result){
+            if(this -> output){
+                delete this -> output;
+            }
+            this -> output = new Output(result);
+        }
+        int getResult(){
+            return this -> output -> result -> getResult();
         }
         int probe(){
-            return this -> output -> result;
+            ProbeResult* result = this -> output -> result;
+            return result -> probe;
         }
 };
 
@@ -75,13 +103,37 @@ TEST(SysCommands, ThreeArgs){
 }
 
 TEST(Connectors, AnyConnector){
-    Command* command = new SysCommand("echo", "ping ping ping");
+    Command* command = new SysCommand("echo", "ping");
     ProbeConnector* probe = new ProbeConnector();
     Connector* test = new AnyConnector(probe, command);
 
     test -> execute(new Result(0));
 
+    EXPECT_EQ(probe -> getResult(), 1);
+}
+
+TEST(Connectors, FailConnectorPass){
+    Command* passcommand = new SysCommand("echo", "ping");
+    ProbeConnector* probe = new ProbeConnector();
+    Connector* test = new FailConnector(probe, passcommand);
+
+    test -> execute(new Result(0));
+
+    EXPECT_EQ(probe -> getResult(), 1);
+}
+
+TEST(Connectors, FailConnectorStopped){
+    Command* passcommand = new SysCommand("echo", "ping");
+    ProbeConnector* probe = new ProbeConnector();
+    Connector* test = new FailConnector(probe, passcommand);
+
+    ProbeResult* result = new ProbeResult(1);
+    test -> execute(result);
+
+    result -> set_probe(10);
+
     EXPECT_EQ(probe -> probe(), 1);
+    EXPECT_EQ(result -> probe(), 10);
 }
 
 int main(int argc, char **argv){
