@@ -10,7 +10,7 @@ ADD_EXECUTABLE(worse_terminal
 )
 
 ADD_EXECUTABLE(test
-    unit_tests/test.cpp
+    unit_tests/tests.cpp
     src/commands.cpp
 )
 
