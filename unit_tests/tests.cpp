@@ -152,7 +152,6 @@ TEST(Connectors, PassConnectorStopped){
     Connector* test = new PassConnector(probe, passcommand);
 
     ProbeResult* result = new ProbeResult(0);
-    Result* result = new Result(0);
     test -> execute(result);
 
     result -> set_probe(10);
