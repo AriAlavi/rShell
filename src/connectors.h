@@ -4,6 +4,7 @@
 #include "results.h"
 #include "commands.h"
 
+
 class Connector{
     protected:
         Connector* next;
@@ -46,7 +47,9 @@ class TailConnector:public Connector{
         TailConnector(Connector* next){this -> next = next;};
         TailConnector(){};
         void setNext(Connector* next){this -> next = next;};
-        void execute(Result*){};
+        void execute(Result* res){
+            //cout << res -> getResult() << endl;}; //Uncomment this if want to test
+        }
 };
 
 #endif

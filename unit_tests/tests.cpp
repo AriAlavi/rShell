@@ -151,13 +151,12 @@ TEST(Connectors, PassConnectorStopped){
     ProbeConnector* probe = new ProbeConnector();
     Connector* test = new PassConnector(probe, passcommand);
 
-    ProbeResult* result = new ProbeResult(0);
-    test -> execute(result);
 
-    result -> set_probe(10);
+
+    test -> execute(new Result(true));
 
     EXPECT_EQ(probe -> getResult(), 0);
-    EXPECT_EQ(result -> probe(), 10);
+    //EXPECT_EQ(result -> probe(), 10);
 }
 
 int main(int argc, char **argv){
