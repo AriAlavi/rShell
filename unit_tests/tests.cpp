@@ -12,15 +12,18 @@ TEST(CompileTest, Compiles){
 }
 
 TEST(Results, BadResult){
-    EXPECT_EQ(new Result(false)->getResult(), 0);
+    Result* res = new Result(false);
+    EXPECT_EQ(res, 0);
 }
 
 TEST(Results, GoodResult){
-    EXPECT_EQ(new Result(true)->getResult(), 1);
+    Result* res = new Result(true);
+    EXPECT_EQ(res->getResult(), 1);
 }
 
 TEST(Results, ExitResult){
-    EXPECT_EQ(new ExitResult()->getResult(), -1);
+    Result* res = new ExitResult();
+    EXPECT_EQ(res->getResult(), -1);
 }
 
 TEST(SysCommands, Basic){
