@@ -1,3 +1,6 @@
+#ifndef __CONNECTORS_H__
+#define __CONNECTORS_H__
+
 #include "results.h"
 #include "commands.h"
 
@@ -45,3 +48,5 @@ class TailConnector:public Connector{
         void setNext(Connector* next){this -> next = next;};
         void execute(Result*){};
 };
+
+#endif

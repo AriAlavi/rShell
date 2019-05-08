@@ -1,3 +1,7 @@
+#ifndef __RESULTS_H__
+#define __RESULTS_H__
+
+
 class Result{
     private:
         bool result;
@@ -34,3 +38,5 @@ class AbsoluteTrue : public Result{
             return 2;
         }
 };
+
+#endif
