@@ -136,6 +136,30 @@ TEST(Connectors, FailConnectorStopped){
     EXPECT_EQ(result -> probe(), 10);
 }
 
+TEST(Connectors, PassConnectorPassed){
+    Command* passcommand = new SysCommand("echo", "ping");
+    ProbeConnector* probe = new ProbeConnector();
+    Connector* test = new PassConnector(probe, passcommand);
+
+    test -> execute(new Result(1));
+
+    EXPECT_EQ(probe -> getResult(), 1);
+}
+
+TEST(Connectors, PassConnectorStopped){
+    Command* passcommand = new SysCommand("echo", "ping");
+    ProbeConnector* probe = new ProbeConnector();
+    Connector* test = new PassConnector(probe, passcommand);
+
+    ProbeResult* result = new ProbeResult(0);
+    test -> execute(result);
+
+    result -> set_probe(10);
+
+    EXPECT_EQ(probe -> getResult(), 0);
+    EXPECT_EQ(result -> probe(), 10);
+}
+
 int main(int argc, char **argv){
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
