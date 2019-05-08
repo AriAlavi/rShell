@@ -1,4 +1,3 @@
-#include "../src/results.h"
 #include "../src/commands.h"
 #include "../src/connectors.h"
 
