@@ -13,7 +13,7 @@ TEST(CompileTest, Compiles){
 
 TEST(Results, BadResult){
     Result* res = new Result(false);
-    EXPECT_EQ(res, 0);
+    EXPECT_EQ(res->getResult(), 0);
 }
 
 TEST(Results, GoodResult){
