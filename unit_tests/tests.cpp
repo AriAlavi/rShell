@@ -9,51 +9,18 @@
 using namespace std;
 
 
-class ProbeResult:public Result{
-    public:
-        int probe_value = 0;
-        void set_probe(int probe){
-            this -> probe_value = probe;
-        }
-        ProbeResult(){
-            this -> result = false;
-        }
-        ProbeResult(bool result){
-            this -> result = result;
-        }
-        int probe(){
-            return this -> probe_value;
-        }
-};
-
-class Output{
-    public:
-        ProbeResult* result;
-        Output(ProbeResult* result){this -> result = result;};
-};
-
 class ProbeConnector:public Connector{
     public:
-        Output* output = NULL;
+        Result* output = NULL;
         ProbeConnector(){};
         void execute(Result* result){
             if(this -> output){
                 delete this -> output;
             }
-            this -> output = new Output(new ProbeResult(result));
-        }
-        void execute(ProbeResult* result){
-            if(this -> output){
-                delete this -> output;
-            }
-            this -> output = new Output(result);
+            this -> output = result;
         }
         int getResult(){
-            return this -> output -> result -> getResult();
-        }
-        int probe(){
-            ProbeResult* result = this -> output -> result;
-            return result -> probe_value;
+            return this -> output -> getResult();
         }
 };
 
@@ -127,13 +94,13 @@ TEST(Connectors, FailConnectorStopped){
     ProbeConnector* probe = new ProbeConnector();
     Connector* test = new FailConnector(probe, passcommand);
 
-    ProbeResult* result = new ProbeResult(1);
+    Result* result = new Result(1);
     test -> execute(result);
 
-    result -> set_probe(10);
+    //result -> set_probe(10);
 
     EXPECT_EQ(probe -> getResult(), 1);
-    EXPECT_EQ(result -> probe(), 10);
+    //EXPECT_EQ(result -> probe(), 10);
 }
 
 TEST(Connectors, PassConnectorPassed){
@@ -151,13 +118,13 @@ TEST(Connectors, PassConnectorStopped){
     ProbeConnector* probe = new ProbeConnector();
     Connector* test = new PassConnector(probe, passcommand);
 
-    ProbeResult* result = new ProbeResult(false);
+    Result* result = new Result(false);
 
     test -> execute(result);
 
     EXPECT_EQ(probe -> getResult(), 0);
-    result -> set_probe(10);
-    EXPECT_EQ(result -> probe(), 10);
+    //result -> set_probe(10);
+    //EXPECT_EQ(result -> probe(), 10);
 }
 
 int main(int argc, char **argv){
