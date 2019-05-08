@@ -53,7 +53,7 @@ class ProbeConnector:public Connector{
         }
         int probe(){
             ProbeResult* result = this -> output -> result;
-            return result -> probe;
+            return result -> probe_value;
         }
 };
 
