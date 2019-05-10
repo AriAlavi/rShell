@@ -1,8 +1,10 @@
 #include "../src/results.h"
 #include "../src/commands.h"
 #include "../src/connectors.h"
+#include "../src/parser.h"
 
 #include <string>
+#include <iostream>
 
 #include "gtest/gtest.h"
 
@@ -138,6 +140,81 @@ TEST(Connectors, HeadConnector){
     head -> execute(result);
 
     EXPECT_EQ(probe -> getResult(), 1); 
+}
+
+TEST(Parsing, Simple) {
+    string toTest = "echo hello;";
+
+    vector<vector<string>> test = parse(toTest);
+
+    EXPECT_EQ(test[0][0], "echo");
+    EXPECT_EQ(test[0][1], "hello");
+    EXPECT_EQ(test[0][2], ";");
+}
+
+TEST(Parsing, Space_Semicolon) {
+    string toTest = "echo hello ;";
+
+    vector<vector<string>> test = parse(toTest);
+
+    EXPECT_EQ(test[0][0], "echo");
+    EXPECT_EQ(test[0][1], "hello");
+    EXPECT_EQ(test[0][2], ";");
+}
+
+TEST(Parsing, Two_Commands) {
+    string toTest = "echo hello; echo bye;";
+
+    vector<vector<string>> test = parse(toTest);
+
+    ASSERT_EQ(test.size(), 2);
+    EXPECT_EQ(test[0][0], "echo");
+    EXPECT_EQ(test[0][1], "bye");
+    EXPECT_EQ(test[0][2], ";");
+    EXPECT_EQ(test[1][0], "echo");
+    EXPECT_EQ(test[1][1], "hello");
+    EXPECT_EQ(test[1][2], ";");
+}
+
+TEST(Parsing, No_semicolon) {
+    string toTest = "echo hello";
+
+    vector<vector<string>> test = parse(toTest);
+
+    EXPECT_EQ(test[0][0], "echo");
+    EXPECT_EQ(test[0][1], "hello");
+    EXPECT_EQ(test[0][2], ";");
+}
+
+TEST(Parsing, AndTest) {
+    string toTest = "echo hello && mkdir newFolder";
+
+    vector<vector<string>> test = parse(toTest);
+
+    ASSERT_EQ(test.size(), 2);
+    EXPECT_EQ(test[0][0], "mkdir");
+    EXPECT_EQ(test[0][1], "newFolder");
+    EXPECT_EQ(test[0][2], ";");
+    EXPECT_EQ(test[1][0], "echo");
+    EXPECT_EQ(test[1][1], "hello");
+    EXPECT_EQ(test[1][2], "&&");
+}
+
+TEST(Parsing, ORAndTest) {
+    string toTest = "echo hello || mkdir newFolder && cd newFolder";
+
+    vector<vector<string>> test = parse(toTest);
+
+    ASSERT_EQ(test.size(), 3);
+    EXPECT_EQ(test[0][0], "cd");
+    EXPECT_EQ(test[0][1], "newFolder");
+    EXPECT_EQ(test[0][2], ";");
+    EXPECT_EQ(test[1][0], "mkdir");
+    EXPECT_EQ(test[1][1], "newFolder");
+    EXPECT_EQ(test[1][2], "&&");
+    EXPECT_EQ(test[2][0], "echo");
+    EXPECT_EQ(test[2][1], "hello");
+    EXPECT_EQ(test[2][2], "||");
 }
 
 int main(int argc, char **argv){
