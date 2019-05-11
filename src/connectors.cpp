@@ -7,11 +7,11 @@ void HeadConnector::execute(Result* result){
 }
 
 void AnyConnector::execute(Result* result){
-    Result* nextResult = this -> command -> execute();
-    switch(nextResult -> getResult()){
+    switch(result -> getResult()){
         case -1:
-            break;
+            this -> next -> execute(result);
         default:
+            Result* nextResult = this -> command -> execute();
             this -> next -> execute(nextResult);
 
     }
@@ -20,6 +20,9 @@ void AnyConnector::execute(Result* result){
 
 void FailConnector::execute(Result* result){
     switch(result -> getResult()){
+        case -1:
+            this -> next -> execute(result);
+            break;
         case 1:
             this -> next -> execute(result);
             break;
@@ -33,6 +36,8 @@ void FailConnector::execute(Result* result){
 
 void PassConnector::execute(Result* result){
     switch(result -> getResult()){
+        case -1:
+            this -> next -> execute(result);
         case 0:
             this -> next -> execute(result);
             break;
