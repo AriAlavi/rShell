@@ -2,6 +2,7 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <algorithm>
 
 #include "commands.h"
 #include "connectors.h"
