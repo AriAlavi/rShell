@@ -7,11 +7,11 @@ void HeadConnector::execute(Result* result){
 }
 
 void AnyConnector::execute(Result* result){
-    Result* nextResult = this -> command -> execute();
-    switch(nextResult -> getResult()){
+    switch(result -> getResult()){
         case -1:
             this -> next -> execute(result);
         default:
+            Result* nextResult = this -> command -> execute();
             this -> next -> execute(nextResult);
 
     }
