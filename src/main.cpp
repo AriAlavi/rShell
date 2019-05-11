@@ -2,6 +2,7 @@
 #include "commands.h"
 #include "connectors.h"
 #include "parser.h"
+#include "integrator.h"
 
 #include <iostream>
 
