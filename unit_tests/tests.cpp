@@ -140,6 +140,21 @@ TEST(Connectors, HeadConnector){
     EXPECT_EQ(probe -> getResult(), 1); 
 }
 
+TEST(Connectors, ExitConnector){
+    Command* passcommand = new SysCommand("echo", "ping");
+    TailConnector* probe = new TailConnector();
+    Connector* test3 = new PassConnector(probe, passcommand);
+    Connector* test2 = new PassConnector(test3, passcommand);
+    Connector* test1 = new PassConnector(test2, passcommand);
+    Connector* test0 = new PassConnector(test1, passcommand);
+    Connector* head = new HeadConnector(test1);
+
+    head -> execute(new ExitResult());
+
+    EXPECT_EQ(probe -> keepRunning(), false);
+
+}
+
 int main(int argc, char **argv){
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

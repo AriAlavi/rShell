@@ -43,12 +43,20 @@ class HeadConnector:public Connector{
 };
 
 class TailConnector:public Connector{
+    private:
+        bool noExit = true;
     public:
         TailConnector(Connector* next){this -> next = next;};
         TailConnector(){};
         void setNext(Connector* next){this -> next = next;};
         void execute(Result* res){
+            if(res -> getResult == -1){
+                this -> noExit = false;
+            }
             //cout << res -> getResult() << endl;}; //Uncomment this if want to test
+        }
+        bool keepRunning(){
+            return this -> noExit;
         }
 };
 
