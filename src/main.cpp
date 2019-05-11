@@ -4,13 +4,37 @@
 #include "parser.h"
 #include "integrator.h"
 
+#include <vector>
+#include <sstream>
 #include <iostream>
 
-int main(){
-    // Command* passcommand = new SysCommand("echo", "ping");
-    // Connector* tail = new TailConnector();
-    // Connector* test = new PassConnector(tail, passcommand);
+bool exit(string s) {
+    istringstream ss(s);
+    while (ss) {
+        string input;
+        ss >> input;
+        if(input == "exit" || input == "Exit") {
+            return true;
+        }
+    }
+    return false;
+}
 
-    // test -> execute(new Result(true));
+int main(){
+
+    string input;
+    HeadConnector* head;
+    
+    cout << "$ ";
+    getline(cin, input);
+
+    while (not exit(input)) { //exit command is "exit" or "Exit"
+        head = integrate(parse(input));
+        head -> execute(new AbsoluteTrue());
+        cout << "$ ";
+        getline(cin, input);
+    }
+    
+
     return 1;
 }
