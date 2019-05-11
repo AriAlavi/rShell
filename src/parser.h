@@ -3,9 +3,9 @@
 #include <sstream>
 #include <vector>
 
-// #include "commands.h"
-// #include "connectors.h"
-// #include "results.h"
+#include "commands.h"
+#include "connectors.h"
+#include "results.h"
 
 using namespace std;
 
@@ -13,10 +13,8 @@ using namespace std;
 // || = 2
 // && = 3
 
-
-
 int isConnector(string s){
-     vector<string> POSSIBLE_CONNECTORS{ ";", "||", "&&"};
+     vector<string> POSSIBLE_CONNECTORS{ ";", "||", "&&"} ;
      //If adding new connectors, please add to the END, and do not change the order
     if(s.back() == ';'){
         return 1;
@@ -105,32 +103,6 @@ vector <vector<string> > parse(string s) {
         bigVec.push_back(thisResult);//...and make sure it is in the list
     }
 
-
-    // for (int i = 0; i < tempList.size(); ++i) {
-    //     index = i;
-    //     while((tempList.at(index) != "||" || tempList.at(index) != "&&") && index < tempList.size()) {
-    //         bigVec.at(i).push_back(tempList.at(index)); //push command and args
-    //         index++;
-    //     }
-    //     bigVec.at(i).push_back(tempList.at(index + 1)); //push connector
-    // }
     reverse(bigVec.begin(),bigVec.end());
     return bigVec;
 }
-
-// HeadConnector* integrate(string s, vector<vector<string> > stringVec) {
-//     TailConnector* tail = new TailConnector();
-//     SysCommand* Com; 
-//     string command, arguments = "";
-
-//     for (int i = 0; i < stringVec.size(); ++i) {
-//         command = stringVec.at(i).at(i);
-//         for (int j = i + 1; j < stringVec.size(); ++j) {
-//             Com = new SysCommand(command, arguments);
-
-//             if (stringVec.at(i).at(j) == "&&") {
-//                 AnyConnector* Conn = new AnyConnector(tail, Com);
-//             }
-//         }
-//     }
-// }
