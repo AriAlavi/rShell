@@ -147,7 +147,7 @@ TEST(Connectors, ExitConnector){
     Connector* test2 = new PassConnector(test3, passcommand);
     Connector* test1 = new PassConnector(test2, passcommand);
     Connector* test0 = new PassConnector(test1, passcommand);
-    Connector* head = new HeadConnector(test1);
+    Connector* head = new AnyConnector(test1, passcommand);
 
     head -> execute(new ExitResult());
 
