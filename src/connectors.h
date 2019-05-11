@@ -50,7 +50,7 @@ class TailConnector:public Connector{
         TailConnector(){};
         void setNext(Connector* next){this -> next = next;};
         void execute(Result* res){
-            if(res -> getResult == -1){
+            if(res -> getResult() == -1){
                 this -> noExit = false;
             }
             //cout << res -> getResult() << endl;}; //Uncomment this if want to test
