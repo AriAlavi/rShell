@@ -1,6 +1,7 @@
 #include "results.h"
 #include "commands.h"
 #include "connectors.h"
+#include "parser.h"
 
 #include <iostream>
 
