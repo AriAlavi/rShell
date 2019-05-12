@@ -17,43 +17,47 @@ Connector* makeConnector(string type, Command* com, Connector* next) {
     if (type == "||") {
         return new FailConnector(next,com);
     }
+    throw __throw_logic_error;
     return NULL;
 }
 
-HeadConnector* integrate(vector <vector<string> > bigVec) {
+struct executePayload{
+    HeadConnector* head;
+    TailConnector* tail;
+};
+
+
+executePayload integrate(vector <vector<string> > bigVec) {
     TailConnector* tail = new TailConnector();
     string com1, argument;
-    Connector* connector;
     Command* command;
 
     if (bigVec.size() == 0) { /* if there is nothing to integrate */
-        return new HeadConnector(new TailConnector());
+        HeadConnector* head = new HeadConnector(tail);
+        executePayload empty = executePayload();
+        empty.head = head;
+        empty.tail = tail;
+        return empty;
     }
-    com1 = bigVec.at(0).at(0);
-    argument = bigVec.at(0).at(1);
-    if (com1 == "exit") {
-        command = new ExitCommand();
-    }
-    else {
-        command = new SysCommand(com1,argument);
-    }
-    connector = makeConnector(bigVec[0][2], command, tail); /* function to return appropriate connector */
 
-    if (bigVec.size() > 1) { 
-        for (int i = 1; i < bigVec.size(); ++i) {
-            com1 = bigVec[i][0];
-            argument = bigVec[i][1];
-            Connector* conn2;
-            if (com1 == "exit") {
-                conn2 = makeConnector(bigVec[i][2], (new ExitCommand()), connector);
-            }
-            else{
-                conn2 = makeConnector(bigVec[i][2], (new SysCommand(com1, argument)), connector); /* conn2 -> next = connector */
-            }
-            connector = conn2;
+    Connector* next = tail;
+    Connector* current;
+
+    for (int i = 0; i < bigVec.size(); ++i) {
+        com1 = bigVec.at(i).at(0);
+        argument = bigVec.at(i).at(1);
+        if (com1 == "exit") {
+            current = makeConnector(bigVec.at(i).at(2), (new ExitCommand()), next);
         }
-
+        else{
+            current = makeConnector(bigVec.at(i).at(2), (new SysCommand(com1, argument)), next); /* conn2 -> next = connector */
+        }
+        next = current;
     }
-    HeadConnector* head = new HeadConnector(connector);
-    return head;
+
+    HeadConnector* head = new HeadConnector(current);
+    executePayload result = executePayload();
+    result.head = head;
+    result.tail = tail;
+    return result;
 }

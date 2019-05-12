@@ -11,17 +11,21 @@
 int main(){
 
     string input;
+    executePayload result;
     HeadConnector* head;
-    
-
-    head = integrate(parse(input));
+    TailConnector* tail;    
 
     bool keepRunning = true;
     while (keepRunning) { //exit command is "exit" or "Exit"
         cout << "$";
         getline(cin, input);
-        head = integrate(parse(input));
-        head -> execute(new AbsoluteTrue());       
+        result = integrate(parse(input));
+        head = result.head;
+        tail = result.tail;
+
+        head -> execute();
+
+        keepRunning = tail -> keepRunning();       
 
     }
     
