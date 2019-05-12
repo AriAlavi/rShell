@@ -217,6 +217,16 @@ TEST(Parsing, ORAndTest) {
     EXPECT_EQ(test[2][2], "||");
 }
 
+TEST(Parsing, QuoteTest){
+    string toTest = "echo \"ping && ping\"";
+
+    vector<vector<string>> test = parse(toTest);
+
+    EXPECT_EQ(test[0][0], "echo");
+    EXPECT_EQ(test[0][1], "ping && ping");
+    EXPECT_EQ(test[0][2], ";");
+}
+
 int main(int argc, char **argv){
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

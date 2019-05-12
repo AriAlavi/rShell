@@ -1,11 +1,10 @@
 INPUTS=(
-    "echo ping; echo ping"
-    "ech crash || echo ping; echo ping"
-    "echo ping && echo ping"
-    "ech crash || echo ping && echo ping"
-    "ech crash || ech crash || echo ping && echo ping"
-    "echo ping && echo ping || echo ping"
-    "echo ping || echo ping && echo ping"
+    "echo ping; echo ping; exit; echo ping;"
+    "echo ping && echo ping && exit && echo ping"
+    "echo ping || exit && echo ping"
+    "echo ping || echo ping && echo ping && exit"
+    "ech ping || echo ping || ech ping && echo ping || exit || echo ping && exit"
+
 )
 
 
@@ -24,7 +23,8 @@ do
     then
         echo "Test passed"
     else
-        echo "Test failed"
+        printf "\n_____________________\n\nTest failed\nTest failed\nTest failed\n_____________________\n"
+        
     fi
     printf "\n"
 

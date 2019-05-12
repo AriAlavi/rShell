@@ -51,17 +51,38 @@ vector <vector<string> > parse(string s) {
         tempList.push_back(input);
     }
 
-    // int index = 0;
+
     string command = "";
     string args = "";
     string connector = "";
 
+    bool comment = false;
+
     for(int i = 0; i< tempList.size(); i++){
+        int connector_result = 0;
         string currentPhrase = tempList.at(i);
         if(currentPhrase == ""){
             continue;
         }
-        int connector_result = isConnector(currentPhrase);
+
+        if(currentPhrase.front() == '"'){
+            currentPhrase.erase(0, 1);
+            comment = true;
+        }else{
+            if(comment==false){connector_result=isConnector(currentPhrase);}
+        }
+
+
+        if(currentPhrase.back() == '"'){
+            comment = false;
+            currentPhrase.pop_back();
+        }
+
+        
+        
+
+
+        
         if(currentPhrase.front() == '#'){ //If comment, treat as semicolon and stop parsing
             connector = ';';
             break;
