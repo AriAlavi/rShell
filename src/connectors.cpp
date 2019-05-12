@@ -1,16 +1,13 @@
 #include "connectors.h"
 
-#include <iostream> //TODO REMOVE
 
 using namespace std;
 
 void HeadConnector::execute(Result* result){
-    //cout << this -> type << endl;
     this -> next -> execute(new AbsoluteTrue());
 }
 
 void AnyConnector::execute(Result* result){
-    //cout << this -> type << endl;
     switch(result -> getResult()){
         case -1:
             this -> next -> execute(result);
@@ -24,7 +21,6 @@ void AnyConnector::execute(Result* result){
 }
 
 void FailConnector::execute(Result* result){
-    //cout << this -> type << endl;
     switch(result -> getResult()){
         case -1:
             this -> next -> execute(result);

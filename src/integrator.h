@@ -42,15 +42,22 @@ executePayload integrate(vector <vector<string> > bigVec) {
 
     Connector* next = tail;
     Connector* current;
+    string connector;
 
     for (int i = 0; i < bigVec.size(); ++i) {
         com1 = bigVec.at(i).at(0);
         argument = bigVec.at(i).at(1);
+        if(i == bigVec.size()-1){
+            connector = ";";
+        }else{
+            connector = bigVec.at(i+1).at(2);
+        }
+        
         if (com1 == "exit") {
-            current = makeConnector(bigVec.at(i).at(2), (new ExitCommand()), next);
+            current = makeConnector(connector, (new ExitCommand()), next);
         }
         else{
-            current = makeConnector(bigVec.at(i).at(2), (new SysCommand(com1, argument)), next); /* conn2 -> next = connector */
+            current = makeConnector(connector, (new SysCommand(com1, argument)), next); /* conn2 -> next = connector */
         }
         next = current;
     }
