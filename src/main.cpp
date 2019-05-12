@@ -8,31 +8,26 @@
 #include <sstream>
 #include <iostream>
 
-bool exit(string s) {
-    istringstream ss(s);
-    while (ss) {
-        string input;
-        ss >> input;
-        if(input == "exit" || input == "Exit") {
-            return true;
-        }
-    }
-    return false;
-}
-
 int main(){
 
     string input;
     HeadConnector* head;
+    TailConnector* tail;
+    vector<tailhead*> vec;
     
     cout << "$ ";
     getline(cin, input);
+    vec = integrate(parse(input));
+    tail = vec[0] -> t;
+    head = vec[0] -> h;
 
-    while (not exit(input)) { //exit command is "exit" or "Exit"
-        head = integrate(parse(input));
+    while (tail -> keepRunning()) { //exit command is "exit" or "Exit"
         head -> execute(new AbsoluteTrue());
         cout << "$ ";
         getline(cin, input);
+        vec = integrate(parse(input));
+        tail = vec[0] -> t;
+        head = vec[0] -> h;
     }
     
 
