@@ -7,27 +7,47 @@
 #include <vector>
 #include <sstream>
 #include <iostream>
+#include <string>
 
-int main(){
+int main(int argv, char** argc){
 
     string input;
     executePayload result;
     HeadConnector* head;
-    TailConnector* tail;    
+    TailConnector* tail;
 
-    bool keepRunning = true;
-    while (keepRunning) { //exit command is "exit" or "Exit"
-        cout << "$";
-        getline(cin, input);
+    if(argc){
+        string input = "";
+        for(int i = 1; i < argv; i++) {
+            if(input.length() > 0){
+                input += " ";
+            }
+            input = string(argc[i]);
+        }
         result = integrate(parse(input));
         head = result.head;
         tail = result.tail;
 
         head -> execute();
+        return 1;
+    }else{
+        bool keepRunning = true;
+        while (keepRunning) { //exit command is "exit" or "Exit"
+            cout << "$";
+            getline(cin, input);
+            result = integrate(parse(input));
+            head = result.head;
+            tail = result.tail;
 
-        keepRunning = tail -> keepRunning();       
+            head -> execute();
 
+            keepRunning = tail -> keepRunning();       
+
+        }
     }
+
+
+
     
 
     return 1;
