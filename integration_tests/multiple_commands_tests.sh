@@ -1,13 +1,17 @@
 INPUTS=(
     "echo ping; echo ping"
+    "ech crash || echo ping"
+    "echo ping && echo ping"
 )
 OUTPUTS=(
+    "pingping"
+    "ping"
     "pingping"
 )
 
 LENGTH=${#INPUTS[*]}
 LENGTH="$(($LENGTH-1))"
-for i in $LENGTH
+for i in $(seq 0 $LENGTH)
 do
     INPUT="${INPUTS[${i}]}"
     EXPECTEDOUTPUT="${OUTPUTS[${i}]}"
@@ -24,6 +28,7 @@ do
     else
         echo "Test failed"
     fi
+    printf "\n"
 
 done
 
