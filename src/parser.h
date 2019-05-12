@@ -68,12 +68,13 @@ vector <vector<string> > parse(string s) {
         if(currentPhrase.front() == '"'){
             currentPhrase.erase(0, 1);
             comment = true;
-        }else{
-            if(comment==false){connector_result=isConnector(currentPhrase);}
+        }else{ //If not a quote...
+            if(comment==false){connector_result=isConnector(currentPhrase);}//...check for connectors
+            if(comment == false and currentPhrase.front() == '#'){connector = ';';break;}//... and if comment, treat as semicolon and stop parsing
         }
 
 
-        if(currentPhrase.back() == '"'){
+        if(currentPhrase.back() == '"'){//Check if end of quote
             comment = false;
             currentPhrase.pop_back();
         }
@@ -83,10 +84,7 @@ vector <vector<string> > parse(string s) {
 
 
         
-        if(currentPhrase.front() == '#'){ //If comment, treat as semicolon and stop parsing
-            connector = ';';
-            break;
-        }
+
         if(command == ""){ //If vector is empty, then you have found a command, put it in
             command = currentPhrase;
         }

@@ -3,14 +3,14 @@ INPUTS=(
     "#echo comment"
     "echo bye && #echo comment"
     "echo testing; #echo comment; echo hello"
-    'echo "ping && ping"'
+    'echo "ping && #ping"'
 )
 OUTPUTS=(
     "hello"
     ""
     "bye"
     "testing"
-    "ping && ping"
+    "ping && #ping"
 )
 
 LENGTH=${#INPUTS[*]}
