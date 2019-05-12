@@ -4,7 +4,7 @@ ADD_SUBDIRECTORY(googletest)
 
 SET(CMAKE_CXX_STANDARD 11)
 
-ADD_EXECUTABLE(worse_terminal
+ADD_EXECUTABLE(rshell
     src/main.cpp
     src/commands.cpp
     src/connectors.cpp
