@@ -1,4 +1,3 @@
-echo "Running tests"
 INPUTS=(
     "ping"
     "ping ping;"
