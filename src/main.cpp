@@ -12,22 +12,17 @@ int main(){
 
     string input;
     HeadConnector* head;
-    TailConnector* tail;
-    vector<tailhead*> vec;
     
-    cout << "$ ";
-    getline(cin, input);
-    vec = integrate(parse(input));
-    tail = vec[0] -> t;
-    head = vec[0] -> h;
 
-    while (tail -> keepRunning()) { //exit command is "exit" or "Exit"
-        head -> execute(new AbsoluteTrue());
-        cout << "$ ";
+    head = integrate(parse(input));
+
+    bool keepRunning = true;
+    while (keepRunning) { //exit command is "exit" or "Exit"
+        cout << "$";
         getline(cin, input);
-        vec = integrate(parse(input));
-        tail = vec[0] -> t;
-        head = vec[0] -> h;
+        head = integrate(parse(input));
+        head -> execute(new AbsoluteTrue());       
+
     }
     
 

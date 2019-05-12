@@ -7,8 +7,6 @@
 
 using namespace std;
 
-struct tailhead {TailConnector* t = NULL; HeadConnector* h = NULL;};
-
 Connector* makeConnector(string type, Command* com, Connector* next) {
     if (type == ";") {
         return new AnyConnector(next,com);
@@ -22,20 +20,17 @@ Connector* makeConnector(string type, Command* com, Connector* next) {
     return NULL;
 }
 
-vector <tailhead*> integrate(vector <vector<string> > bigVec) {
+HeadConnector* integrate(vector <vector<string> > bigVec) {
     TailConnector* tail = new TailConnector();
     string com1, argument;
     Connector* connector;
     Command* command;
-    vector <tailhead*> vec;
-    tailhead* tailhead;
 
-    tailhead -> t = tail;
     if (bigVec.size() == 0) { /* if there is nothing to integrate */
-        return vec;
+        return new HeadConnector(new TailConnector());
     }
-    com1 = bigVec[0][0];
-    argument = bigVec[0][1];
+    com1 = bigVec.at(0).at(0);
+    argument = bigVec.at(0).at(1);
     if (com1 == "exit") {
         command = new ExitCommand();
     }
@@ -60,7 +55,5 @@ vector <tailhead*> integrate(vector <vector<string> > bigVec) {
 
     }
     HeadConnector* head = new HeadConnector(connector);
-    tailhead -> h = head;
-    vec.push_back(tailhead);
-    return vec;
+    return head;
 }
