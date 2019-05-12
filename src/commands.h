@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include "results.h"
 
 using namespace std;
 

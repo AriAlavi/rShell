@@ -6,6 +6,7 @@
 
 
 class Connector{
+    
     protected:
         Connector* next;
         Command* command;
@@ -39,11 +40,11 @@ class HeadConnector:public Connector{
         HeadConnector(Connector* next){this -> next = next;};
         HeadConnector(){};
         void setNext(Connector* next){this -> next = next;};
-        void execute(Result*);
+        void execute(Result* res);
 };
 
 class TailConnector:public Connector{
-    private:
+    private:__RESULTS_H__
         bool noExit = true;
     public:
         TailConnector(Connector* next){this -> next = next;};
