@@ -21,6 +21,7 @@ Connector* makeConnector(string type, Command* com, Connector* next) {
     return NULL;
 }
 
+
 struct executePayload{
     HeadConnector* head;
     TailConnector* tail;
@@ -56,6 +57,33 @@ executePayload integrate(vector <vector<string> > bigVec) {
         if (com1 == "exit") {
             current = makeConnector(connector, (new ExitCommand()), next);
         }
+        else if (com1 == "test") {
+            current = makeConnector(connector, (new TestCommand(com1, argument)), next);
+        }
+        else if (com1.at(0) == '[') { // [argument]
+            if (argument == "") {
+                argument = com1;
+                argument.erase(0,1);
+                argument.pop_back();
+                com1 = "test";
+                current = makeConnector(connector, (new TestCommand(com1, argument)), next);
+            }
+            else if (com1 != "[") { // [-flag argument]
+                argument = com1 + " " + argument;
+                argument.erase(0,1);
+                argument.pop_back();
+                com1 = "test";
+                current = makeConnector(connector, (new TestCommand(com1, argument)), next);
+            }
+            else{
+                com1.replace(0,1,"test"); // [ argument ]
+                argument.pop_back();
+                argument.pop_back();
+                current = makeConnector(connector, (new TestCommand(com1, argument)), next);
+            }
+
+        }
+
         else{
             current = makeConnector(connector, (new SysCommand(com1, argument)), next); /* conn2 -> next = connector */
         }
