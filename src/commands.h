@@ -31,4 +31,15 @@ class SysCommand: public Command{
 
 };
 
+class TestCommand: public Command{
+    public:
+        TestCommand(string command, string args) {
+            this -> command = command; 
+            this -> args = args;
+        }
+        bool exists(string);
+        Result* execute();
+
+};
+
 #endif

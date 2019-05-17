@@ -33,7 +33,7 @@ int main(int argv, char** argc){
     }else{
         bool keepRunning = true;
         while (keepRunning) { //exit command is "exit" or "Exit"
-            cout << "$";
+            cout << "$ ";
             getline(cin, input);
             result = integrate(parse(input));
             head = result.head;
