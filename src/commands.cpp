@@ -47,7 +47,7 @@ bool TestCommand::exists(string file) {
         }
         return S_ISDIR(validate.st_mode);
     }
-    if (file.find("-f")!= string::npos) {   // checks if it's a directory
+    if (file.find("-f")!= string::npos) {   // checks if it's a regular file
         file.replace(file.find("-f"), 3, "");
         if (stat(file.c_str(), &validate) != 0) {
             return false;
