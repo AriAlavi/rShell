@@ -54,7 +54,11 @@ bool TestCommand::exists(string file) {
         }
         return S_ISREG(validate.st_mode);
     }
-    return(stat(file.c_str(), &validate) == 0); // checks if file exists
+    if (file.find("-e")!= string::npos) {
+        file.replace(file.find("-e"), 3, "");  // checks if file exists
+    
+    } 
+    return(stat(file.c_str(), &validate) == 0);   
 }
 
 
