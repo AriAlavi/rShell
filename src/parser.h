@@ -70,7 +70,15 @@ vector <vector<string> > parse(string s) {
             comment = true;
         }else{ //If not a quote...
             if(comment==false){connector_result=isConnector(currentPhrase);}//...check for connectors
-            if(comment == false and currentPhrase.front() == '#'){connector = ';';break;}//... and if comment, treat as semicolon and stop parsing
+            if(comment == false and currentPhrase.front() == '#'){
+                connector = ';';
+                vector<string> thisResult;
+                thisResult.push_back(command);
+                thisResult.push_back(args);
+                thisResult.push_back(connector);
+                bigVec.push_back(thisResult);
+                break;
+                }//... and if comment, treat as semicolon and stop parsing
         }
 
 
