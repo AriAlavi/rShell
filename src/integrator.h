@@ -1,10 +1,18 @@
 #include <string>
 #include <vector>
+#include <iostream>
 
 #include "connectors.h"
 #include "commands.h"
 #include "results.h"
+#include <stdio.h>
+#include <limits.h>
+#include <unistd.h>
 
+#define GetCurrentDir getcwd
+
+
+ 
 using namespace std;
 
 Connector* makeConnector(string type, Command* com, Connector* next) {
@@ -32,6 +40,8 @@ executePayload integrate(vector <vector<string> > bigVec) {
     TailConnector* tail = new TailConnector();
     string com1, argument;
     Command* command;
+    char cwd[PATH_MAX];
+    getcwd(cwd, sizeof(cwd));
 
     if (bigVec.size() == 0) { /* if there is nothing to integrate */
         HeadConnector* head = new HeadConnector(tail);
@@ -52,6 +62,10 @@ executePayload integrate(vector <vector<string> > bigVec) {
             connector = ";";
         }else{
             connector = bigVec.at(i+1).at(2);
+        }
+
+        if (com1 == "ls" && argument == "") {
+            argument = cwd;
         }
         
         if (com1 == "exit") {
