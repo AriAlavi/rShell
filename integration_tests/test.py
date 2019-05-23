@@ -1,5 +1,5 @@
 from sys import argv
-from subprocess import Popen, PIPE
+from subprocess import check_output, CalledProcessError, STDOUT
 from json import load as jsonLoad
 from itertools import product
 import re
@@ -15,7 +15,11 @@ def runCommand(command): #takes in an a command and runs it in the base compiled
 
 
     commands = [COMPILED_CPLUS, command]
-    output = Popen(commands, stdout=PIPE).communicate()[0].decode().replace("\n", " ")[:-1]
+    try:
+        output = check_output(commands, stderr=STDOUT).decode()
+    except Exception as e:
+        output = e.output.decode()
+
     return output
 
 class DynamicTest(unittest.TestCase):
