@@ -227,6 +227,13 @@ TEST(Parsing, QuoteTest){
     EXPECT_EQ(test[0][2], ";");
 }
 
+TEST(Replace, Basic) {
+    string given = "yeet the meat";
+    pythonicc_replace(given, "yeet", "eat");
+    EXPECT_EQ(given, "eat the meat");
+}
+
+
 int main(int argc, char **argv){
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
