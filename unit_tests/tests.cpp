@@ -15,7 +15,7 @@ class ProbeConnector:public Connector{
     public:
         Result* output = NULL;
         ProbeConnector(){};
-        void execute(Result* result){
+        Result* execute(Result* result){
             if(this -> output){
                 delete this -> output;
             }

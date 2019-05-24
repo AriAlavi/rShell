@@ -3,11 +3,11 @@
 
 using namespace std;
 
-void HeadConnector::execute(Result* result){
+Result* HeadConnector::execute(Result* result){
     this -> next -> execute(new AbsoluteTrue());
 }
 
-void AnyConnector::execute(Result* result){
+Result* AnyConnector::execute(Result* result){
     switch(result -> getResult()){
         case -1:
             this -> next -> execute(result);
@@ -20,7 +20,7 @@ void AnyConnector::execute(Result* result){
     
 }
 
-void FailConnector::execute(Result* result){
+Result* FailConnector::execute(Result* result){
     switch(result -> getResult()){
         case -1:
             this -> next -> execute(result);
@@ -35,7 +35,7 @@ void FailConnector::execute(Result* result){
     
 }
 
-void PassConnector::execute(Result* result){
+Result* PassConnector::execute(Result* result){
     switch(result -> getResult()){
         case -1:
             this -> next -> execute(result);
