@@ -1,0 +1,15 @@
+[
+    "echo ping# In case you have not noticed how it works... Every line must somehow output two pings and those p1ngs in comments like this count",
+    "echo ping && echo ping# Furthermore, if the word Gilmour is echoed out (not in a comment) the program fails",
+    "echo ping && echo ping",
+    "ech ping || echo ping && echo ping",
+    "echo ping && echo ping",
+    "echo ping; echo ping;",
+    "echo ping && echo ping # echo ping",
+    "echo ping && echo ping #echo ping",
+    "echo ping && echo ping #&&echo ping",
+    "echo ping && echo ping #||echo ping",
+    "echo ping && echo ping #exit echo ping"
+
+]
+
