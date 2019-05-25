@@ -2,6 +2,7 @@
 #include "../src/commands.h"
 #include "../src/connectors.h"
 #include "../src/parser.h"
+//#include "../src/commands.cpp" //forgive me for I have sinned
 
 #include <string>
 #include <iostream>
@@ -20,6 +21,7 @@ class ProbeConnector:public Connector{
                 delete this -> output;
             }
             this -> output = result;
+            return result;
         }
         int getResult(){
             return this -> output -> getResult();
@@ -232,6 +234,39 @@ TEST(Replace, Basic) {
     pythonicc_replace(given, "yeet", "eat");
     EXPECT_EQ(given, "eat the meat");
 }
+
+// TEST(Paren, Basic){
+//     Command* A = new SysCommand("echo", "A");
+//     Command* B = new SysCommand("echo", "B");
+//     Command* C = new SysCommand("echo", "C");
+//     Command* D = new SysCommand("echo", "D");
+
+//     ProbeConnector* LEFTPROBE = new ProbeConnector();
+//     ProbeConnector* RIGHTPROBE = new ProbeConnector();
+//     ProbeConnector* ABSOLUTETAIL = new ProbeConnector();
+   
+
+//     Connector* LeftB = new PassConnector(LEFTPROBE, B);
+//     Connector* LeftA= new PassConnector(LeftB, A);
+//     Connector* LeftHead = new HeadConnector(LeftA);
+
+//     Command* LeftParen = new ParenCommand(LeftHead);
+
+//     Connector* RightC = new PassConnector(RIGHTPROBE, C);
+//     Connector* RightD = new PassConnector(RIGHTPROBE, D);
+//     Connector* RightHead = new HeadConnector(RightC);
+
+//     Command* RightParen = new ParenCommand(RightHead);
+    
+//     Connector* RightRunner = new FailConnector(ABSOLUTETAIL, RightParen);
+//     Connector* LeftRunner = new AnyConnector(RightRunner, LeftParen);
+//     Connector* head = new HeadConnector(LeftRunner);
+
+
+//     head -> execute(new AbsoluteTrue());
+
+//     // EXPECT_EQ(probe -> getResult(), 1); 
+// }
 
 
 int main(int argc, char **argv){

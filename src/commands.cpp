@@ -6,9 +6,22 @@
 
 #include "results.h"
 #include "commands.h"
+#include "connectors.h"
 
 using namespace std;
 
+
+
+
+class ParenCommand:public Command{
+    public:
+        Connector* inside;
+        ParenCommand(){this -> inside = nullptr;}
+        ParenCommand(Connector* inside){this -> inside = inside;}
+        Result* execute(){
+            this -> inside -> execute(new AbsoluteTrue());
+        }
+};
 
 Result* SysCommand::execute(){
     char* args[3]; //Thanks for that prototype malhar ;)
