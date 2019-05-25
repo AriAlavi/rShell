@@ -4,17 +4,17 @@
 using namespace std;
 
 Result* HeadConnector::execute(Result* result){
-    this -> next -> execute(new AbsoluteTrue());
+    return this -> next -> execute(new AbsoluteTrue());
 }
 
 Result* AnyConnector::execute(Result* result){
     switch(result -> getResult()){
         case -1:
-            this -> next -> execute(result);
+            return this -> next -> execute(result);
             break;
         default:
             Result* nextResult = this -> command -> execute();
-            this -> next -> execute(nextResult);
+            return this -> next -> execute(nextResult);
 
     }
     
@@ -23,14 +23,14 @@ Result* AnyConnector::execute(Result* result){
 Result* FailConnector::execute(Result* result){
     switch(result -> getResult()){
         case -1:
-            this -> next -> execute(result);
+            return this -> next -> execute(result);
             break;
         case 1:
-            this -> next -> execute(result);
+            return this -> next -> execute(result);
             break;
         default:
             Result* nextResult = this -> command -> execute();
-            this -> next -> execute(nextResult);
+            return this -> next -> execute(nextResult);
     }
     
 }
@@ -38,14 +38,14 @@ Result* FailConnector::execute(Result* result){
 Result* PassConnector::execute(Result* result){
     switch(result -> getResult()){
         case -1:
-            this -> next -> execute(result);
+            return this -> next -> execute(result);
             break;
         case 0:
-            this -> next -> execute(result);
+            return this -> next -> execute(result);
             break;
         default:
             Result* nextResult = this -> command -> execute();
-            this -> next -> execute(nextResult);
+            return this -> next -> execute(nextResult);
     }
     
 }
