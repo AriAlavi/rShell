@@ -1,9 +1,13 @@
 #ifndef __CONNECTORS_H__
 #define __CONNECTORS_H__
 
-#include "results.h"
-#include "commands.h"
 
+
+#include <string>
+
+using namespace std;
+
+class Command;
 
 class Connector{
     
@@ -13,7 +17,7 @@ class Connector{
         Command* command;
     public:
         Connector(){};
-        virtual void execute(Result*) = 0;
+        virtual Result* execute(Result*) = 0;
         
 };
 
@@ -22,21 +26,31 @@ class FailConnector:public Connector{
     public:
         string type = "Fail";
         FailConnector(Connector* next, Command* command){this -> next = next; this -> command = command;};
-        void execute(Result*);
+        Result* execute(Result*);
 };
 
 class PassConnector:public Connector{
     public:
         string type = "Pass";
         PassConnector(Connector* next, Command* command){this -> next = next; this -> command = command;};
-        void execute(Result*);
+        Result* execute(Result*);
 };
 
 class AnyConnector:public Connector{
     public:
         string type = "Any";
         AnyConnector(Connector* next, Command* command){this -> next = next; this -> command = command;};
-        void execute(Result*);
+        Result* execute(Result*);
+};
+
+class ParenCommand:public Command{
+    public:
+        Connector* inside;
+        ParenCommand(){this -> inside = nullptr;}
+        ParenCommand(Connector* inside){this -> inside = inside;}
+        Result* execute(){
+            this -> inside -> execute(new AbsoluteTrue());
+        }
 };
 
 class HeadConnector:public Connector{
@@ -45,8 +59,8 @@ class HeadConnector:public Connector{
         HeadConnector(Connector* next){this -> next = next;};
         HeadConnector(){};
         void setNext(Connector* next){this -> next = next;};
-        void execute(Result* res);
-        void execute(){this -> execute(new AbsoluteTrue());};
+        Result* execute(Result* res);
+        Result* execute(){return this -> execute(new AbsoluteTrue());};
 };
 
 class TailConnector:public Connector{
@@ -57,10 +71,11 @@ class TailConnector:public Connector{
         TailConnector(Connector* next){this -> next = next;};
         TailConnector(){};
         void setNext(Connector* next){this -> next = next;};
-        void execute(Result* res){
+        Result* execute(Result* res){
             if(res -> getResult() == -1){
                 this -> noExit = false;
             }
+            return res;
             //cout << res -> getResult() << endl;}; //Uncomment this if want to test
         }
         bool keepRunning(){
