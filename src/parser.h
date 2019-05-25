@@ -4,9 +4,6 @@
 #include <vector>
 #include <algorithm>
 
-#include "commands.h"
-#include "connectors.h"
-#include "results.h"
 
 using namespace std;
 

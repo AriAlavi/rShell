@@ -3,7 +3,8 @@
 
 #include <string>
 #include <vector>
-#include "results.h"
+
+
 
 using namespace std;
 
@@ -16,6 +17,7 @@ class Command{
         virtual Result* execute() = 0;
         
 };
+
 
 class ExitCommand: public Command{
     public:
@@ -42,5 +44,7 @@ class TestCommand: public Command{
         Result* execute();
 
 };
+
+
 
 #endif

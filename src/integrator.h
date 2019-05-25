@@ -2,9 +2,7 @@
 #include <vector>
 #include <iostream>
 
-#include "connectors.h"
-#include "commands.h"
-#include "results.h"
+
 #include <stdio.h>
 #include <limits.h>
 #include <unistd.h>

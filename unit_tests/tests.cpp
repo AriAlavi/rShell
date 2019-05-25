@@ -2,7 +2,7 @@
 #include "../src/commands.h"
 #include "../src/connectors.h"
 #include "../src/parser.h"
-//#include "../src/commands.cpp" //forgive me for I have sinned
+
 
 #include <string>
 #include <iostream>
@@ -24,6 +24,9 @@ class ProbeConnector:public Connector{
             return result;
         }
         int getResult(){
+            if (this -> output == NULL){
+                return -2;
+            }
             return this -> output -> getResult();
         }
 };
@@ -235,38 +238,40 @@ TEST(Replace, Basic) {
     EXPECT_EQ(given, "eat the meat");
 }
 
-// TEST(Paren, Basic){
-//     Command* A = new SysCommand("echo", "A");
-//     Command* B = new SysCommand("echo", "B");
-//     Command* C = new SysCommand("echo", "C");
-//     Command* D = new SysCommand("echo", "D");
+TEST(Paren, Basic){
+    Command* A = new SysCommand("echo", "A");
+    Command* B = new SysCommand("echo", "B");
+    Command* C = new SysCommand("echo", "C");
+    Command* D = new SysCommand("echo", "D");
 
-//     ProbeConnector* LEFTPROBE = new ProbeConnector();
-//     ProbeConnector* RIGHTPROBE = new ProbeConnector();
-//     ProbeConnector* ABSOLUTETAIL = new ProbeConnector();
+    ProbeConnector* LEFTPROBE = new ProbeConnector();
+    ProbeConnector* RIGHTPROBE = new ProbeConnector();
+    ProbeConnector* ABSOLUTETAIL = new ProbeConnector();
    
 
-//     Connector* LeftB = new PassConnector(LEFTPROBE, B);
-//     Connector* LeftA= new PassConnector(LeftB, A);
-//     Connector* LeftHead = new HeadConnector(LeftA);
+    Connector* LeftB = new PassConnector(LEFTPROBE, B);
+    Connector* LeftA= new PassConnector(LeftB, A);
+    Connector* LeftHead = new HeadConnector(LeftA);
 
-//     Command* LeftParen = new ParenCommand(LeftHead);
+    Command* LeftParen = new ParenCommand(LeftHead);
 
-//     Connector* RightC = new PassConnector(RIGHTPROBE, C);
-//     Connector* RightD = new PassConnector(RIGHTPROBE, D);
-//     Connector* RightHead = new HeadConnector(RightC);
+    Connector* RightC = new PassConnector(RIGHTPROBE, C);
+    Connector* RightD = new PassConnector(RIGHTPROBE, D);
+    Connector* RightHead = new HeadConnector(RightC);
 
-//     Command* RightParen = new ParenCommand(RightHead);
+    Command* RightParen = new ParenCommand(RightHead);
     
-//     Connector* RightRunner = new FailConnector(ABSOLUTETAIL, RightParen);
-//     Connector* LeftRunner = new AnyConnector(RightRunner, LeftParen);
-//     Connector* head = new HeadConnector(LeftRunner);
+    Connector* RightRunner = new FailConnector(ABSOLUTETAIL, RightParen);
+    Connector* LeftRunner = new AnyConnector(RightRunner, LeftParen);
+    Connector* head = new HeadConnector(LeftRunner);
 
 
-//     head -> execute(new AbsoluteTrue());
+    head -> execute(new AbsoluteTrue());
 
-//     // EXPECT_EQ(probe -> getResult(), 1); 
-// }
+    EXPECT_EQ(ABSOLUTETAIL -> getResult(), 1); 
+    EXPECT_EQ(LEFTPROBE -> getResult(), 1); 
+    EXPECT_EQ(RIGHTPROBE -> getResult(), -2); 
+}
 
 
 int main(int argc, char **argv){

@@ -1,4 +1,7 @@
+#include "results.h"
+#include "commands.h"
 #include "connectors.h"
+
 
 
 using namespace std;

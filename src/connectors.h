@@ -1,9 +1,13 @@
 #ifndef __CONNECTORS_H__
 #define __CONNECTORS_H__
 
-#include "results.h"
-#include "commands.h"
 
+
+#include <string>
+
+using namespace std;
+
+class Command;
 
 class Connector{
     
@@ -37,6 +41,16 @@ class AnyConnector:public Connector{
         string type = "Any";
         AnyConnector(Connector* next, Command* command){this -> next = next; this -> command = command;};
         Result* execute(Result*);
+};
+
+class ParenCommand:public Command{
+    public:
+        Connector* inside;
+        ParenCommand(){this -> inside = nullptr;}
+        ParenCommand(Connector* inside){this -> inside = inside;}
+        Result* execute(){
+            this -> inside -> execute(new AbsoluteTrue());
+        }
 };
 
 class HeadConnector:public Connector{
