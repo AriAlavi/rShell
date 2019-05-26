@@ -4,15 +4,35 @@
 #include <vector>
 #include <algorithm>
 
-#include "commands.h"
-#include "connectors.h"
-#include "results.h"
 
 using namespace std;
 
 // ; = 1
 // || = 2
 // && = 3
+
+
+// ( = 11
+// ) = 12
+// () = 13
+// )( = 14
+
+
+// int parenCheck(string given, bool leftFound = false){
+//     if(leftFound == false and given.find("(")){
+//         return parenCheck(given, true);
+//     }else if(given.find(")")){
+//         if(leftFound == true){
+//             return 13;
+//         }else{
+//             return 12;
+//         }
+//     }else if(leftFound == true){
+//         return 11;
+//     }
+//     return 0;
+// }
+
 
 int isConnector(string s){
      vector<string> POSSIBLE_CONNECTORS{ ";", "||", "&&"} ;
@@ -38,7 +58,33 @@ string appendString(string baseString, string newString){
     }
 }
 
+string pythonicc_replace(string & original, const string arg1, const string arg2){
+    // pythonicc_replace("yeet the meat","yeet", "eat"))
+    // output = "eat the meat"
+
+    if(original.find(arg1) == string::npos){
+        return original;
+    }
+
+    int size = arg1.size();
+    original.replace(original.find(arg1),size,arg2);
+    return original;
+}
+
+void pythonicc_replace_complete(string & original, const string arg1, const string arg2){
+    while(original.find(arg1) != string::npos){
+        pythonicc_replace(original, arg1, arg2);
+    }
+}
+
 vector <vector<string> > parse(string s) {
+
+
+    pythonicc_replace_complete(s, "( ", "(");
+    pythonicc_replace_complete(s, " )", ")");
+    pythonicc_replace_complete(s, " (", "(");
+    pythonicc_replace_complete(s, ") ", ")");
+
     istringstream ss(s);
     vector<string> tempList;
     vector <vector<string> > bigVec;
@@ -86,12 +132,6 @@ vector <vector<string> > parse(string s) {
             comment = false;
             currentPhrase.pop_back();
         }
-
-        
-        
-
-
-        
 
         if(command == ""){ //If vector is empty, then you have found a command, put it in
             command = currentPhrase;

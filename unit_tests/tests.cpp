@@ -3,6 +3,7 @@
 #include "../src/connectors.h"
 #include "../src/parser.h"
 
+
 #include <string>
 #include <iostream>
 
@@ -15,13 +16,17 @@ class ProbeConnector:public Connector{
     public:
         Result* output = NULL;
         ProbeConnector(){};
-        void execute(Result* result){
+        Result* execute(Result* result){
             if(this -> output){
                 delete this -> output;
             }
             this -> output = result;
+            return result;
         }
         int getResult(){
+            if (this -> output == NULL){
+                return -2;
+            }
             return this -> output -> getResult();
         }
 };
@@ -226,6 +231,48 @@ TEST(Parsing, QuoteTest){
     EXPECT_EQ(test[0][1], "ping && ping");
     EXPECT_EQ(test[0][2], ";");
 }
+
+TEST(Replace, Basic) {
+    string given = "yeet the meat";
+    pythonicc_replace(given, "yeet", "eat");
+    EXPECT_EQ(given, "eat the meat");
+}
+
+TEST(Paren, Basic){
+    Command* A = new SysCommand("echo", "A");
+    Command* B = new SysCommand("echo", "B");
+    Command* C = new SysCommand("echo", "C");
+    Command* D = new SysCommand("echo", "D");
+
+    ProbeConnector* LEFTPROBE = new ProbeConnector();
+    ProbeConnector* RIGHTPROBE = new ProbeConnector();
+    ProbeConnector* ABSOLUTETAIL = new ProbeConnector();
+   
+
+    Connector* LeftB = new PassConnector(LEFTPROBE, B);
+    Connector* LeftA= new PassConnector(LeftB, A);
+    Connector* LeftHead = new HeadConnector(LeftA);
+
+    Command* LeftParen = new ParenCommand(LeftHead);
+
+    Connector* RightC = new PassConnector(RIGHTPROBE, C);
+    Connector* RightD = new PassConnector(RIGHTPROBE, D);
+    Connector* RightHead = new HeadConnector(RightC);
+
+    Command* RightParen = new ParenCommand(RightHead);
+    
+    Connector* RightRunner = new FailConnector(ABSOLUTETAIL, RightParen);
+    Connector* LeftRunner = new AnyConnector(RightRunner, LeftParen);
+    Connector* head = new HeadConnector(LeftRunner);
+
+
+    head -> execute(new AbsoluteTrue());
+
+    EXPECT_EQ(ABSOLUTETAIL -> getResult(), 1); 
+    EXPECT_EQ(LEFTPROBE -> getResult(), 1); 
+    EXPECT_EQ(RIGHTPROBE -> getResult(), -2); 
+}
+
 
 int main(int argc, char **argv){
     ::testing::InitGoogleTest(&argc, argv);

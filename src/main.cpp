@@ -16,7 +16,7 @@ int main(int argv, char** argc){
     HeadConnector* head;
     TailConnector* tail;
 
-    if(argc){
+    if(argv > 1){
         string input = "";
         for(int i = 1; i < argv; i++) {
             if(input.length() > 0){
@@ -33,7 +33,7 @@ int main(int argv, char** argc){
     }else{
         bool keepRunning = true;
         while (keepRunning) { //exit command is "exit" or "Exit"
-            cout << "$";
+            cout << "$ ";
             getline(cin, input);
             result = integrate(parse(input));
             head = result.head;

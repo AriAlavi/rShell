@@ -3,9 +3,11 @@
 
 #include <string>
 #include <vector>
-#include "results.h"
+
+
 
 using namespace std;
+
 
 class Command{
     public:
@@ -15,6 +17,7 @@ class Command{
         virtual Result* execute() = 0;
         
 };
+
 
 class ExitCommand: public Command{
     public:
@@ -30,5 +33,18 @@ class SysCommand: public Command{
         Result* execute();
 
 };
+
+class TestCommand: public Command{
+    public:
+        TestCommand(string command, string args) {
+            this -> command = command; 
+            this -> args = args;
+        }
+        bool exists(string);
+        Result* execute();
+
+};
+
+
 
 #endif

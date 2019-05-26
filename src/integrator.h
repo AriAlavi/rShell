@@ -1,10 +1,16 @@
 #include <string>
 #include <vector>
+#include <iostream>
 
-#include "connectors.h"
-#include "commands.h"
-#include "results.h"
 
+#include <stdio.h>
+#include <limits.h>
+#include <unistd.h>
+
+#define GetCurrentDir getcwd
+
+
+ 
 using namespace std;
 
 Connector* makeConnector(string type, Command* com, Connector* next) {
@@ -21,6 +27,7 @@ Connector* makeConnector(string type, Command* com, Connector* next) {
     return NULL;
 }
 
+
 struct executePayload{
     HeadConnector* head;
     TailConnector* tail;
@@ -31,6 +38,8 @@ executePayload integrate(vector <vector<string> > bigVec) {
     TailConnector* tail = new TailConnector();
     string com1, argument;
     Command* command;
+    char cwd[PATH_MAX];
+    getcwd(cwd, sizeof(cwd));
 
     if (bigVec.size() == 0) { /* if there is nothing to integrate */
         HeadConnector* head = new HeadConnector(tail);
@@ -52,10 +61,41 @@ executePayload integrate(vector <vector<string> > bigVec) {
         }else{
             connector = bigVec.at(i+1).at(2);
         }
+
+        if (com1 == "ls" && argument == "") {
+            argument = cwd;
+        }
         
         if (com1 == "exit") {
             current = makeConnector(connector, (new ExitCommand()), next);
         }
+        else if (com1 == "test") {
+            current = makeConnector(connector, (new TestCommand(com1, argument)), next);
+        }
+        else if (com1.at(0) == '[') { // [argument]
+            if (argument == "") {
+                argument = com1;
+                argument.erase(0,1);
+                argument.pop_back();
+                com1 = "test";
+                current = makeConnector(connector, (new TestCommand(com1, argument)), next);
+            }
+            else if (com1 != "[") { // [-flag argument]
+                argument = com1 + " " + argument;
+                argument.erase(0,1);
+                argument.pop_back();
+                com1 = "test";
+                current = makeConnector(connector, (new TestCommand(com1, argument)), next);
+            }
+            else{
+                com1.replace(0,1,"test"); // [ argument ]
+                argument.pop_back();
+                argument.pop_back();
+                current = makeConnector(connector, (new TestCommand(com1, argument)), next);
+            }
+
+        }
+
         else{
             current = makeConnector(connector, (new SysCommand(com1, argument)), next); /* conn2 -> next = connector */
         }

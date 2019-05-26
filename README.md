@@ -1,6 +1,6 @@
 # CS 100 Programming Project
 > ### Spring 2019
-> ### Malhar Nerurkar (862004989) Arian Alavi (862030914)
+> ### Malhar Nerurkar (862004989) Arian Alavi (862030914) Hussain Merchant (862027193)
 
 # Introduction
 Our program will consist of a command shell that
