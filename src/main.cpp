@@ -1,7 +1,6 @@
 #include "results.h"
 #include "commands.h"
 #include "connectors.h"
-#include "supVec.h"
 #include "parser.h"
 #include "integrator.h"
 

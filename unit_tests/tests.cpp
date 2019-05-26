@@ -275,19 +275,19 @@ TEST(Paren, Basic){
 }
 
 
-TEST(SupVec, AtTest){
-    vector<string> smallVec1 = {"echo","hello","&&"};
-    vector<string> smallVec2 = {"echo","goodbye",";"};
-    vector<vector<string> > mainVec = {smallVec1, smallVec2};
+// TEST(SupVec, AtTest){
+//     vector<string> smallVec1 = {"echo","hello","&&"};
+//     vector<string> smallVec2 = {"echo","goodbye",";"};
+//     vector<vector<string> > mainVec = {smallVec1, smallVec2};
 
-    SupVec testVec = SupVec();
-    testVec.changeVec(mainVec);
+//     SupVec testVec = SupVec();
+//     testVec.changeVec(mainVec);
 
-    EXPECT_EQ(testVec.size(), 6);
-    EXPECT_EQ(testVec.getOuter_givenInner(4), 1);
-    EXPECT_EQ(testVec.at(4), "goodbye");
+//     EXPECT_EQ(testVec.size(), 6);
+//     EXPECT_EQ(testVec.getOuter_givenInner(4), 1);
+//     EXPECT_EQ(testVec.at(4), "goodbye");
 
-}
+// }
 
 int main(int argc, char **argv){
     ::testing::InitGoogleTest(&argc, argv);

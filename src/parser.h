@@ -120,13 +120,18 @@ vector <vector<string> > parse(string s) {
         if(currentPhrase == "(" or currentPhrase == ")"){ //If you find a paren
             if(command == ""){ //...and you have not found a command
                 vector<string> thisResult;
-                thisResult.push_back("");
-                thisResult.push_back("");
                 thisResult.push_back(currentPhrase);
+                thisResult.push_back("");
+                if(connector != ""){
+                    thisResult.push_back(connector);
+                }else{
+                    thisResult.push_back(currentPhrase);//..make sure the integrator knows you found a paren
+                }
+                
                 bigVec.push_back(thisResult);
                 continue;
             }else{//...otherwise
-                currentPhrase = ";";
+                currentPhrase = ";"; //...back up one and pretend that paran was a semicolon
                 i--;
             }
         }
