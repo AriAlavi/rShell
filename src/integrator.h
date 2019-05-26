@@ -15,6 +15,12 @@
  
 using namespace std;
 
+struct parenShading{
+    vector<int> parenVec;
+    vector<int> priorityVec;
+};
+
+
 Connector* makeConnector(string type, Command* com, Connector* next) {
     if (type == ";") {
         return new AnyConnector(next,com);
