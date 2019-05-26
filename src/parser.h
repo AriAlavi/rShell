@@ -231,6 +231,6 @@ vector <preConnector> parse(string s) {
         }
 
     }
-    reverse(returnVec.begin(),returnVec.end());
+
     return returnVec;
 }
