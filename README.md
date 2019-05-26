@@ -12,6 +12,8 @@ We will be using a linked-list of connectors, of which there are three diffrent 
 
 We will iterate through the connectors and we will pass the result (error or not error) into the execute function of the next connector, based on that input the connector will react. The connector's execute function will then run the execute function of the command, with its args.
 
+In assignment 3, we added the test command to the rshell we have developed as well as its symbolic equivalent [ ]. The square brackets [ ] are actually interpreted as the test command in bash. This command returns 0 (TRUE) if the test succeeds and 1 (FALSE) if the test fails. This command is very useful for writing conditions that can be combined with the && and || connectors to write more complex bash command structures.
+
 # Diagrams
 ![UML](images/CS100-Assignment_2-UML.jpg)
 # Classes
