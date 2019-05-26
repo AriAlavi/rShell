@@ -91,7 +91,7 @@ HeadConnector* integrate(vector <vector<string> > bigVec) {
         else if (com1 == "test") {
             current = makeConnector(connector, (new TestCommand(com1, argument)), next);
         }
-        else if (com1.at(0) == '[') { // [argument]
+        else if (com1 != "" and com1.at(0) == '[') { // [argument]
             if (argument == "") {
                 argument = com1;
                 argument.erase(0,1);
@@ -106,7 +106,7 @@ HeadConnector* integrate(vector <vector<string> > bigVec) {
                 com1 = "test";
                 current = makeConnector(connector, (new TestCommand(com1, argument)), next);
             }
-            else{
+            else if (com1 != ""){
                 com1.replace(0,1,"test"); // [ argument ]
                 argument.pop_back();
                 argument.pop_back();

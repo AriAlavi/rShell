@@ -12,7 +12,7 @@ SupVec::SupVec() {
 
 void SupVec::changeVec(vector<vector<string> > newVec) {
     this -> asVector = newVec;
-    this -> updateString();
+    // this -> updateString();
 }
 
 int SupVec::size() {
