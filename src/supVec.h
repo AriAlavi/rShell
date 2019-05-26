@@ -6,6 +6,11 @@
 
 using namespace std;
 
+struct parenShading{
+    vector<int> parenVec;
+    vector<int> priorityVec;
+};
+
 
 class SupVec{
     private:

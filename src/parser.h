@@ -12,26 +12,6 @@ using namespace std;
 // && = 3
 
 
-// ( = 11
-// ) = 12
-// () = 13
-// )( = 14
-
-
-// int parenCheck(string given, bool leftFound = false){
-//     if(leftFound == false and given.find("(")){
-//         return parenCheck(given, true);
-//     }else if(given.find(")")){
-//         if(leftFound == true){
-//             return 13;
-//         }else{
-//             return 12;
-//         }
-//     }else if(leftFound == true){
-//         return 11;
-//     }
-//     return 0;
-// }
 
 
 int isConnector(string s){
@@ -145,7 +125,8 @@ vector <vector<string> > parse(string s) {
                     args = appendString(args, currentPhrase.substr(0, currentPhrase.size()-1));
                     connector = currentPhrase.back(); //...rip it off
                 }
-            }else{//...and it is not a semicolon...
+            }
+            else{//...and it is not a semicolon...
                 connector = currentPhrase;//...it must be free standing
             }
             vector<string> thisResult; //...then you have finished the arguments, so return it
