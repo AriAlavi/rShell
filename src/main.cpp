@@ -9,12 +9,15 @@
 #include <iostream>
 #include <string>
 
+
+
 int main(int argv, char** argc){
 
     string input;
-    executePayload result;
     HeadConnector* head;
     TailConnector* tail;
+    Result* result;
+
 
     if(argv > 1){
         string input = "";
@@ -24,9 +27,7 @@ int main(int argv, char** argc){
             }
             input = string(argc[i]);
         }
-        result = integrate(parse(input));
-        head = result.head;
-        tail = result.tail;
+        head = integrate(parse(input));
 
         head -> execute();
         return 1;
@@ -35,13 +36,11 @@ int main(int argv, char** argc){
         while (keepRunning) { //exit command is "exit" or "Exit"
             cout << "$ ";
             getline(cin, input);
-            result = integrate(parse(input));
-            head = result.head;
-            tail = result.tail;
+            head = integrate(parse(input));
 
-            head -> execute();
+            result = head -> execute();
 
-            keepRunning = tail -> keepRunning();       
+            keepRunning = head -> keepRunning();       
 
         }
     }

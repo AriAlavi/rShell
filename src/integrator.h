@@ -28,13 +28,8 @@ Connector* makeConnector(string type, Command* com, Connector* next) {
 }
 
 
-struct executePayload{
-    HeadConnector* head;
-    TailConnector* tail;
-};
 
-
-executePayload integrate(vector <vector<string> > bigVec) {
+HeadConnector* integrate(vector <vector<string> > bigVec) {
     TailConnector* tail = new TailConnector();
     string com1, argument;
     Command* command;
@@ -43,10 +38,7 @@ executePayload integrate(vector <vector<string> > bigVec) {
 
     if (bigVec.size() == 0) { /* if there is nothing to integrate */
         HeadConnector* head = new HeadConnector(tail);
-        executePayload empty = executePayload();
-        empty.head = head;
-        empty.tail = tail;
-        return empty;
+        return head;
     }
 
     Connector* next = tail;
@@ -103,8 +95,11 @@ executePayload integrate(vector <vector<string> > bigVec) {
     }
 
     HeadConnector* head = new HeadConnector(current);
-    executePayload result = executePayload();
-    result.head = head;
-    result.tail = tail;
-    return result;
+    return head;
+}
+
+
+
+HeadConnector* superIntegrate(vector <vector<string> > bigVec){
+    return integrate(bigVec);
 }
