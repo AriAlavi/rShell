@@ -1,8 +1,10 @@
+#ifndef __INTEGRATOR_H__
+#define __INTEGRATOR_H__
+
+
 #include <string>
 #include <vector>
 #include <iostream>
-
-
 #include <stdio.h>
 #include <limits.h>
 #include <unistd.h>
@@ -103,3 +105,5 @@ HeadConnector* integrate(vector <vector<string> > bigVec) {
 HeadConnector* superIntegrate(vector <vector<string> > bigVec){
     return integrate(bigVec);
 }
+
+#endif

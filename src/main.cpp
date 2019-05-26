@@ -3,6 +3,7 @@
 #include "connectors.h"
 #include "parser.h"
 #include "integrator.h"
+#include "supVec.h"
 
 #include <vector>
 #include <sstream>

@@ -2,6 +2,7 @@
 #include "../src/commands.h"
 #include "../src/connectors.h"
 #include "../src/parser.h"
+#include "../src/supVec.h"
 
 
 #include <string>
