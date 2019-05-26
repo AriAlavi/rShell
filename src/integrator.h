@@ -4,6 +4,7 @@
 
 #include <string>
 #include <vector>
+#include <stack>
 #include <iostream>
 #include <stdio.h>
 #include <limits.h>
@@ -16,8 +17,8 @@
 using namespace std;
 
 struct parenShading{
-    vector<int> parenVec;
-    vector<int> priorityVec;
+    int parent;
+    int priority;
 };
 
 
@@ -45,23 +46,64 @@ vector<int> findChar(string givenStr, char findChar){
     return results;
 }
 
-vector<parenShading> constructShading(string givenStr){
+vector<parenShading> constructShading(vector<preConnector> preConnectors){
     // Incoming givenStr is reversed
-    // i.e "echo ping && echo yeet" -> echo 
 
-    vector<int> lefts = findChar(givenStr, ')');
-    vector<int> rights = findChar(givenStr, '(');
 
+    // vector<int> lefts = findChar(givenStr, ')');
+    // vector<int> rights = findChar(givenStr, '(');
+
+    reverse(preConnectors.begin(),preConnectors.end());
+
+    vector<int> lefts;
+    int leftIndex = 0;
+    vector<int> rights;
+    int rightIndex = 0;
+
+    vector<parenShading> returnShading;
+
+
+    for(int i = 0;i < preConnectors.size(); i++){
+        if(preConnectors.at(i).command == ")"){
+            rights.push_back(i+1);
+        } else if(preConnectors.at(i).command == "("){
+            lefts.push_back(i+1);
+        }
+    }
     if(lefts.size() != rights.size()){
         throw __throw_logic_error;
+        }
+    stack<int> stacc;
+    int currentShading = 0;
+    for(int i = 0; i < preConnectors.size(); i++){
+        parenShading shade = parenShading();
+        if(lefts.size() > 0 and lefts.at(0) == i){
+            if(currentShading != 0){
+                stacc.push(currentShading);
+            }
+            
+            currentShading = lefts.at(0);
+            
+            lefts.erase(lefts.begin(), lefts.begin()+1);
+        }else if(rights.size() > 0 and rights.at(0) == i){
+            if(stacc.empty()){
+                currentShading = 0;
+            }else{
+                currentShading = stacc.top();
+                stacc.pop();
+
+            }
+            rights.erase(rights.begin(), rights.begin()+1);
+        }
+        shade.parent = currentShading;
+        returnShading.push_back(shade);
     }
 
-    vector<parenShading> parens;
-
-
+    reverse(returnShading.begin(),returnShading.end());
+    return returnShading;
 }
 
-HeadConnector* integrate(vector <vector<string> > bigVec) {
+HeadConnector* integrate(vector <preConnector> bigVec) {
     TailConnector* tail = new TailConnector();
     string com1, argument;
     Command* command;
@@ -78,13 +120,13 @@ HeadConnector* integrate(vector <vector<string> > bigVec) {
     string connector;
 
     for (int i = 0; i < bigVec.size(); ++i) {
-        com1 = bigVec.at(i).at(0);
-        argument = bigVec.at(i).at(1);
+        com1 = bigVec.at(i).command;
+        argument = bigVec.at(i).argument;
 
         if(i == bigVec.size()-1){
             connector = ";";
         }else{
-            connector = bigVec.at(i+1).at(2);
+            connector = bigVec.at(i+1).connector;
         }
 
         if (com1 == "ls" && argument == "") {
@@ -133,8 +175,10 @@ HeadConnector* integrate(vector <vector<string> > bigVec) {
 
 
 
-HeadConnector* superIntegrate(vector <vector<string> > bigVec){
-    return integrate(bigVec);
+HeadConnector* superIntegrate(vector <preConnector> bigVec){
+    constructShading(bigVec);
+    //return integrate(bigVec);
+
 }
 
 #endif

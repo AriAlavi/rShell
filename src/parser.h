@@ -11,7 +11,20 @@ using namespace std;
 // || = 2
 // && = 3
 
+struct preConnector{
+    string command;
+    string argument;
+    string connector;
+};
 
+bool isParen(string s){
+    for(auto i : s){
+        if (i == ')' or i == '('){
+            return true;
+        }
+    }
+    return false;
+}
 
 int isConnector(string s){
      vector<string> POSSIBLE_CONNECTORS{ ";", "||", "&&"} ;
@@ -80,7 +93,7 @@ void pythonicc_replace_complete(string & original, const string arg1, const stri
     }
 }
 
-vector <vector<string> > parse(string s) {
+vector <preConnector> parse(string s) {
 
 
     pythonicc_replace_complete(s, "( ", "(");
@@ -96,7 +109,8 @@ vector <vector<string> > parse(string s) {
     vector<string> tempList;
     vector <vector<string> > bigVec;
     if (s.length() == 0) { /* no string exists :( */
-        return bigVec;
+        vector<preConnector> empty;
+        return empty;
     }
     while (ss) {
         string input;
@@ -125,7 +139,7 @@ vector <vector<string> > parse(string s) {
                 if(connector != ""){
                     thisResult.push_back(connector);
                 }else{
-                    thisResult.push_back(currentPhrase);//..make sure the integrator knows you found a paren
+                    thisResult.push_back(";");//..make sure the integrator knows you found a paren
                 }
                 
                 bigVec.push_back(thisResult);
@@ -196,7 +210,27 @@ vector <vector<string> > parse(string s) {
         thisResult.push_back(connector); 
         bigVec.push_back(thisResult);//...and make sure it is in the list
     }
+    vector<preConnector> returnVec;
+    int at_returnVec = -1;
+    for(int i = 0; i < bigVec.size(); i++){
+        preConnector thisItem = preConnector();
+        if(isConnector(bigVec.at(i).at(2)) and bigVec.at(i).at(0) == ""){
+            if(isParen(bigVec.at(i-1).at(0))){
+                returnVec.at(at_returnVec).connector = bigVec.at(i).at(2);
+            }else{
+                throw __throw_logic_error;
+            }
 
-    reverse(bigVec.begin(),bigVec.end());
-    return bigVec;
+            
+        }else{
+            thisItem.command = bigVec.at(i).at(0);
+            thisItem.argument = bigVec.at(i).at(1);
+            thisItem.connector = bigVec.at(i).at(2);
+            returnVec.push_back(thisItem);
+            at_returnVec++;
+        }
+
+    }
+    reverse(returnVec.begin(),returnVec.end());
+    return returnVec;
 }

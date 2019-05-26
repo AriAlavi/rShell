@@ -28,7 +28,7 @@ int main(int argv, char** argc){
             }
             input = string(argc[i]);
         }
-        head = integrate(parse(input));
+        head = superIntegrate(parse(input));
 
         head -> execute();
         return 1;
@@ -37,7 +37,7 @@ int main(int argv, char** argc){
         while (keepRunning) { //exit command is "exit" or "Exit"
             cout << "$ ";
             getline(cin, input);
-            head = integrate(parse(input));
+            head = superIntegrate(parse(input));
 
             result = head -> execute();
 
