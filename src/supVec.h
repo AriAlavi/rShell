@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+using namespace std;
+
 struct parenShading{
     vector<int> parenVec;
     vector<int> priorityVec;

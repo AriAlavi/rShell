@@ -13,7 +13,6 @@ using namespace std;
 
 
 
-
 int isConnector(string s){
      vector<string> POSSIBLE_CONNECTORS{ ";", "||", "&&"} ;
      //If adding new connectors, please add to the END, and do not change the order
@@ -51,6 +50,30 @@ string pythonicc_replace(string & original, const string arg1, const string arg2
     return original;
 }
 
+string pythonicc_replace_char(string & original, const char arg1, const string arg2){
+    if(original.find(arg1) == string::npos){
+        return original;
+    }
+
+    string returnString = "";
+    string arg1Str;
+    arg1Str.push_back(arg1);
+
+    for(int i = 0; i < original.size(); i++){
+        
+        if(original.at(i) == arg1){
+            for(int j = 0; j < arg2.size(); j++){
+                returnString.push_back(arg2.at(j));
+            }
+        }else{
+            returnString.push_back(original.at(i));
+        }
+    }
+
+
+    return returnString;  
+}
+
 void pythonicc_replace_complete(string & original, const string arg1, const string arg2){
     while(original.find(arg1) != string::npos){
         pythonicc_replace(original, arg1, arg2);
@@ -64,6 +87,10 @@ vector <vector<string> > parse(string s) {
     pythonicc_replace_complete(s, " )", ")");
     pythonicc_replace_complete(s, " (", "(");
     pythonicc_replace_complete(s, ") ", ")");
+
+    s = pythonicc_replace_char(s, '(', " ( ");
+    s = pythonicc_replace_char(s, ')', " ) ");
+    
 
     istringstream ss(s);
     vector<string> tempList;
@@ -90,6 +117,19 @@ vector <vector<string> > parse(string s) {
         if(currentPhrase == ""){
             continue;
         }
+        if(currentPhrase == "(" or currentPhrase == ")"){ //If you find a paren
+            if(command == ""){ //...and you have not found a command
+                vector<string> thisResult;
+                thisResult.push_back("");
+                thisResult.push_back("");
+                thisResult.push_back(currentPhrase);
+                bigVec.push_back(thisResult);
+                continue;
+            }else{//...otherwise
+                currentPhrase = ";";
+                i--;
+            }
+        }
 
         if(currentPhrase.front() == '"'){
             currentPhrase.erase(0, 1);
@@ -113,7 +153,7 @@ vector <vector<string> > parse(string s) {
             currentPhrase.pop_back();
         }
 
-        if(command == ""){ //If vector is empty, then you have found a command, put it in
+        if(command == "" and connector_result == 0){ //If vector is empty, then you have found a command that is not a connector, put it in
             command = currentPhrase;
         }
         else if(connector_result > 0){ //If you find a connector...
