@@ -1,6 +1,14 @@
 #ifndef __SUPVEC_H__
 #define __SUPVEC_H_
 
+#include <string>
+#include <vector>
+
+struct parenShading{
+    vector<int> parenVec;
+    vector<int> priorityVec;
+};
+
 
 class SupVec{
     private:
