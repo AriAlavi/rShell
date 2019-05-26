@@ -1,6 +1,11 @@
 #ifndef __SUPVEC_H__
 #define __SUPVEC_H_
 
+#include <string>
+#include <vector>
+
+using namespace std;
+
 
 class SupVec{
     private:

@@ -30,7 +30,6 @@ Connector* makeConnector(string type, Command* com, Connector* next) {
 }
 
 
-
 HeadConnector* integrate(vector <vector<string> > bigVec) {
     TailConnector* tail = new TailConnector();
     string com1, argument;
