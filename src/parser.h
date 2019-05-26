@@ -118,7 +118,7 @@ vector <vector<string> > parse(string s) {
             if(comment==false){connector_result=isConnector(currentPhrase);}//...check for connectors
             if(comment == false and currentPhrase.front() == '#'){
                 connector = ';';
-                vector<string> thisResult;
+                vector<string> thisResult; //...then you have finished the arguments, so return it
                 thisResult.push_back(command);
                 thisResult.push_back(args);
                 thisResult.push_back(connector);
