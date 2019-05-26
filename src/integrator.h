@@ -50,8 +50,8 @@ Connector* makeConnector(string type, Command* com, Connector* next) {
     if (type == "||") {
         return new FailConnector(next,com);
     }
-    throw __throw_logic_error;
-    return NULL;
+    return new AnyConnector(next, com);
+
 }
 
 vector<int> findChar(string givenStr, char findChar){
@@ -194,7 +194,7 @@ HeadConnector* integrate(vector <preConnector> bigVec) {
                 next = current;
                 continue;
             }
-
+            continue;
         }
         if(com1 == ""){
             continue;
@@ -326,41 +326,30 @@ HeadConnector* superIntegrate(vector <preConnector> bigVec){
         bigVec.insert(bigVec.begin() + locations.first + 1, newResult);
 
     }
-    TailConnector* tail = new TailConnector();
-    Connector* current = tail;
-    for(int i = bigVec.size()-1; i >= 0; i--){
-        if(i == bigVec.size()-1 and bigVec.at(i).command == ")"){
 
-        }else if(bigVec.at(i).command == "("){
-            Connector* newConnector = makeConnector(bigVec.at(i).connector, bigVec.at(i+1).head,current);
-            current = newConnector;
-        }else if(bigVec.at(i).command == ")"){
+    return integrate(bigVec);
+    // TailConnector* tail = new TailConnector();
+    // Connector* current = tail;
+    // for(int i = bigVec.size()-1; i >= 0; i--){
+    //     if(i == bigVec.size()-1 and bigVec.at(i).command == ")"){
 
-        }else{
-            vector<preConnector> lazy;
-            lazy.push_back(bigVec.at(i));
-            Connector* newConnector = integrate(lazy);
-            current = newConnector;
-        }
+    //     }else if(bigVec.at(i).command == "("){
+    //         Connector* newConnector = makeConnector(bigVec.at(i).connector, bigVec.at(i+1).head,current);
+    //         current = newConnector;
+    //     }else if(bigVec.at(i).command == ")"){
 
-    }
-    HeadConnector* finalConnector = new HeadConnector(current);
-
-    int i = 0;
-    // integrate(bigVec.at(executionOrder.at(executionOrder.size()-1)));
-
-    // vector<preConnector> localExecute;
-    // for(int i = 0; i < bigVec.size(); i++){
-    //     if(shaders.at(i).parent == parens){
-    //         localExecute.push_back(bigVec.at(i));
+    //     }else{
+    //         vector<preConnector> lazy;
+    //         lazy.push_back(bigVec.at(i));
+    //         Connector* newConnector = integrate(lazy);
+    //         current = newConnector;
     //     }
+
     // }
-    // headVector.at(parens) = integrate(localExecute);
+    // HeadConnector* finalConnector = new HeadConnector(current);
 
 
-
-    //return integrate(bigVec);
-    return finalConnector;
+    // return finalConnector;
 
 }
 
