@@ -36,7 +36,7 @@ parenLocation findParens(vector <preConnector> given, int parenNumber){
 
     parenLocation returnval = parenLocation();
     returnval.first = first;
-    returnval.last = last-1;
+    returnval.last = last;
     return returnval;
 }
 
@@ -191,12 +191,19 @@ HeadConnector* integrate(vector <preConnector> bigVec) {
             ParenCommand* parenNext = bigVec.at(i-1).head;
             if(parenNext != nullptr){
                 Connector* parenConn = makeConnector(bigVec.at(i).connector, parenNext, next);
+                current = parenConn;
                 next = current;
                 continue;
             }
             continue;
         }
-        if(com1 == ""){
+        if(com1 == "" and bigVec.at(i).head != nullptr){
+            Connector* parenPlaceholder = makeConnector(bigVec.at(i).connector, bigVec.at(i).head, next);
+            current = parenPlaceholder;
+            next = current;
+            continue;
+        }
+        else if(com1 == ""){
             continue;
         }
 
@@ -318,12 +325,21 @@ HeadConnector* superIntegrate(vector <preConnector> bigVec){
         
         // bigVec.at(locations.last).head = result;
         
-        bigVec.erase(bigVec.begin() + locations.first+1, bigVec.begin() + locations.last+1);
-        preConnector firstParen = bigVec.at(locations.first);
-        preConnector newResult = preConnector();
-        newResult.head = result;
-        newResult.shade = firstParen.shade;
-        bigVec.insert(bigVec.begin() + locations.first + 1, newResult);
+        bigVec.erase(bigVec.begin() + locations.first, bigVec.begin() + locations.last+1);
+        if(locations.first > 0){
+            preConnector firstParen = bigVec.at(locations.first-1);
+            preConnector newResult = preConnector();
+            newResult.head = result;
+            newResult.shade = firstParen.shade;
+            newResult.connector = bigVec.at(locations.first-1).connector;
+            bigVec.insert(bigVec.begin() + locations.first, newResult);
+        }
+        else{
+            preConnector newResult = preConnector();
+            newResult.head = result;
+            newResult.connector = ";";
+            bigVec.insert(bigVec.begin(), newResult);
+        }
 
     }
 
