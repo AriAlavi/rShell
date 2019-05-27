@@ -98,7 +98,11 @@ vector<parenShading> constructShading(vector<preConnector> preConnectors){
         }
     }
     if(lefts.size() != rights.size()){
-        throw __throw_logic_error;
+        parenShading failed = parenShading();
+        failed.parent = -1;
+        failed.priority = -1;
+        returnShading.push_back(failed);
+        return returnShading;
         }
 
     if(lefts.size() == 0){
@@ -260,8 +264,17 @@ HeadConnector* integrate(vector <preConnector> bigVec) {
 
 
 HeadConnector* superIntegrate(vector <preConnector> bigVec){
-    vector<parenShading> shaders = constructShading(bigVec);
+    vector<parenShading> shaders;
+    shaders = constructShading(bigVec);
+    if(shaders.size() == 1 and shaders.at(0).priority == -1){
+        TailConnector* failTail = new TailConnector();
+        HeadConnector* dummyHead = new HeadConnector(failTail);
+        cout << "Error: Unmatched parentheses" << endl;
+        return dummyHead;
+    }
 
+
+    
     if(shaders.size() != bigVec.size()){
         throw __throw_logic_error;
     }
