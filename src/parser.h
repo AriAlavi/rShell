@@ -11,28 +11,27 @@ using namespace std;
 // || = 2
 // && = 3
 
+struct parenShading{
+    int parent;
+    int priority;
+};
 
-// ( = 11
-// ) = 12
-// () = 13
-// )( = 14
+struct preConnector{
+    string command = "";
+    string argument = "";
+    string connector = "";
+    parenShading shade;
+    ParenCommand* head = nullptr;
+};
 
-
-// int parenCheck(string given, bool leftFound = false){
-//     if(leftFound == false and given.find("(")){
-//         return parenCheck(given, true);
-//     }else if(given.find(")")){
-//         if(leftFound == true){
-//             return 13;
-//         }else{
-//             return 12;
-//         }
-//     }else if(leftFound == true){
-//         return 11;
-//     }
-//     return 0;
-// }
-
+bool isParen(string s){
+    for(auto i : s){
+        if (i == ')' or i == '('){
+            return true;
+        }
+    }
+    return false;
+}
 
 int isConnector(string s){
      vector<string> POSSIBLE_CONNECTORS{ ";", "||", "&&"} ;
@@ -71,13 +70,37 @@ string pythonicc_replace(string & original, const string arg1, const string arg2
     return original;
 }
 
+string pythonicc_replace_char(string & original, const char arg1, const string arg2){
+    if(original.find(arg1) == string::npos){
+        return original;
+    }
+
+    string returnString = "";
+    string arg1Str;
+    arg1Str.push_back(arg1);
+
+    for(int i = 0; i < original.size(); i++){
+        
+        if(original.at(i) == arg1){
+            for(int j = 0; j < arg2.size(); j++){
+                returnString.push_back(arg2.at(j));
+            }
+        }else{
+            returnString.push_back(original.at(i));
+        }
+    }
+
+
+    return returnString;  
+}
+
 void pythonicc_replace_complete(string & original, const string arg1, const string arg2){
     while(original.find(arg1) != string::npos){
         pythonicc_replace(original, arg1, arg2);
     }
 }
 
-vector <vector<string> > parse(string s) {
+vector <preConnector> parse(string s) {
 
 
     pythonicc_replace_complete(s, "( ", "(");
@@ -85,11 +108,16 @@ vector <vector<string> > parse(string s) {
     pythonicc_replace_complete(s, " (", "(");
     pythonicc_replace_complete(s, ") ", ")");
 
+    s = pythonicc_replace_char(s, '(', " ( ");
+    s = pythonicc_replace_char(s, ')', " ) ");
+    
+
     istringstream ss(s);
     vector<string> tempList;
     vector <vector<string> > bigVec;
     if (s.length() == 0) { /* no string exists :( */
-        return bigVec;
+        vector<preConnector> empty;
+        return empty;
     }
     while (ss) {
         string input;
@@ -109,6 +137,45 @@ vector <vector<string> > parse(string s) {
         string currentPhrase = tempList.at(i);
         if(currentPhrase == ""){
             continue;
+        }
+        if(currentPhrase == "(" or currentPhrase == ")"){ //If you find a paren
+            if(comment == false){// ... and you are not in a comment ...
+                if(command == ""){ //...and you have not found a command
+                    vector<string> thisResult;
+                    thisResult.push_back(currentPhrase);
+                    thisResult.push_back("");
+                    if(connector != ""){
+                        thisResult.push_back(connector);
+                    }else{
+                        thisResult.push_back(";");//..make sure the integrator knows you found a paren
+                    }
+                    
+                    bigVec.push_back(thisResult);
+                    continue;
+                }else{//...otherwise
+                    currentPhrase = ";"; //...back up one and pretend that paran was a semicolon
+                    i--;
+                }
+            }if(currentPhrase == "("){
+                vector<string> newTemplist;
+                for(int j = 0; j < tempList.size();j++){
+                    if(j == i){
+                        string constructNew = "(" + tempList.at(j+1);
+                        newTemplist.push_back(constructNew);
+                        j++;
+                    }else{
+                        newTemplist.push_back(tempList.at(j));
+                    }
+                }
+                tempList = newTemplist;
+                i--;
+                continue;
+            }else if(currentPhrase == ")"){
+                args.push_back(')');
+                continue;
+                
+            }
+
         }
 
         if(currentPhrase.front() == '"'){
@@ -133,7 +200,7 @@ vector <vector<string> > parse(string s) {
             currentPhrase.pop_back();
         }
 
-        if(command == ""){ //If vector is empty, then you have found a command, put it in
+        if(command == "" and connector_result == 0){ //If vector is empty, then you have found a command that is not a connector, put it in
             command = currentPhrase;
         }
         else if(connector_result > 0){ //If you find a connector...
@@ -145,7 +212,8 @@ vector <vector<string> > parse(string s) {
                     args = appendString(args, currentPhrase.substr(0, currentPhrase.size()-1));
                     connector = currentPhrase.back(); //...rip it off
                 }
-            }else{//...and it is not a semicolon...
+            }
+            else{//...and it is not a semicolon...
                 connector = currentPhrase;//...it must be free standing
             }
             vector<string> thisResult; //...then you have finished the arguments, so return it
@@ -170,7 +238,27 @@ vector <vector<string> > parse(string s) {
         thisResult.push_back(connector); 
         bigVec.push_back(thisResult);//...and make sure it is in the list
     }
+    vector<preConnector> returnVec;
+    int at_returnVec = -1;
+    for(int i = 0; i < bigVec.size(); i++){
+        preConnector thisItem = preConnector();
+        if(isConnector(bigVec.at(i).at(2)) and bigVec.at(i).at(0) == ""){
+            if(isParen(bigVec.at(i-1).at(0))){
+                returnVec.at(at_returnVec).connector = bigVec.at(i).at(2);
+            }else{
+                throw __throw_logic_error;
+            }
 
-    reverse(bigVec.begin(),bigVec.end());
-    return bigVec;
+            
+        }else{
+            thisItem.command = bigVec.at(i).at(0);
+            thisItem.argument = bigVec.at(i).at(1);
+            thisItem.connector = bigVec.at(i).at(2);
+            returnVec.push_back(thisItem);
+            at_returnVec++;
+        }
+
+    }
+
+    return returnVec;
 }

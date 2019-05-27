@@ -7,7 +7,7 @@
 using namespace std;
 
 Result* HeadConnector::execute(Result* result){
-    return this -> next -> execute(new AbsoluteTrue());
+    return this -> next -> execute(result);
 }
 
 Result* AnyConnector::execute(Result* result){

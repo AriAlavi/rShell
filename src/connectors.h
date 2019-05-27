@@ -54,33 +54,37 @@ class ParenCommand:public Command{
 };
 
 class HeadConnector:public Connector{
+    private:__RESULTS_H__
+        bool noExit = true;
     public:
         string type = "Head";
         HeadConnector(Connector* next){this -> next = next;};
         HeadConnector(){};
         void setNext(Connector* next){this -> next = next;};
         Result* execute(Result* res);
-        Result* execute(){return this -> execute(new AbsoluteTrue());};
+        Result* execute(){
+            Result* res =  this -> execute(new AbsoluteTrue());
+            if(res -> getResult() == -1){
+                this -> noExit = false;
+            }
+            return res;
+            };
+        bool keepRunning(){
+            return this -> noExit;
+        }
 };
 
 class TailConnector:public Connector{
-    private:__RESULTS_H__
-        bool noExit = true;
     public:
         string type = "Next";
         TailConnector(Connector* next){this -> next = next;};
         TailConnector(){};
         void setNext(Connector* next){this -> next = next;};
         Result* execute(Result* res){
-            if(res -> getResult() == -1){
-                this -> noExit = false;
-            }
             return res;
             //cout << res -> getResult() << endl;}; //Uncomment this if want to test
         }
-        bool keepRunning(){
-            return this -> noExit;
-        }
+
 };
 
 #endif

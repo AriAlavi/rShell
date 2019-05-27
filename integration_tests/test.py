@@ -87,7 +87,7 @@ def main():
     [COMBINATIONS.append(tuple([x]),) for x in COMMENTS]
     
 
-    print("\n" + str(len(INPUTS)) + " inputs generated " + str(len(COMBINATIONS)) + " tests")
+    print("\n" + str(len(INPUTS)) + " inputs found")
 
     INPUTS = [] #free some of dat ram
     COMMENTS = []
