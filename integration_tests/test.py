@@ -76,7 +76,7 @@ def main():
 
         print("Found " + str(len(data)) + " inputs.")
 
-
+    print("\n" + str(len(INPUTS)) + " total inputs found")
     
     while len(argv) > 1: # unittest.main() gets mad if you pass in argv, so I pop all them off
         argv.pop()
@@ -88,7 +88,7 @@ def main():
     [COMBINATIONS.append(tuple([x]),) for x in PARENS]
     
 
-    print("\n" + str(len(INPUTS)) + " inputs found")
+    
 
     INPUTS = [] #free some of dat ram
     COMMENTS = []
