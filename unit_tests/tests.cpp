@@ -2,6 +2,7 @@
 #include "../src/commands.h"
 #include "../src/connectors.h"
 #include "../src/parser.h"
+#include "../src/integrator.h"
 
 
 #include <string>
@@ -140,102 +141,175 @@ TEST(Connectors, HeadConnector){
     Connector* test = new PassConnector(probe, passcommand);
     Connector* head = new HeadConnector(test);
 
-    Result* result = new Result(false);
+    Result* result = new Result(true);
 
     head -> execute(result);
 
     EXPECT_EQ(probe -> getResult(), 1); 
 }
 
-// TEST(Parsing, Simple) {
-//     string toTest = "echo hello;";
+TEST(Parsing, Simple) {
+    string toTest = "echo hello;";
 
-//     vector<vector<string>> test = parse(toTest);
+    vector<preConnector> test = parse(toTest);
 
-//     EXPECT_EQ(test[0][0], "echo");
-//     EXPECT_EQ(test[0][1], "hello");
-//     EXPECT_EQ(test[0][2], ";");
-// }
+    EXPECT_EQ(test[0].command, "echo");
+    EXPECT_EQ(test[0].argument, "hello");
+    EXPECT_EQ(test[0].connector, ";");
+}
 
-// TEST(Parsing, Space_Semicolon) {
-//     string toTest = "echo hello ;";
+TEST(Parsing, Space_Semicolon) {
+    string toTest = "echo hello ;";
 
-//     vector<vector<string>> test = parse(toTest);
+    vector<preConnector> test = parse(toTest);
 
-//     EXPECT_EQ(test[0][0], "echo");
-//     EXPECT_EQ(test[0][1], "hello");
-//     EXPECT_EQ(test[0][2], ";");
-// }
+    EXPECT_EQ(test[0].command, "echo");
+    EXPECT_EQ(test[0].argument, "hello");
+    EXPECT_EQ(test[0].connector, ";");
+}
 
-// TEST(Parsing, Two_Commands) {
-//     string toTest = "echo hello; echo bye;";
+TEST(Parsing, Two_Commands) {
+    string toTest = "echo hello; echo bye;";
 
-//     vector<vector<string>> test = parse(toTest);
+    vector<preConnector> test = parse(toTest);
 
-//     ASSERT_EQ(test.size(), 2);
-//     EXPECT_EQ(test[0][0], "echo");
-//     EXPECT_EQ(test[0][1], "bye");
-//     EXPECT_EQ(test[0][2], ";");
-//     EXPECT_EQ(test[1][0], "echo");
-//     EXPECT_EQ(test[1][1], "hello");
-//     EXPECT_EQ(test[1][2], ";");
-// }
+    ASSERT_EQ(test.size(), 2);
+    EXPECT_EQ(test[0].command, "echo");
+    EXPECT_EQ(test[0].argument, "hello");
+    EXPECT_EQ(test[0].connector, ";");
+    EXPECT_EQ(test[1].command, "echo");
+    EXPECT_EQ(test[1].argument, "bye");
+    EXPECT_EQ(test[1].connector, ";");
+}
 
-// TEST(Parsing, No_semicolon) {
-//     string toTest = "echo hello";
+TEST(Parsing, No_semicolon) {
+    string toTest = "echo hello";
 
-//     vector<vector<string>> test = parse(toTest);
+    vector<preConnector> test = parse(toTest);
 
-//     EXPECT_EQ(test[0][0], "echo");
-//     EXPECT_EQ(test[0][1], "hello");
-//     EXPECT_EQ(test[0][2], ";");
-// }
+    EXPECT_EQ(test[0].command, "echo");
+    EXPECT_EQ(test[0].argument, "hello");
+    EXPECT_EQ(test[0].connector, ";");
+}
 
-// TEST(Parsing, AndTest) {
-//     string toTest = "echo hello && mkdir newFolder";
+TEST(Parsing, AndTest) {
+    string toTest = "echo hello && mkdir newFolder";
 
-//     vector<vector<string>> test = parse(toTest);
+    vector<preConnector> test = parse(toTest);
 
-//     ASSERT_EQ(test.size(), 2);
-//     EXPECT_EQ(test[0][0], "mkdir");
-//     EXPECT_EQ(test[0][1], "newFolder");
-//     EXPECT_EQ(test[0][2], ";");
-//     EXPECT_EQ(test[1][0], "echo");
-//     EXPECT_EQ(test[1][1], "hello");
-//     EXPECT_EQ(test[1][2], "&&");
-// }
+    ASSERT_EQ(test.size(), 2);
+    EXPECT_EQ(test[0].command, "echo");
+    EXPECT_EQ(test[0].argument, "hello");
+    EXPECT_EQ(test[0].connector, "&&");
+    EXPECT_EQ(test[1].command, "mkdir");
+    EXPECT_EQ(test[1].argument, "newFolder");
+    EXPECT_EQ(test[1].connector, ";");
+}
 
-// TEST(Parsing, ORAndTest) {
-//     string toTest = "echo hello || mkdir newFolder && cd newFolder";
+TEST(Parsing, ORAndTest) {
+    string toTest = "echo hello || mkdir newFolder && cd newFolder";
 
-//     vector<vector<string>> test = parse(toTest);
+    vector<preConnector> test = parse(toTest);
 
-//     ASSERT_EQ(test.size(), 3);
-//     EXPECT_EQ(test[0][0], "cd");
-//     EXPECT_EQ(test[0][1], "newFolder");
-//     EXPECT_EQ(test[0][2], ";");
-//     EXPECT_EQ(test[1][0], "mkdir");
-//     EXPECT_EQ(test[1][1], "newFolder");
-//     EXPECT_EQ(test[1][2], "&&");
-//     EXPECT_EQ(test[2][0], "echo");
-//     EXPECT_EQ(test[2][1], "hello");
-//     EXPECT_EQ(test[2][2], "||");
-// }
+    ASSERT_EQ(test.size(), 3);
+    EXPECT_EQ(test[0].command, "echo");
+    EXPECT_EQ(test[0].argument, "hello");
+    EXPECT_EQ(test[0].connector, "||");
+    EXPECT_EQ(test[1].command, "mkdir");
+    EXPECT_EQ(test[1].argument, "newFolder");
+    EXPECT_EQ(test[1].connector, "&&");
+    EXPECT_EQ(test[2].command, "cd");
+    EXPECT_EQ(test[2].argument, "newFolder");
+    EXPECT_EQ(test[2].connector, ";");
+}
 
-// TEST(Parsing, QuoteTest){
-//     string toTest = "echo \"ping && ping\"";
+TEST(Parsing, QuoteTest){
+    string toTest = "echo \"ping && ping\"";
 
-//     vector<vector<string>> test = parse(toTest);
+    vector<preConnector> test = parse(toTest);
 
-//     EXPECT_EQ(test[0][0], "echo");
-//     EXPECT_EQ(test[0][1], "ping && ping");
-//     EXPECT_EQ(test[0][2], ";");
-// }
+    EXPECT_EQ(test[0].command, "echo");
+    EXPECT_EQ(test[0].argument, "ping && ping");
+    EXPECT_EQ(test[0].connector, ";");
+}
+
+TEST(testCommand, literal_exists) {
+    TestCommand* totest = new TestCommand("test", "-e rshell");
+    EXPECT_EQ(1, totest -> execute() -> getResult());
+
+}
+
+TEST(testCommand, literal_dir) {
+    TestCommand* totest = new TestCommand("test", "-d rshell");
+    EXPECT_EQ(0, totest -> execute() -> getResult());
+
+}
+
+TEST(testCommand, literal_is_regular) {
+    TestCommand* totest = new TestCommand("test", "-f rshell");
+    EXPECT_EQ(1, totest -> execute() -> getResult());
+
+}
+
+TEST(testCommand, literal_no_flag) {
+    TestCommand* totest = new TestCommand("test", "rshell");
+    EXPECT_EQ(1, totest -> execute() -> getResult());
+
+}
+
+TEST(testCommand, literal_dir2) {
+    TestCommand* totest = new TestCommand("test", "-d src");
+    EXPECT_EQ(1, totest -> execute() -> getResult());
+
+}
+
+TEST(testCommand, symb_exists) {
+    vector<preConnector> testVec = parse("[-e rshell]");
+    HeadConnector* totest = integrate(testVec);
+    EXPECT_EQ(1, totest -> execute() -> getResult());
+
+}
+
+TEST(testCommand, symb_dir) {
+    vector<preConnector> testVec = parse("[-d rshell]");
+    HeadConnector* totest = integrate(testVec);
+    EXPECT_EQ(0, totest -> execute() -> getResult());
+
+}
+
+TEST(testCommand, symb_regular_file) {
+    vector<preConnector> testVec = parse("[-f rshell]");
+    HeadConnector* totest = integrate(testVec);
+    EXPECT_EQ(1, totest -> execute() -> getResult());
+
+}
+
+TEST(testCommand, symb_dir2) {
+    vector<preConnector> testVec = parse("[-d src]");
+    HeadConnector* totest = integrate(testVec);
+    EXPECT_EQ(1, totest -> execute() -> getResult());
+
+}
+
+TEST(testCommand, symb_no_flag) {
+    vector<preConnector> testVec = parse("[src]");
+    HeadConnector* totest = integrate(testVec);
+    EXPECT_EQ(1, totest -> execute() -> getResult());
+
+}
+
+TEST(testCommand, symb_space) {
+    vector<preConnector> testVec = parse("[ src ]");
+    HeadConnector* totest = integrate(testVec);
+    EXPECT_EQ(1, totest -> execute() -> getResult());
+
+}
+
 
 TEST(Replace, Basic) {
-    string given = "yeet the meat";
-    pythonicc_replace(given, "yeet", "eat");
-    EXPECT_EQ(given, "eat the meat");
+    string given = "The red bus";
+    pythonicc_replace(given, "red", "blue");
+    EXPECT_EQ(given, "The blue bus");
 }
 
 TEST(Paren, Basic){
@@ -273,20 +347,6 @@ TEST(Paren, Basic){
     EXPECT_EQ(RIGHTPROBE -> getResult(), -2); 
 }
 
-
-// TEST(SupVec, AtTest){
-//     vector<string> smallVec1 = {"echo","hello","&&"};
-//     vector<string> smallVec2 = {"echo","goodbye",";"};
-//     vector<vector<string> > mainVec = {smallVec1, smallVec2};
-
-//     SupVec testVec = SupVec();
-//     testVec.changeVec(mainVec);
-
-//     EXPECT_EQ(testVec.size(), 6);
-//     EXPECT_EQ(testVec.getOuter_givenInner(4), 1);
-//     EXPECT_EQ(testVec.at(4), "goodbye");
-
-// }
 
 int main(int argc, char **argv){
     ::testing::InitGoogleTest(&argc, argv);
