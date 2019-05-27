@@ -14,10 +14,14 @@ We will be using a linked-list of connectors, of which there are three diffrent 
 
 We will iterate through the connectors and we will pass the result (error or not error) into the execute function of the next connector, based on that input the connector will react. The connector's execute function will then run the execute function of the command, with its args.
 
-In assignment 3, we added the test command to the rshell we have developed as well as its symbolic equivalent [ ]. The square brackets [ ] are actually interpreted as the test command in bash. This command returns 0 (TRUE) if the test succeeds and 1 (FALSE) if the test fails. This command is very useful for writing conditions that can be combined with the && and || connectors to write more complex bash command structures.
+Parentheses will serve as precedence operators that will give certain connectors higher precedence over others. For instance, **(echo A && echo B) || (echo C && echo D)** will output:
+
+    A
+    B
+
 
 # Diagrams
-![UML](images/CS100-Assignment_2-UML.jpg)
+![UML](images/CS100-Assignment_3-UML.jpg)
 # Classes
 
 **Command Classes**:
@@ -27,6 +31,8 @@ The command classes are classes which execute the given user's commands. They wi
 
 * The exit command subclass will terminate the program.
 
+* The test command subclass will check if the given file name exists (-e), is a directory (-d), or if it is a regular file (-f). If no flag is passed in, the -e flag is assumed by default. Additionally, tests commands will have a symbolic equivalent, "[]" that will work in place of the actual command "test". **For example, "[-d directory_1]".**
+
 **Connector Classes**:
 The connector classes will be the classes which determine if the command will actually be ran. The connector also has a pointer to its next connector and will call its execute with the result of its current execution passed in as an argument. 
 
@@ -34,7 +40,7 @@ The connector classes will be the classes which determine if the command will ac
 
 * Pass connector executes its command if it is passed in a true result.
 
-* The any connector will always executs its code.
+* The any connector will always execute its code.
 
 If a connector doesn't execute its command, it will pass in the given result into the next result.
 
@@ -75,15 +81,18 @@ If a connector doesn't execute its command, it will pass in the given result int
 
 # Development and Testing Roadmap
 ## Malhar will be in charge of:
-* [Parser (1)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/1)
-* [Integration of Connector classes (5)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/2)
-* [Integration of Command classes (6)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/3)
-* [Integration tests (7)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/4)
+* [Test Commands(1)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/21)
+* [Unit Tests (2)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/22)
+* [Assisting with integrator/parser changes (3)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/24)
+
 
 ## Arian will be in charge of: 
-* [Result class (1)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/5)
-* [Command classes (2)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/6)
-* [Connector classes (3)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/7)
-* [Unit tests (4)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/8)
+* [Updates to integrator/parser (1)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/24)
+* [Parentheses (2)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/25)
+* [Integration Tests (3)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/26)
+
+## Hussain will be in charge of:
+* [Making changes to README (1)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/23)
+* [Additional Unit Tests (2)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/22)
 
 
