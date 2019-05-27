@@ -81,10 +81,11 @@ def main():
     while len(argv) > 1: # unittest.main() gets mad if you pass in argv, so I pop all them off
         argv.pop()
 
-    NON_COMMENTS = [x for x in INPUTS if "#" not in x] #Comments should not be in a chain of commands, because comments ruin everything
-    COMMENTS = list(set(INPUTS) - set(NON_COMMENTS))
-    COMBINATIONS = getCombinations(NON_COMMENTS)
+    COMMENTS = [x for x in INPUTS if "#"  in x] #Comments should not be in a chain of commands, because comments ruin everything
+    PARENS = [x for x in INPUTS if "(" or ")" in x] #Parens should not be in a chain of commands, because they dont work
+    COMBINATIONS = getCombinations(list(set(INPUTS) - set(COMMENTS) - set(PARENS)))
     [COMBINATIONS.append(tuple([x]),) for x in COMMENTS]
+    [COMBINATIONS.append(tuple([x]),) for x in PARENS]
     
 
     print("\n" + str(len(INPUTS)) + " inputs found")

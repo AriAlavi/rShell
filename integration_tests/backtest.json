@@ -9,7 +9,8 @@
     "echo ping && echo ping #echo ping",
     "echo ping && echo ping #&&echo ping",
     "echo ping && echo ping #||echo ping",
-    "echo ping && echo ping #exit echo ping"
+    "echo ping && echo ping #exit echo ping",
+    "echo ping || echo Gilmour && echo ping"
 
 ]
 

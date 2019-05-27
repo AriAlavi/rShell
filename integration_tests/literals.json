@@ -1,3 +1,7 @@
 [
+    "test testfile.txt && echo ping && echo ping",
+    "test fail.c || echo ping && echo ping",
+    "echo ping || test fail.c && echo ping",
+    "test fail.c || test testfile.txt && echo ping && test testfile.txt && echo ping"
 
 ]
