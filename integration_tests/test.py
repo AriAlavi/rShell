@@ -82,11 +82,12 @@ def main():
         argv.pop()
 
     COMMENTS = [x for x in INPUTS if "#"  in x] #Comments should not be in a chain of commands, because comments ruin everything
-    PARENS = [x for x in INPUTS if "(" or ")" in x] #Parens should not be in a chain of commands, because they dont work
+    PARENS = [x for x in INPUTS if "(" in x] #Parens should not be in a chain of commands, because they dont work
+
     FOR_COMBINATIONS = list(set(INPUTS) - set(COMMENTS) - set(PARENS))
     COMBINATIONS = getCombinations(FOR_COMBINATIONS)
     print(str(len(FOR_COMBINATIONS)) + " of the inputs generated " + str(len(COMBINATIONS)) + " combinations.")
-    
+
     
     [COMBINATIONS.append(tuple([x]),) for x in COMMENTS]
     [COMBINATIONS.append(tuple([x]),) for x in PARENS]
