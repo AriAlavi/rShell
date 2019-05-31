@@ -45,6 +45,39 @@ class TestCommand: public Command{
 
 };
 
+class OutRedir: public Command{
+    private:
+        string file;
+    public:
+        OutRedir(string command, string args, string file) {
+            this -> command = command; 
+            this -> args = args;
+            this -> file = file;
+        }
+        Result* execute();
+};
+
+class DubOutRedir: public Command{
+    private:
+        string file;
+    public:
+        DubOutRedir(string command, string args, string file) {
+            this -> command = command; 
+            this -> args = args;
+            this -> file = file;
+        }
+        Result* execute();
+};
+
+class InRedir: public Command{
+    public:
+        InRedir(string command, string args) {
+            this -> command = command; 
+            this -> args = args;
+        }
+        Result* execute();
+};
+
 
 
 #endif
