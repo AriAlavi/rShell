@@ -78,7 +78,7 @@ Result* OutRedir::execute() {
     int result;
     int stdout = dup(1); // save stdout to revert back later
 
-    fd = open(this -> file.c_str(), O_CREAT | O_TRUNC | O_RDWR); //overwrites file or creates a new one
+    fd = open(this -> file.c_str(), O_RDWR | O_CREAT | O_TRUNC,0666); //overwrites file or creates a new one
 
     if (fd < 0) {
         //something went wrong...
@@ -93,7 +93,7 @@ Result* OutRedir::execute() {
         exit(1);
     }
 
-    char* args[3]; //Thanks for that prototype malhar ;)
+    char* args[3];
     args[0] = (char*)this -> command.c_str();
     args[1] = (char*)this -> args.c_str();
     args[2] = NULL;
@@ -129,7 +129,7 @@ Result* DubOutRedir::execute() {
     int result;
     int stdout = dup(1); // save stdout to revert back later
 
-    fd = open(this -> file.c_str(), O_CREAT | O_APPEND | O_RDWR); //appends to file or creates a new one
+    fd = open(this -> file.c_str(), O_RDWR | O_CREAT | O_APPEND, 0666); //appends to file or creates a new one
 
     if (fd < 0) {
         //something went wrong...

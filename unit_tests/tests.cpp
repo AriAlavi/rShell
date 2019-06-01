@@ -4,7 +4,7 @@
 #include "../src/parser.h"
 #include "../src/integrator.h"
 
-
+#include <fstream>
 #include <string>
 #include <iostream>
 
@@ -345,6 +345,107 @@ TEST(Paren, Basic){
     EXPECT_EQ(ABSOLUTETAIL -> getResult(), 1); 
     EXPECT_EQ(LEFTPROBE -> getResult(), 1); 
     EXPECT_EQ(RIGHTPROBE -> getResult(), -2); 
+}
+
+TEST(redir_out, single_bracket_exists) {
+    OutRedir* test = new OutRedir("echo", "hello", "toTest.txt");
+    test -> execute();
+
+    TestCommand* exists = new TestCommand("test", "-f toTest.txt");
+
+    EXPECT_EQ(1,exists->execute() -> getResult());
+
+}
+
+TEST(redir_out, single_bracket_simple) {
+    OutRedir* test = new OutRedir("echo", "hello", "toTest.txt");
+    test -> execute();
+
+    ifstream myfile;
+    string curr;
+    myfile.open ("toTest.txt");
+
+    myfile >> curr;
+    EXPECT_EQ(curr, "hello");
+    myfile.close();
+
+}
+
+TEST(redir_out, single_bracket_overwrite) {
+    OutRedir* test = new OutRedir("echo", "The Wall is the best PF album", "toTest.txt");
+    test -> execute();
+
+    OutRedir* test2 = new OutRedir("echo", "The Division Bell is the best PF album", "toTest.txt");
+    test2 -> execute();
+
+    ifstream myfile;
+    string curr;
+    myfile.open ("toTest.txt");
+
+    getline(myfile,curr);
+    EXPECT_EQ(curr, "The Division Bell is the best PF album");
+    myfile.close();
+
+}
+
+TEST(redir_out, double_bracket_exists) {
+    DubOutRedir* test = new DubOutRedir("echo", "hello", "toTest2.txt");
+    test -> execute();
+
+    TestCommand* exists = new TestCommand("test", "-f toTest2.txt");
+
+    EXPECT_EQ(1,exists->execute() -> getResult());
+
+}
+
+TEST(redir_out, double_bracket_simple) {
+    DubOutRedir* test = new DubOutRedir("echo", "goodbye", "toTest2.txt");
+    test -> execute();
+
+    ifstream myfile;
+    string curr;
+    myfile.open ("toTest2.txt");
+
+    myfile >> curr;
+    EXPECT_EQ(curr, "hello");
+    myfile >> curr;
+    EXPECT_EQ(curr, "goodbye");
+    myfile.close();
+
+}
+
+TEST(redir_out, append_bracket_append) {
+    OutRedir* test = new OutRedir("echo", "Overhead", "toTest.txt");
+    test -> execute();
+
+    DubOutRedir* test2 = new DubOutRedir("echo", "the albatross", "toTest.txt");
+    test2 -> execute();
+
+    DubOutRedir* test3 = new DubOutRedir("echo", "hangs motionless", "toTest.txt");
+    test3 -> execute();
+
+    DubOutRedir* test4 = new DubOutRedir("echo", "upon the air", "toTest.txt");
+    test4 -> execute();
+
+
+    ifstream myfile;
+    string curr;
+    myfile.open ("toTest.txt");
+
+    getline(myfile,curr);
+    EXPECT_EQ(curr, "Overhead");
+    curr.clear();
+    getline(myfile,curr);
+    EXPECT_EQ(curr, "the albatross");
+    curr.clear();
+    getline(myfile,curr);
+    EXPECT_EQ(curr, "hangs motionless");
+    curr.clear();
+    getline(myfile,curr);
+    EXPECT_EQ(curr, "upon the air");
+
+    myfile.close();
+
 }
 
 
