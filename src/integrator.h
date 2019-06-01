@@ -238,6 +238,19 @@ HeadConnector* integrate(vector <preConnector> bigVec) {
             argument.pop_back();
 
         }
+        else if (argument.find("<") != string::npos) {
+            size_t pos = argument.find("<");
+            inputfile = argument.substr(pos);
+            inputfile.erase(inputfile.begin(), inputfile.begin()+2);
+            argument.replace(pos, argument.size()-1, "");
+            argument.pop_back();
+
+            if (argument != "") {
+                com1 = com1 + argument;
+
+            }            
+
+        }
         
         if (com1 == "exit") {
             current = makeConnector(connector, (new ExitCommand()), next);
@@ -275,6 +288,9 @@ HeadConnector* integrate(vector <preConnector> bigVec) {
             }
             else if (outputfile_app != "") {
                 current = makeConnector(connector, (new DubOutRedir(com1, argument, outputfile_app)), next);
+            }
+            else if (inputfile != "") {
+                current = makeConnector(connector, (new InRedir(com1, inputfile)), next);
             }
             else{
                 current = makeConnector(connector, (new SysCommand(com1, argument)), next); /* conn2 -> next = connector */
