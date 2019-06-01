@@ -229,6 +229,9 @@ HeadConnector* integrate(vector <preConnector> bigVec) {
             outputfile_app.erase(outputfile_app.begin(), outputfile_app.begin()+3);
             argument.replace(pos, argument.size()-1, "");
             argument.pop_back();
+            if (com1 == "ls" && argument == "") {
+                argument = cwd;
+            }
         }
         else if (argument.find(">") != string::npos) {
             size_t pos = argument.find(">");
@@ -236,6 +239,9 @@ HeadConnector* integrate(vector <preConnector> bigVec) {
             outputfile.erase(outputfile.begin(), outputfile.begin()+2);
             argument.replace(pos, argument.size()-1, "");
             argument.pop_back();
+            if (com1 == "ls" && argument == "") {
+                argument = cwd;
+            }
 
         }
         else if (argument.find("<") != string::npos) {
