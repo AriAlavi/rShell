@@ -139,22 +139,43 @@ vector <preConnector> parse(string s) {
             continue;
         }
         if(currentPhrase == "(" or currentPhrase == ")"){ //If you find a paren
-            if(command == ""){ //...and you have not found a command
-                vector<string> thisResult;
-                thisResult.push_back(currentPhrase);
-                thisResult.push_back("");
-                if(connector != ""){
-                    thisResult.push_back(connector);
-                }else{
-                    thisResult.push_back(";");//..make sure the integrator knows you found a paren
+            if(comment == false){// ... and you are not in a comment ...
+                if(command == ""){ //...and you have not found a command
+                    vector<string> thisResult;
+                    thisResult.push_back(currentPhrase);
+                    thisResult.push_back("");
+                    if(connector != ""){
+                        thisResult.push_back(connector);
+                    }else{
+                        thisResult.push_back(";");//..make sure the integrator knows you found a paren
+                    }
+                    
+                    bigVec.push_back(thisResult);
+                    continue;
+                }else{//...otherwise
+                    currentPhrase = ";"; //...back up one and pretend that paran was a semicolon
+                    i--;
                 }
-                
-                bigVec.push_back(thisResult);
-                continue;
-            }else{//...otherwise
-                currentPhrase = ";"; //...back up one and pretend that paran was a semicolon
+            }if(currentPhrase == "("){
+                vector<string> newTemplist;
+                for(int j = 0; j < tempList.size();j++){
+                    if(j == i){
+                        string constructNew = "(" + tempList.at(j+1);
+                        newTemplist.push_back(constructNew);
+                        j++;
+                    }else{
+                        newTemplist.push_back(tempList.at(j));
+                    }
+                }
+                tempList = newTemplist;
                 i--;
+                continue;
+            }else if(currentPhrase == ")"){
+                args.push_back(')');
+                continue;
+                
             }
+
         }
 
         if(currentPhrase.front() == '"'){

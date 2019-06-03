@@ -76,18 +76,24 @@ def main():
 
         print("Found " + str(len(data)) + " inputs.")
 
-
+    print("\n" + str(len(INPUTS)) + " total inputs found")
     
     while len(argv) > 1: # unittest.main() gets mad if you pass in argv, so I pop all them off
         argv.pop()
 
-    NON_COMMENTS = [x for x in INPUTS if "#" not in x] #Comments should not be in a chain of commands, because comments ruin everything
-    COMMENTS = list(set(INPUTS) - set(NON_COMMENTS))
-    COMBINATIONS = getCombinations(NON_COMMENTS)
+    COMMENTS = [x for x in INPUTS if "#"  in x] #Comments should not be in a chain of commands, because comments ruin everything
+    PARENS = [x for x in INPUTS if "(" in x] #Parens should not be in a chain of commands, because they dont work
+
+    FOR_COMBINATIONS = list(set(INPUTS) - set(COMMENTS) - set(PARENS))
+    COMBINATIONS = getCombinations(FOR_COMBINATIONS)
+    print(str(len(FOR_COMBINATIONS)) + " of the inputs generated " + str(len(COMBINATIONS)) + " combinations.")
+
+    
     [COMBINATIONS.append(tuple([x]),) for x in COMMENTS]
+    [COMBINATIONS.append(tuple([x]),) for x in PARENS]
     
 
-    print("\n" + str(len(INPUTS)) + " inputs found")
+    
 
     INPUTS = [] #free some of dat ram
     COMMENTS = []

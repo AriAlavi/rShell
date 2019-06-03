@@ -1,3 +1,7 @@
 [
-    
+    "(echo ping && echo ping) || (echo ping && echo ping)",
+    "echo ping && ( echo bing && (echo bing && echo bing)) && echo ping",
+    "(echo ping) && (echo ping)",
+    "(echo ping && echo ping)",
+    "ech break || echo ping && (echo ping)"
 ]
