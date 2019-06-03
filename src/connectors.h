@@ -50,15 +50,7 @@ class ParenConnector:public Connector{
         Result* execute(Result*);
 };
 
-class ParenCommand:public Command{
-    public:
-        Connector* inside;
-        ParenCommand(){this -> inside = nullptr;}
-        ParenCommand(Connector* inside){this -> inside = inside;}
-        Result* execute(){
-            this -> inside -> execute(new AbsoluteTrue());
-        }
-};
+
 
 class HeadConnector:public Connector{
     private:__RESULTS_H__

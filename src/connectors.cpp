@@ -52,3 +52,7 @@ Result* PassConnector::execute(Result* result){
     }
     
 }
+
+// ParenConnector::ParenConnector(Connector*, Paren*){
+
+// }
