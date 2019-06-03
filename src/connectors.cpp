@@ -1,7 +1,7 @@
 #include "results.h"
 #include "commands.h"
 #include "connectors.h"
-
+#include "parser.h"
 
 
 using namespace std;
@@ -64,6 +64,25 @@ Result* HeadConnector::execute(){
 };
 
 
-// ParenConnector::ParenConnector(Connector*, Paren*){
+ParenConnector::ParenConnector(Connector* next, paren* parentheses, string connector){
+    this -> next = next;
+    this -> parentheses = parentheses;
+    this -> connector = connector;
+}
 
-// }
+Result* ParenConnector::execute(Result* result){
+    if(result -> getResult() == -1){return result;};
+    if(this -> connector == ""){throw __throw_logic_error;};
+    if(this -> parentheses -> parent == nullptr){throw __throw_logic_error;};
+
+    if(this -> connector == ";"){
+        return this -> next -> execute(result);
+    }
+    if(this -> connector == "&&"){
+        switch(result -> getResult()){
+            case 0:
+                return this -> parentheses -> next -> parent -> execute(result);
+                break;
+        }
+    }
+}

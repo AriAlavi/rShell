@@ -14,11 +14,13 @@ using namespace std;
 // || = 2
 // && = 3
 
+class Connector;
 
 class paren{
     public:
         paren* prev = nullptr;
         paren* next = nullptr;
+        Connector* parent = nullptr;
 };
 
 struct parenShading{

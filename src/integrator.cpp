@@ -195,11 +195,12 @@ HeadConnector* integrate(vector <preConnector> bigVec) {
         if (com1 == "ls" && argument == "") {
             argument = cwd;
         }
-        // if(com1 == "("){
-        //     current = new ParenConnector(next, bigVec.at(i).parentheses);
-        // }
+        if(com1 == "(" or com1 == ")"){
+            current = new ParenConnector(next, bigVec.at(i).parentheses, bigVec.at(i).connector);
+            bigVec.at(i).parentheses -> parent = current;
+        }
         // else if(com1 == ")"){
-        //     current = new ParenConnector(next, bigVec.at(i).parentheses);
+        //     current = new ParenConnector(next, bigVec.at(i).parentheses, bigVec.at(i).connector); if uncomment, don't forget to update to look like the version above
         // }
         else if (com1 == "exit") {
             current = makeConnector(connector, (new ExitCommand()), next);

@@ -44,11 +44,13 @@ class AnyConnector:public Connector{
         AnyConnector(Connector* next, Command* command){this -> next = next; this -> command = command;};
         Result* execute(Result*);
 };
-struct Paren;
+struct paren;
 class ParenConnector:public Connector{
     public:
+        paren* parentheses;
         string type = "Paren";
-        ParenConnector(Connector*, Paren*);
+        string connector = "";
+        ParenConnector(Connector*, paren*, string);
         Result* execute(Result*);
 };
 
