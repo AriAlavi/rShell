@@ -312,41 +312,6 @@ TEST(Replace, Basic) {
     EXPECT_EQ(given, "The blue bus");
 }
 
-TEST(Paren, Basic){
-    Command* A = new SysCommand("echo", "A");
-    Command* B = new SysCommand("echo", "B");
-    Command* C = new SysCommand("echo", "C");
-    Command* D = new SysCommand("echo", "D");
-
-    ProbeConnector* LEFTPROBE = new ProbeConnector();
-    ProbeConnector* RIGHTPROBE = new ProbeConnector();
-    ProbeConnector* ABSOLUTETAIL = new ProbeConnector();
-   
-
-    Connector* LeftB = new PassConnector(LEFTPROBE, B);
-    Connector* LeftA= new PassConnector(LeftB, A);
-    Connector* LeftHead = new HeadConnector(LeftA);
-
-    Command* LeftParen = new ParenCommand(LeftHead);
-
-    Connector* RightC = new PassConnector(RIGHTPROBE, C);
-    Connector* RightD = new PassConnector(RIGHTPROBE, D);
-    Connector* RightHead = new HeadConnector(RightC);
-
-    Command* RightParen = new ParenCommand(RightHead);
-    
-    Connector* RightRunner = new FailConnector(ABSOLUTETAIL, RightParen);
-    Connector* LeftRunner = new AnyConnector(RightRunner, LeftParen);
-    Connector* head = new HeadConnector(LeftRunner);
-
-
-    head -> execute(new AbsoluteTrue());
-
-    EXPECT_EQ(ABSOLUTETAIL -> getResult(), 1); 
-    EXPECT_EQ(LEFTPROBE -> getResult(), 1); 
-    EXPECT_EQ(RIGHTPROBE -> getResult(), -2); 
-}
-
 
 int main(int argc, char **argv){
     ::testing::InitGoogleTest(&argc, argv);

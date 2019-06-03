@@ -8,6 +8,8 @@
 using namespace std;
 
 class Command;
+class Result;
+
 
 class Connector{
     
@@ -42,33 +44,27 @@ class AnyConnector:public Connector{
         AnyConnector(Connector* next, Command* command){this -> next = next; this -> command = command;};
         Result* execute(Result*);
 };
-
-class ParenCommand:public Command{
+struct paren;
+class ParenConnector:public Connector{
     public:
-        Connector* inside;
-        ParenCommand(){this -> inside = nullptr;}
-        ParenCommand(Connector* inside){this -> inside = inside;}
-        Result* execute(){
-            this -> inside -> execute(new AbsoluteTrue());
-        }
+        paren* parentheses;
+        string type = "Paren";
+        string connector = "";
+        ParenConnector(Connector*, paren*, string);
+        Result* execute(Result*);
 };
 
+
 class HeadConnector:public Connector{
-    private:__RESULTS_H__
-        bool noExit = true;
+        
     public:
+        bool noExit = true;
         string type = "Head";
         HeadConnector(Connector* next){this -> next = next;};
         HeadConnector(){};
         void setNext(Connector* next){this -> next = next;};
         Result* execute(Result* res);
-        Result* execute(){
-            Result* res =  this -> execute(new AbsoluteTrue());
-            if(res -> getResult() == -1){
-                this -> noExit = false;
-            }
-            return res;
-            };
+        Result* execute();
         bool keepRunning(){
             return this -> noExit;
         }
