@@ -108,16 +108,27 @@ def dynamicTestingGenerator(input): #Where a list of tuples becomes an actual co
         command = x.command
         if not stringInput:
             stringInput += command
-        elif command[-1:] == ";":
-            stringInput += " " + command
         else:
-            stringInput += "; " + command
+            if command[-1:] == " ":
+                self.command = command[:-1]
+            if x.outputType == "Pass":
+                stringInput += " && " + command
+            elif x.outputType == "Fail":
+                stringInput += " || " + command
+            else:
+                stringInput += " ; " + command
+
+
 
     while ";;" in stringInput: #ive been spending too long trying to figure out why ;; is happening. This should fix it.
         stringInput = stringInput.replace(";;", ";")
 
 
-    return do_test_expected
+    return {
+        "test" : do_test_expected,
+        "command" : stringInput
+    }
+
 
 def main():
     jsonInputs = iter(argv)
@@ -138,25 +149,19 @@ def main():
     while len(argv) > 1: # unittest.main() gets mad if you pass in argv, so I pop all them off
         argv.pop()
 
-    # COMMENTS = [x for x in INPUTS if "#"  in x] #Comments should not be in a chain of commands, because comments ruin everything
-    # FOR_COMBINATIONS = list(set(INPUTS) - set(COMMENTS))
-    FOR_COMBINATIONS = INPUTS
-    COMBINATIONS = getCombinations(FOR_COMBINATIONS)
-    print(str(len(FOR_COMBINATIONS)) + " of the inputs generated " + str(len(COMBINATIONS)) + " combinations.")
 
-    
-    # [COMBINATIONS.append(tuple([x]),) for x in COMMENTS]
+    COMBINATIONS = getCombinations(INPUTS)
+    print(str(len(INPUTS)) + " of the inputs generated " + str(len(COMBINATIONS)) + " combinations.")
 
-    
+    INPUTS = [] # free dat ram
 
-    
-
-    INPUTS = [] #free some of dat ram
-    COMMENTS = []
-    
+    i = 0
     for x in COMBINATIONS: #Actually dynamically creates the unit tests
-        test_method = dynamicTestingGenerator(x)
-        test_method.__name__ = "test_expected%d" + str(x) # If you try to change the name from test_expected%d IT BREAKS! MY GOD THIS TOOK ME AN HOUR TO FIGURE OUT
+        i += 1
+        generated = dynamicTestingGenerator(x)
+        test_method = generated['test']
+        command = generated['command']
+        test_method.__name__ = "test_expected%d: " + command # If you try to change the name from test_expected%d IT BREAKS! MY GOD THIS TOOK ME AN HOUR TO FIGURE OUT
         setattr(DynamicTest, test_method.__name__, test_method)
 
 
