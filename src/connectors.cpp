@@ -53,6 +53,15 @@ Result* PassConnector::execute(Result* result){
     
 }
 
+Result* HeadConnector::execute(){
+    Result* res =  this -> execute(new AbsoluteTrue());
+    if(res -> getResult() == -1){
+        this -> noExit = false;
+    }
+    return res;
+};
+
+
 // ParenConnector::ParenConnector(Connector*, Paren*){
 
 // }

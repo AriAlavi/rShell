@@ -51,7 +51,6 @@ class ParenConnector:public Connector{
 };
 
 
-
 class HeadConnector:public Connector{
     private:__RESULTS_H__
         bool noExit = true;
@@ -61,13 +60,7 @@ class HeadConnector:public Connector{
         HeadConnector(){};
         void setNext(Connector* next){this -> next = next;};
         Result* execute(Result* res);
-        Result* execute(){
-            Result* res =  this -> execute(new AbsoluteTrue());
-            if(res -> getResult() == -1){
-                this -> noExit = false;
-            }
-            return res;
-            };
+        Result* execute();
         bool keepRunning(){
             return this -> noExit;
         }

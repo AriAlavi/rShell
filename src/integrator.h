@@ -313,54 +313,7 @@ HeadConnector* superIntegrate(vector <preConnector> bigVec){
     parenBuilder(bigVec, parens);
 
     return integrate(bigVec);
-
-
-
-    // for(int i = 0; i <= maxDepth; i++){//In what order should the different parantheses be executed? 
-    //     for(int j = 0; j < bigVec.size(); j++){
-    //         if(shaders.at(j).priority == i){
-    //             if(not(find(executionOrder.begin(), executionOrder.end(), shaders.at(j).parent) != executionOrder.end())){
-    //                 int value = shaders.at(j).parent;
-    //                 executionOrder.push_back(value); //Create a vector in which the last element is the unique parent value of a group of shaders
-    //             }
-    //         }
-            
-    //     }
-    // }
-    // shaders.clear();// Please no more direct reference shaders after this point, they are now connected to bigVec
-    // while(executionOrder.size() > 0){//Execution order.size should equal the number of paran groups
-
-    //     int cur = executionOrder.back(); //The the deepest, unevualated paran group's unique identifier
-    //     executionOrder.pop_back();
-
-    //     vector<preConnector> toExecute;
-    //     parenLocation locations = findParens(bigVec, cur); //Using the unique identifier, find which range of commands correspond to the current paran group (from the unique identifier) 
-    //     if(locations.first == -1 or locations.last == -1){
-    //         throw __throw_logic_error;//This should be impossible
-    //     }
-    //     for(int i = locations.first; i <= locations.last; i++){ //Given the corresponding range of commands, now fetch them into a single execution vector
-    //         bigVec.at(i).shade.parent = cur;
-    //         toExecute.push_back(bigVec.at(i));
-    //     }
-    //     HeadConnector* headResult = integrate(toExecute); //Feed that integrator in a vector and then...
-    //     ParenCommand* result = new ParenCommand(headResult);//Wrap it in a parancommand parantheses so it can be attached to more connectors further on
-        
-    //     bigVec.erase(bigVec.begin() + locations.first, bigVec.begin() + locations.last+1);//Remove the just integrated command
-    //     preConnector newResult = preConnector();
-    //     newResult.head = result;//and then feed the paran into the head of a new preConnector to be passed into the integrator at a future time
-    //     if(locations.first > 0){//If it was not at the start of the user input...          
-    //         newResult.shade = bigVec.at(locations.first-1).shade;//... then it needs the data from the previous command...
-    //         newResult.connector = bigVec.at(locations.first-1).connector;//... because it needs to know what type of connector it came from for the integrator
-    //         bigVec.insert(bigVec.begin() + locations.first, newResult);//... and add it back tot he list...
-    //     }//... . The point of all this was to replace the following list ["(", "echo A", "echo B", ")"] with ["PARAN_COMMAND"], which then can be passed into the integrator, still holding pointers to echo B and echo A.
-    //     else{//If the paran was the first thing the user inputted...
-    //         newResult.connector = ";";//... then it should always be executed, so it needs a semicolon connector...
-    //         bigVec.insert(bigVec.begin(), newResult);//... and it should be inputted at the start of the list since it was the first input from the user.
-    //     }
-
-    // }
-
-    // return integrate(bigVec);//idk why we need this, but it works 100% of the time because of it. Maybe in the case of "(echo A && echo B) || (echo C && echo D)", since there is no zero depth unique identifier, it needs one more integrate to link them all together. 
+ 
 }
 
 #endif
