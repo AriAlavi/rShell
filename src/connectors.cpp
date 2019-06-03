@@ -78,11 +78,22 @@ Result* ParenConnector::execute(Result* result){
     if(this -> connector == ";"){
         return this -> next -> execute(result);
     }
-    if(this -> connector == "&&"){
+    else if(this -> connector == "&&"){
         switch(result -> getResult()){
             case 0:
                 return this -> parentheses -> next -> parent -> execute(result);
                 break;
+            default:
+                return this -> next -> execute(result);
+        }
+    }
+    else if(this -> connector == "||"){
+        switch(result -> getResult()){
+            case 1:
+                return this -> parentheses -> next -> parent -> execute(result);
+                break;
+            default:
+                return this -> next -> execute(result);
         }
     }
 }

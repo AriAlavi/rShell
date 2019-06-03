@@ -196,7 +196,14 @@ HeadConnector* integrate(vector <preConnector> bigVec) {
             argument = cwd;
         }
         if(com1 == "(" or com1 == ")"){
-            current = new ParenConnector(next, bigVec.at(i).parentheses, bigVec.at(i).connector);
+            if(com1 == ")"){
+                connector = ";";
+            }else if(i == bigVec.size()-1){
+                connector == ";";
+            }else{
+                connector = bigVec.at(i+1).connector;
+            }
+            current = new ParenConnector(next, bigVec.at(i).parentheses, connector);
             bigVec.at(i).parentheses -> parent = current;
         }
         // else if(com1 == ")"){
