@@ -23,6 +23,8 @@ Result* AnyConnector::execute(Result* result){
     
 }
 
+Result* ExitCommand::execute(){return new ExitResult();}
+
 Result* FailConnector::execute(Result* result){
     switch(result -> getResult()){
         case -1:

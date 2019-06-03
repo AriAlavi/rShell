@@ -22,8 +22,7 @@ class Command{
 class ExitCommand: public Command{
     public:
         ExitCommand(){};
-        Result* execute(){return new ExitResult();}
-        
+        Result* execute();
 };
 
 class SysCommand: public Command{

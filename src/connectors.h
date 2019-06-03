@@ -8,6 +8,8 @@
 using namespace std;
 
 class Command;
+class Result;
+
 
 class Connector{
     
@@ -52,9 +54,9 @@ class ParenConnector:public Connector{
 
 
 class HeadConnector:public Connector{
-    private:__RESULTS_H__
-        bool noExit = true;
+        
     public:
+        bool noExit = true;
         string type = "Head";
         HeadConnector(Connector* next){this -> next = next;};
         HeadConnector(){};
