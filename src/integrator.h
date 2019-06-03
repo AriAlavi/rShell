@@ -188,28 +188,7 @@ HeadConnector* integrate(vector <preConnector> bigVec) {
         com1 = bigVec.at(i).command;
         argument = bigVec.at(i).argument;
 
-        if(com1 == ")"){
-            continue;
-        }
-        if(com1 == "("){
-            ParenCommand* parenNext = bigVec.at(i-1).head;
-            if(parenNext != nullptr){
-                Connector* parenConn = makeConnector(bigVec.at(i).connector, parenNext, next);
-                current = parenConn;
-                next = current;
-                continue;
-            }
-            continue;
-        }
-        if(com1 == "" and bigVec.at(i).head != nullptr){
-            Connector* parenPlaceholder = makeConnector(bigVec.at(i).connector, bigVec.at(i).head, next);
-            current = parenPlaceholder;
-            next = current;
-            continue;
-        }
-        else if(com1 == ""){
-            continue;
-        }
+
 
         if(i == bigVec.size()-1){
             connector = ";";
@@ -220,8 +199,13 @@ HeadConnector* integrate(vector <preConnector> bigVec) {
         if (com1 == "ls" && argument == "") {
             argument = cwd;
         }
-        
-        if (com1 == "exit") {
+        // if(com1 == "("){
+        //     current = new ParenConnector(next, bigVec.at(i).parentheses);
+        // }
+        // else if(com1 == ")"){
+        //     current = new ParenConnector(next, bigVec.at(i).parentheses);
+        // }
+        else if (com1 == "exit") {
             current = makeConnector(connector, (new ExitCommand()), next);
         }
         else if (com1 == "test") {
@@ -261,7 +245,32 @@ HeadConnector* integrate(vector <preConnector> bigVec) {
     return head;
 }
 
+void parenBuilder(vector <preConnector> & bigVec, int howManyParens){
+    vector<preConnector> returnVec;
 
+    for(int i = 1; i < howManyParens+1;i++){
+        paren* first = nullptr;
+        bool found = false;
+        for(int j = 0; j < bigVec.size(); j++){
+            if((bigVec.at(j).command == "(" or bigVec.at(j).command == ")") and bigVec.at(j).shade.parent == i){
+                if(first == nullptr){
+                    first = new paren();
+                    bigVec.at(j).parentheses = first;
+                }else{
+                    bigVec.at(j).parentheses = new paren();
+                    bigVec.at(j).parentheses -> prev = first;
+                    first -> next = bigVec.at(j).parentheses;
+                    found = true;
+                }
+            }
+        }
+        // if(! found){
+        //     return returnVec;
+        // }
+        
+    }
+
+}
 
 HeadConnector* superIntegrate(vector <preConnector> bigVec){
     vector<parenShading> shaders;
@@ -301,56 +310,57 @@ HeadConnector* superIntegrate(vector <preConnector> bigVec){
         }
     }
 
-    if(parens == 0){
-        return integrate(bigVec); //If we have no parans, the integrating is done is just one round
-    }
+    parenBuilder(bigVec, parens);
+
+    return integrate(bigVec);
 
 
-    for(int i = 0; i <= maxDepth; i++){//In what order should the different parantheses be executed? 
-        for(int j = 0; j < bigVec.size(); j++){
-            if(shaders.at(j).priority == i){
-                if(not(find(executionOrder.begin(), executionOrder.end(), shaders.at(j).parent) != executionOrder.end())){
-                    int value = shaders.at(j).parent;
-                    executionOrder.push_back(value); //Create a vector in which the last element is the unique parent value of a group of shaders
-                }
-            }
+
+    // for(int i = 0; i <= maxDepth; i++){//In what order should the different parantheses be executed? 
+    //     for(int j = 0; j < bigVec.size(); j++){
+    //         if(shaders.at(j).priority == i){
+    //             if(not(find(executionOrder.begin(), executionOrder.end(), shaders.at(j).parent) != executionOrder.end())){
+    //                 int value = shaders.at(j).parent;
+    //                 executionOrder.push_back(value); //Create a vector in which the last element is the unique parent value of a group of shaders
+    //             }
+    //         }
             
-        }
-    }
-    shaders.clear();// Please no more direct reference shaders after this point, they are now connected to bigVec
-    while(executionOrder.size() > 0){//Execution order.size should equal the number of paran groups
+    //     }
+    // }
+    // shaders.clear();// Please no more direct reference shaders after this point, they are now connected to bigVec
+    // while(executionOrder.size() > 0){//Execution order.size should equal the number of paran groups
 
-        int cur = executionOrder.back(); //The the deepest, unevualated paran group's unique identifier
-        executionOrder.pop_back();
+    //     int cur = executionOrder.back(); //The the deepest, unevualated paran group's unique identifier
+    //     executionOrder.pop_back();
 
-        vector<preConnector> toExecute;
-        parenLocation locations = findParens(bigVec, cur); //Using the unique identifier, find which range of commands correspond to the current paran group (from the unique identifier) 
-        if(locations.first == -1 or locations.last == -1){
-            throw __throw_logic_error;//This should be impossible
-        }
-        for(int i = locations.first; i <= locations.last; i++){ //Given the corresponding range of commands, now fetch them into a single execution vector
-            bigVec.at(i).shade.parent = cur;
-            toExecute.push_back(bigVec.at(i));
-        }
-        HeadConnector* headResult = integrate(toExecute); //Feed that integrator in a vector and then...
-        ParenCommand* result = new ParenCommand(headResult);//Wrap it in a parancommand parantheses so it can be attached to more connectors further on
+    //     vector<preConnector> toExecute;
+    //     parenLocation locations = findParens(bigVec, cur); //Using the unique identifier, find which range of commands correspond to the current paran group (from the unique identifier) 
+    //     if(locations.first == -1 or locations.last == -1){
+    //         throw __throw_logic_error;//This should be impossible
+    //     }
+    //     for(int i = locations.first; i <= locations.last; i++){ //Given the corresponding range of commands, now fetch them into a single execution vector
+    //         bigVec.at(i).shade.parent = cur;
+    //         toExecute.push_back(bigVec.at(i));
+    //     }
+    //     HeadConnector* headResult = integrate(toExecute); //Feed that integrator in a vector and then...
+    //     ParenCommand* result = new ParenCommand(headResult);//Wrap it in a parancommand parantheses so it can be attached to more connectors further on
         
-        bigVec.erase(bigVec.begin() + locations.first, bigVec.begin() + locations.last+1);//Remove the just integrated command
-        preConnector newResult = preConnector();
-        newResult.head = result;//and then feed the paran into the head of a new preConnector to be passed into the integrator at a future time
-        if(locations.first > 0){//If it was not at the start of the user input...          
-            newResult.shade = bigVec.at(locations.first-1).shade;//... then it needs the data from the previous command...
-            newResult.connector = bigVec.at(locations.first-1).connector;//... because it needs to know what type of connector it came from for the integrator
-            bigVec.insert(bigVec.begin() + locations.first, newResult);//... and add it back tot he list...
-        }//... . The point of all this was to replace the following list ["(", "echo A", "echo B", ")"] with ["PARAN_COMMAND"], which then can be passed into the integrator, still holding pointers to echo B and echo A.
-        else{//If the paran was the first thing the user inputted...
-            newResult.connector = ";";//... then it should always be executed, so it needs a semicolon connector...
-            bigVec.insert(bigVec.begin(), newResult);//... and it should be inputted at the start of the list since it was the first input from the user.
-        }
+    //     bigVec.erase(bigVec.begin() + locations.first, bigVec.begin() + locations.last+1);//Remove the just integrated command
+    //     preConnector newResult = preConnector();
+    //     newResult.head = result;//and then feed the paran into the head of a new preConnector to be passed into the integrator at a future time
+    //     if(locations.first > 0){//If it was not at the start of the user input...          
+    //         newResult.shade = bigVec.at(locations.first-1).shade;//... then it needs the data from the previous command...
+    //         newResult.connector = bigVec.at(locations.first-1).connector;//... because it needs to know what type of connector it came from for the integrator
+    //         bigVec.insert(bigVec.begin() + locations.first, newResult);//... and add it back tot he list...
+    //     }//... . The point of all this was to replace the following list ["(", "echo A", "echo B", ")"] with ["PARAN_COMMAND"], which then can be passed into the integrator, still holding pointers to echo B and echo A.
+    //     else{//If the paran was the first thing the user inputted...
+    //         newResult.connector = ";";//... then it should always be executed, so it needs a semicolon connector...
+    //         bigVec.insert(bigVec.begin(), newResult);//... and it should be inputted at the start of the list since it was the first input from the user.
+    //     }
 
-    }
+    // }
 
-    return integrate(bigVec);//idk why we need this, but it works 100% of the time because of it. Maybe in the case of "(echo A && echo B) || (echo C && echo D)", since there is no zero depth unique identifier, it needs one more integrate to link them all together. 
+    // return integrate(bigVec);//idk why we need this, but it works 100% of the time because of it. Maybe in the case of "(echo A && echo B) || (echo C && echo D)", since there is no zero depth unique identifier, it needs one more integrate to link them all together. 
 }
 
 #endif

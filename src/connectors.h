@@ -42,6 +42,13 @@ class AnyConnector:public Connector{
         AnyConnector(Connector* next, Command* command){this -> next = next; this -> command = command;};
         Result* execute(Result*);
 };
+struct Paren;
+class ParenConnector:public Connector{
+    public:
+        string type = "Paren";
+        ParenConnector(Connector*, Paren*);
+        Result* execute(Result*);
+};
 
 class ParenCommand:public Command{
     public:

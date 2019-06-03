@@ -11,6 +11,13 @@ using namespace std;
 // || = 2
 // && = 3
 
+
+class paren{
+    public:
+        paren* prev = nullptr;
+        paren* next = nullptr;
+};
+
 struct parenShading{
     int parent;
     int priority;
@@ -21,7 +28,7 @@ struct preConnector{
     string argument = "";
     string connector = "";
     parenShading shade;
-    ParenCommand* head = nullptr;
+    paren* parentheses = nullptr;
 };
 
 bool isParen(string s){
