@@ -7,6 +7,12 @@
 #include <fstream>
 #include <string>
 #include <iostream>
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 #include "gtest/gtest.h"
 
@@ -414,7 +420,7 @@ TEST(redir_out, double_bracket_simple) {
 
 }
 
-TEST(redir_out, append_bracket_append) {
+TEST(redir_out, double_bracket_append) {
     OutRedir* test = new OutRedir("echo", "Overhead", "toTest.txt");
     test -> execute();
 
@@ -446,6 +452,142 @@ TEST(redir_out, append_bracket_append) {
 
     myfile.close();
 
+}
+
+TEST(redir_in, executes) {
+    OutRedir* helper = new OutRedir("echo", "test", "file1.txt");
+    helper -> execute();
+    InRedir* test = new InRedir("cat", "file1.txt");
+
+    EXPECT_EQ(1, test -> execute() -> getResult());
+
+}
+
+TEST(redir_in, cat) {
+
+    OutRedir* test = new OutRedir("echo", "Hello,", "toTest.txt");
+    test -> execute();
+
+    DubOutRedir* test2 = new DubOutRedir("echo", "this", "toTest.txt");
+    test2 -> execute();
+
+    DubOutRedir* test3 = new DubOutRedir("echo", "is a", "toTest.txt");
+    test3 -> execute();
+
+    DubOutRedir* test4 = new DubOutRedir("echo", "test", "toTest.txt");
+    test4 -> execute();
+
+    int fd = open("cat.txt", O_RDWR | O_CREAT | O_TRUNC,0666);
+    int result;
+    int stdout = dup(1);
+
+    result = dup2(fd,1);
+
+    InRedir* newIn = new InRedir("cat", "toTest.txt");
+    newIn -> execute();
+
+    dup2(stdout, 1);
+    close(stdout);
+    
+    ifstream myfile;
+    string curr;
+    myfile.open ("cat.txt");
+
+    getline(myfile,curr);
+    EXPECT_EQ(curr, "Hello,");
+    curr.clear();
+    getline(myfile,curr);
+    EXPECT_EQ(curr, "this");
+    curr.clear();
+    getline(myfile,curr);
+    EXPECT_EQ(curr, "is a");
+    curr.clear();
+    getline(myfile,curr);
+    EXPECT_EQ(curr, "test");
+
+    myfile.close();
+}
+
+TEST(redir_in, sort) {
+
+    OutRedir* test = new OutRedir("echo", "Zebra", "toTest.txt");
+    test -> execute();
+
+    DubOutRedir* test2 = new DubOutRedir("echo", "Kangaroo", "toTest.txt");
+    test2 -> execute();
+
+    DubOutRedir* test3 = new DubOutRedir("echo", "Tortoise", "toTest.txt");
+    test3 -> execute();
+
+    DubOutRedir* test4 = new DubOutRedir("echo", "Antelope", "toTest.txt");
+    test4 -> execute();
+
+    int fd = open("sorted.txt", O_RDWR | O_CREAT | O_TRUNC,0666);
+    int result;
+    int stdout = dup(1);
+
+    result = dup2(fd,1);
+
+    InRedir* newIn = new InRedir("sort", "toTest.txt");
+    newIn -> execute();
+
+    dup2(stdout, 1);
+    close(stdout);
+    
+    ifstream myfile;
+    string curr;
+    myfile.open ("sorted.txt");
+
+    getline(myfile,curr);
+    EXPECT_EQ(curr, "Antelope");
+    curr.clear();
+    getline(myfile,curr);
+    EXPECT_EQ(curr, "Kangaroo");
+    curr.clear();
+    getline(myfile,curr);
+    EXPECT_EQ(curr, "Tortoise");
+    curr.clear();
+    getline(myfile,curr);
+    EXPECT_EQ(curr, "Zebra");
+
+    myfile.close();
+}
+
+TEST (redir_in, wc_test) {
+    OutRedir* test = new OutRedir("echo", "Zebra", "toTest.txt");
+    test -> execute();
+
+    DubOutRedir* test2 = new DubOutRedir("echo", "Kangaroo", "toTest.txt");
+    test2 -> execute();
+
+    DubOutRedir* test3 = new DubOutRedir("echo", "Tortoise", "toTest.txt");
+    test3 -> execute();
+
+    DubOutRedir* test4 = new DubOutRedir("echo", "Antelope", "toTest.txt");
+    test4 -> execute();
+
+    int fd = open("wordcount.txt", O_RDWR | O_CREAT | O_TRUNC,0666);
+    int result;
+    int stdout = dup(1);
+
+    result = dup2(fd,1);
+
+    InRedir* newIn = new InRedir("wc", "toTest.txt");
+    newIn -> execute();
+
+    dup2(stdout, 1);
+    close(stdout);
+    
+    ifstream myfile;
+    int curr;
+    myfile.open ("wordcount.txt");
+
+    myfile >> curr;
+    myfile >> curr;
+
+    EXPECT_EQ(curr, 4); //wc outputs (# of lines, # of words, # of bytes)
+
+    myfile.close();
 }
 
 
