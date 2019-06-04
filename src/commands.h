@@ -73,8 +73,9 @@ class InRedir: public Command{
     private:
         string file;
     public:
-        InRedir(string command, string file) { //for some reason, it does not work when args are instantiated
+        InRedir(string command,string argument, string file) { //for some reason, it does not work when args are instantiated
             this -> command = command; 
+            this -> args = argument;
             this -> file = file;
         }
         Result* execute();

@@ -129,7 +129,7 @@ Result* InRedir::execute() {
     int result;
     int stdin = dup(0); // save stdin to revert back later
 
-    fd = open(this -> file.c_str(),O_RDONLY); //overwrites file or creates a new one
+    fd = open(this -> file.c_str(),O_RDONLY); //opens input file
 
     if (fd < 0) {
         //something went wrong...
@@ -144,9 +144,15 @@ Result* InRedir::execute() {
         exit(1);
     }
 
-    char* args[2];
+    char* args[3];
     args[0] = (char*)this -> command.c_str();
-    args[1] = NULL;
+    if (this -> args != "") {
+        args[1] = (char*)this -> args.c_str();
+        args[2] = NULL;
+    }
+    else {
+        args[1] = NULL;
+    }
     pid_t pid = fork();
     if(pid == -1){
         throw __throw_runtime_error;
@@ -155,11 +161,11 @@ Result* InRedir::execute() {
         int returnval = 0;
         wait(&returnval);
         if(returnval != 0){
-            dup2(stdin, 0);
+            dup2(stdin, STDIN_FILENO);
             close(stdin);
             return new Result(false);
         }else{
-            dup2(stdin, 0);
+            dup2(stdin, STDIN_FILENO);
             close(stdin);
             return new Result(true);
         }

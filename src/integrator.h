@@ -255,10 +255,10 @@ HeadConnector* integrate(vector <preConnector> bigVec) {
             argument.replace(pos, argument.size()-1, "");
             argument.pop_back();
 
-            if (argument != "") {
-                com1 = com1 + " " + argument;
+            // if (argument != "") {
+            //     com1 = com1 + " " + argument;
 
-            }            
+            // }            
 
         }
 
@@ -303,7 +303,7 @@ HeadConnector* integrate(vector <preConnector> bigVec) {
                 current = makeConnector(connector, (new DubOutRedir(com1, argument, outputfile_app)), next);
             }
             else if (inputfile != "") {
-                current = makeConnector(connector, (new InRedir(com1, inputfile)), next);
+                current = makeConnector(connector, (new InRedir(com1, argument, inputfile)), next);
             }
             else{
                 current = makeConnector(connector, (new SysCommand(com1, argument)), next); /* conn2 -> next = connector */

@@ -457,7 +457,7 @@ TEST(redir_out, double_bracket_append) {
 TEST(redir_in, executes) {
     OutRedir* helper = new OutRedir("echo", "test", "file1.txt");
     helper -> execute();
-    InRedir* test = new InRedir("cat", "file1.txt");
+    InRedir* test = new InRedir("cat", "","file1.txt");
 
     EXPECT_EQ(1, test -> execute() -> getResult());
 
@@ -483,7 +483,7 @@ TEST(redir_in, cat) {
 
     result = dup2(fd,1);
 
-    InRedir* newIn = new InRedir("cat", "toTest.txt");
+    InRedir* newIn = new InRedir("cat", "", "toTest.txt");
     newIn -> execute();
 
     dup2(stdout, 1);
@@ -528,7 +528,7 @@ TEST(redir_in, sort) {
 
     result = dup2(fd,1);
 
-    InRedir* newIn = new InRedir("sort", "toTest.txt");
+    InRedir* newIn = new InRedir("sort", "", "toTest.txt");
     newIn -> execute();
 
     dup2(stdout, 1);
@@ -572,7 +572,7 @@ TEST (redir_in, wc_test) {
 
     result = dup2(fd,1);
 
-    InRedir* newIn = new InRedir("wc", "toTest.txt");
+    InRedir* newIn = new InRedir("wc", "", "toTest.txt");
     newIn -> execute();
 
     dup2(stdout, 1);
