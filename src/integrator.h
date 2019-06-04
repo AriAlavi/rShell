@@ -232,6 +232,11 @@ HeadConnector* integrate(vector <preConnector> bigVec) {
             if (com1 == "ls" && argument == "") {
                 argument = cwd;
             }
+            if (argument.find("<") != string::npos) {
+                argument.replace(argument.find("<"), 2, "");
+                inputfile = argument;
+                
+            }
         }
         else if (argument.find(">") != string::npos) {
             size_t pos = argument.find(">");
@@ -243,8 +248,9 @@ HeadConnector* integrate(vector <preConnector> bigVec) {
                 argument = cwd;
             }
             if (argument.find("<") != string::npos) {
-                argument.erase(argument.begin(), argument.begin() + 2);
+                argument.replace(argument.find("<"), 2, "");
                 inputfile = argument;
+                
             }
 
         }
@@ -254,12 +260,7 @@ HeadConnector* integrate(vector <preConnector> bigVec) {
             inputfile.erase(inputfile.begin(), inputfile.begin()+2);
             argument.replace(pos, argument.size()-1, "");
             argument.pop_back();
-
-            // if (argument != "") {
-            //     com1 = com1 + " " + argument;
-
-            // }            
-
+           
         }
 
         if (com1 == "exit") {
@@ -295,6 +296,9 @@ HeadConnector* integrate(vector <preConnector> bigVec) {
         else{
             if (outputfile != "" && inputfile != "") {
                 current = makeConnector(connector, (new OutRedir(com1, argument, outputfile)), next);
+            }
+            else if (outputfile_app != "" && inputfile != "") {
+                current = makeConnector(connector, (new DubOutRedir(com1, argument, outputfile_app)), next);
             }
             else if (outputfile != "") {
                 current = makeConnector(connector, (new OutRedir(com1, argument, outputfile)), next);
