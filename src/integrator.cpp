@@ -167,6 +167,9 @@ HeadConnector* integrate(vector <preConnector> bigVec) {
 
     TailConnector* tail = new TailConnector();
     string com1, argument;
+    string outputfile = "";
+    string outputfile_app = "";
+    string inputfile = "";
     Command* command;
     char cwd[PATH_MAX];
     getcwd(cwd, sizeof(cwd));
@@ -194,6 +197,45 @@ HeadConnector* integrate(vector <preConnector> bigVec) {
 
         if (com1 == "ls" && argument == "") {
             argument = cwd;
+        }
+        if (argument.find(">>") != string::npos) {
+            size_t pos = argument.find(">>");
+            outputfile_app = argument.substr(pos);
+            outputfile_app.erase(outputfile_app.begin(), outputfile_app.begin()+3);
+            argument.replace(pos, argument.size()-1, "");
+            argument.pop_back();
+            if (com1 == "ls" && argument == "") {
+                argument = cwd;
+            }
+            if (argument.find("<") != string::npos) {
+                argument.replace(argument.find("<"), 2, "");
+                inputfile = argument;
+                
+            }
+        }
+        else if (argument.find(">") != string::npos) {
+            size_t pos = argument.find(">");
+            outputfile = argument.substr(pos);
+            outputfile.erase(outputfile.begin(), outputfile.begin()+2);
+            argument.replace(pos, argument.size()-1, "");
+            argument.pop_back();
+            if (com1 == "ls" && argument == "") {
+                argument = cwd;
+            }
+            if (argument.find("<") != string::npos) {
+                argument.replace(argument.find("<"), 2, "");
+                inputfile = argument;
+                
+            }
+
+        }
+        else if (argument.find("<") != string::npos) {
+            size_t pos = argument.find("<");
+            inputfile = argument.substr(pos);
+            inputfile.erase(inputfile.begin(), inputfile.begin()+2);
+            argument.replace(pos, argument.size()-1, "");
+            argument.pop_back();
+           
         }
         if(com1 == "(" or com1 == ")"){
             if(com1 == ")"){
@@ -236,14 +278,31 @@ HeadConnector* integrate(vector <preConnector> bigVec) {
                 argument.pop_back();
                 current = makeConnector(connector, (new TestCommand(com1, argument)), next);
             }
-
         }
 
-        else{
-            current = makeConnector(connector, (new SysCommand(com1, argument)), next); /* conn2 -> next = connector */
+         else{
+            if (outputfile != "" && inputfile != "") {
+                current = makeConnector(connector, (new OutRedir(com1, argument, outputfile)), next);
+            }
+            else if (outputfile_app != "" && inputfile != "") {
+                current = makeConnector(connector, (new DubOutRedir(com1, argument, outputfile_app)), next);
+            }
+            else if (outputfile != "") {
+                current = makeConnector(connector, (new OutRedir(com1, argument, outputfile)), next);
+            }
+            else if (outputfile_app != "") {
+                current = makeConnector(connector, (new DubOutRedir(com1, argument, outputfile_app)), next);
+            }
+            else if (inputfile != "") {
+                current = makeConnector(connector, (new InRedir(com1, argument, inputfile)), next);
+            }
+            else{
+                current = makeConnector(connector, (new SysCommand(com1, argument)), next); /* conn2 -> next = connector */
+            }
         }
         next = current;
     }
+
 
     HeadConnector* head = new HeadConnector(current);
     return head;
