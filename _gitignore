@@ -5,3 +5,5 @@ Makefile
 a.out
 .vscode/*
 googletest/*
+rshell
+test
