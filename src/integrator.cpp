@@ -177,6 +177,18 @@ vector<int> findString(string base, string find){
     return returnVec;
 }
 
+int findOneString(string base, string find){
+    vector<int> founds = findString(base, find);
+    switch(founds.size()){
+        case 0:
+            return 0;
+        case 1:
+            return founds.at(0);
+        default:
+            throw __throw_logic_error; //How can there be two of the same redirectors in a command?
+    }
+}
+
 queue<int> findStrings(string base, vector<string> finds){
     vector<vector<int> > redirectorLocations;
     vector<int> finalRedirectLocations;
@@ -238,6 +250,33 @@ vector<string> commandParser(string argument){
     return commandParser;
 }
 
+Command* getCommand(string parsed) {
+    int in_index = findOneString(parsed, "<"); 
+    if(in_index > 0){  //cat < input
+        int out_index = findOneString(parsed, ">");
+        
+        string command = parsed.substr(0,in_index-1);
+        command = pythonicc_replace(command, "< ", "");
+        string file = parsed.substr(in_index, parsed.size()-1);
+        file = pythonicc_replace(file, "< ", "");
+
+        if (out_index > 0) { // cat < input > output
+            out_index = findOneString(file, ">");
+            string newInFile = file.substr(0, out_index-1);
+            Command* in = new InRedir(command, newInFile);
+            string newOutFile = file.substr(out_index+2, file.size());
+            return new OutRedir(newOutFile, in);
+        }
+        Command* in = new InRedir(command, file);
+
+        return in;
+    }
+
+
+
+}
+
+
 HeadConnector* integrate(vector <preConnector> bigVec) {
     reverse(bigVec.begin(),bigVec.end());
 
@@ -280,49 +319,17 @@ HeadConnector* integrate(vector <preConnector> bigVec) {
             argument = com1 + " " + argument;
             parsed = commandParser(argument);
 
+
+            for(int i = 0; i < parsed.size(); ++i) {
+
+            }
+
+        }else if(argument.find("<") != string::npos ){
+            argument = com1 + " " + argument;
+            Command* com = getCommand(argument);
+            current = makeConnector(connector, com, next);
         }
-        cout << "end";
-        // if (argument.find(">>") != string::npos) {
-        //     size_t pos = argument.find(">>");
-        //     outputfile_app = argument.substr(pos);
-        //     outputfile_app.erase(outputfile_app.begin(), outputfile_app.begin()+3);
-        //     argument.replace(pos, argument.size()-1, "");
-        //     argument.pop_back();
-        //     if (com1 == "ls" && argument == "") {
-        //         argument = cwd;
-        //     }
-        //     if (argument.find("<") != string::npos) {
-        //         argument.replace(argument.find("<"), 2, "");
-        //         inputfile = argument;
-                
-        //     }
-        // }
-        // else if (argument.find(">") != string::npos) {
-        //     size_t pos = argument.find(">");
-        //     outputfile = argument.substr(pos);
-        //     outputfile.erase(outputfile.begin(), outputfile.begin()+2);
-        //     argument.replace(pos, argument.size()-1, "");
-        //     argument.pop_back();
-        //     if (com1 == "ls" && argument == "") {
-        //         argument = cwd;
-        //     }
-        //     if (argument.find("<") != string::npos) {
-        //         argument.replace(argument.find("<"), 2, "");
-        //         inputfile = argument;
-                
-        //     }
-
-        // }
-        // else if (argument.find("<") != string::npos) {
-        //     size_t pos = argument.find("<");
-        //     inputfile = argument.substr(pos);
-        //     inputfile.erase(inputfile.begin(), inputfile.begin()+2);
-        //     argument.replace(pos, argument.size()-1, "");
-        //     argument.pop_back();
-           
-        // }
-
-        if(com1 == "(" or com1 == ")"){
+        else if(com1 == "(" or com1 == ")"){
             if(com1 == ")"){
                 connector = ";";
             }else if(i == bigVec.size()-1){
@@ -364,27 +371,9 @@ HeadConnector* integrate(vector <preConnector> bigVec) {
                 current = makeConnector(connector, (new TestCommand(com1, argument)), next);
             }
         }
-        // new pipe(command, args, Command*)
-        //  else{
-        //     if (outputfile != "" && inputfile != "") {
-        //         current = makeConnector(connector, (new InRedir(com1, argument, inputfile, outputfile)), next);
-        //     }
-        //     else if (outputfile_app != "" && inputfile != "") {
-        //         current = makeConnector(connector, (new DubOutRedir(com1, argument, outputfile_app)), next);
-        //     }
-        //     else if (outputfile != "") {
-        //         current = makeConnector(connector, (new OutRedir(com1, argument, outputfile)), next);
-        //     }
-        //     else if (outputfile_app != "") {
-        //         current = makeConnector(connector, (new DubOutRedir(com1, argument, outputfile_app)), next);
-        //     }
-        //     else if (inputfile != "") {
-        //         Command* got = new InRedir(com1, argument, inputfile);
-        //         current = makeConnector(connector, got, next);
-        //     }
-        //     else{
-        //         current = makeConnector(connector, (new SysCommand(com1, argument)), next); /* conn2 -> next = connector */
-        //     }
+            else{
+                current = makeConnector(connector, (new SysCommand(com1, argument)), next); /* conn2 -> next = connector */
+            }
         // }
         next = current;
     }

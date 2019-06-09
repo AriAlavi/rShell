@@ -7,7 +7,7 @@ import unittest
 from secrets import token_hex
 
 COMPILED_CPLUS = "../rshell"
-REDIRECTION_TYPES = ("<", "<<", ">", ">>")
+REDIRECTION_TYPES = ("<", "<<", ">", ">>", " | ")
 
 
 def runCommand(command): #takes in an a command and runs it in the base compiled c++ code as an argv

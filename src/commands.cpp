@@ -97,6 +97,15 @@ Result* OutRedir::execute() {
     args[0] = (char*)this -> command.c_str();
     args[1] = (char*)this -> args.c_str();
     args[2] = NULL;
+
+    if (this -> prev != NULL) {
+        Result* res = this -> prev -> execute();
+        dup2(stdout, 1);
+        close(stdout);
+        
+        return res;
+
+    }
     pid_t pid = fork();
     if(pid == -1){
         throw __throw_runtime_error;
@@ -140,11 +149,7 @@ Result* InRedir::execute() {
         exit(1);
     }
 
-    if (file2 != "")
-        fd2 = open(this -> file2.c_str(), O_RDWR | O_CREAT | O_TRUNC,0666); // open output file
-
     result = dup2(fd, STDIN_FILENO); // replace stdin w/ file
-    result2 = dup2(fd2, STDOUT_FILENO);
     if(result < 0) {
         perror("Error");
         exit(1);
@@ -152,13 +157,13 @@ Result* InRedir::execute() {
 
     char* args[3];
     args[0] = (char*)this -> command.c_str();
-    if (this -> args != "") {
-        args[1] = (char*)this -> args.c_str();
-        args[2] = NULL;
-    }
-    else {
+    // if (this -> args != "") {
+    //     args[1] = (char*)this -> args.c_str();
+    //     args[2] = NULL;
+    // }
+    // else {
         args[1] = NULL;
-    }
+    // }
     pid_t pid = fork();
     if(pid == -1){
         throw __throw_runtime_error;
@@ -169,11 +174,10 @@ Result* InRedir::execute() {
         if(returnval != 0){
             dup2(stdin, STDIN_FILENO);
             close(stdin);
-            dup2(stdout, STDOUT_FILENO);
+    
             return new Result(false);
         }else{
             dup2(stdin, STDIN_FILENO);
-            dup2(stdout, STDOUT_FILENO);
             close(stdin);
             return new Result(true);
         }
@@ -185,7 +189,6 @@ Result* InRedir::execute() {
             exit(-1);
         }        
     }
-
 }
 
 Result* DubOutRedir::execute() {
