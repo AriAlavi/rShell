@@ -185,7 +185,7 @@ int findOneString(string base, string find){
         case 1:
             return founds.at(0);
         default:
-            throw __throw_logic_error; //How can there be two of the same redirectors in a command?
+            return founds.at(0); //How can there be two of the same redirectors in a command?
     }
 }
 
@@ -252,24 +252,58 @@ vector<string> commandParser(string argument){
 
 Command* getCommand(string parsed) {
     int in_index = findOneString(parsed, "<"); 
+    int out_index = findOneString(parsed, ">");
+    int dub_out_index = findOneString(parsed, ">>");
     if(in_index > 0){  //cat < input
-        int out_index = findOneString(parsed, ">");
-        
+    
         string command = parsed.substr(0,in_index-1);
         command = pythonicc_replace(command, "< ", "");
         string file = parsed.substr(in_index, parsed.size()-1);
         file = pythonicc_replace(file, "< ", "");
 
-        if (out_index > 0) { // cat < input > output
+        if(dub_out_index > 0){
+            dub_out_index = findOneString(file, ">>");
+            string newInFile = file.substr(0, dub_out_index-1);
+            Command* in = new InRedir(command, newInFile);
+            string newOutFile = file.substr(dub_out_index+3, file.size());
+            return new DubOutRedir(newOutFile, in);
+        } 
+        else if (out_index > 0) { // cat < input > output
             out_index = findOneString(file, ">");
             string newInFile = file.substr(0, out_index-1);
             Command* in = new InRedir(command, newInFile);
             string newOutFile = file.substr(out_index+2, file.size());
             return new OutRedir(newOutFile, in);
-        }
+        }  
         Command* in = new InRedir(command, file);
 
         return in;
+    }
+    else if(dub_out_index > 0){
+        string command = parsed.substr(0,out_index-1);
+        string whole = pythonicc_replace(command, ">> ", "");
+        int commandSplit = findOneString(whole, " ");
+        command = whole.substr(0, commandSplit);
+        string args = whole.substr(commandSplit+1, whole.size());
+
+        string file = parsed.substr(out_index, parsed.size()-1);
+        file = pythonicc_replace(file, ">> ", "");
+
+        Command* com1 = new SysCommand(command, args);
+        return new DubOutRedir(file, com1);       
+    }
+    else if (out_index > 0){
+        string command = parsed.substr(0,out_index-1);
+        string whole = pythonicc_replace(command, "> ", "");
+        int commandSplit = findOneString(whole, " ");
+        command = whole.substr(0, commandSplit);
+        string args = whole.substr(commandSplit+1, whole.size());
+
+        string file = parsed.substr(out_index, parsed.size()-1);
+        file = pythonicc_replace(file, "> ", "");
+
+        Command* com1 = new SysCommand(command, args);
+        return new OutRedir(file, com1);
     }
 
 
@@ -324,7 +358,7 @@ HeadConnector* integrate(vector <preConnector> bigVec) {
 
             }
 
-        }else if(argument.find("<") != string::npos ){
+        }else if(argument.find("<") != string::npos or argument.find(">") != string::npos or argument.find(">>") != string::npos){
             argument = com1 + " " + argument;
             Command* com = getCommand(argument);
             current = makeConnector(connector, com, next);
