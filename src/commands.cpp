@@ -5,10 +5,13 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <iostream>
+#include <sstream>
+#include <string>
 
 #include "results.h"
 #include "commands.h"
 #include "connectors.h"
+
 
 using namespace std;
 
@@ -195,10 +198,22 @@ Result* DubOutRedir::execute() {
 Result* PipeCommand::execute(){
     int fds[2];
     int fds2[2];
-    char* arg[4];
-    arg[0] = (char*)command.c_str();
-    arg[1] = (char*)args.c_str();
-    arg[2] = NULL;
+
+    istringstream ss(this -> command);
+    vector<string> ssss;
+
+    while(ss) {
+        string temp;
+        ss >> temp;
+        ssss.push_back(temp);
+    }
+
+    char* arg[ssss.size()];
+    for(int i = 0; i < ssss.size(); i++){
+        arg[i] = (char*)ssss.at(i).c_str();
+    }
+    arg[ssss.size()-1] = NULL;
+
     // string command = "tr";
     // string argging1 = "a-z";
     // string argging2 = "A-Z";

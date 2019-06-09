@@ -13,11 +13,6 @@
 
 
 int main(int argv, char** argc){
-    Command* base = new SysCommand("echo", "ping");
-    PipeCommand* bob = new PipeCommand("tr", "a-z A-Z", base);
-    cout << bob -> execute() -> getResult();
-    sleep(50000);
-    throw __throw_logic_error;
 
 
     string input;

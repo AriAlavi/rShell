@@ -315,6 +315,26 @@ Command* getCommand(string parsed) {
         Command* com1 = new SysCommand(command, args);
         return new OutRedir(file, com1);
     }
+    else {
+        char cwd[PATH_MAX];
+        getcwd(cwd, sizeof(cwd));
+        string command, temp, args="";
+        istringstream ss(parsed);
+        ss >> command;
+        parsed.erase(parsed.begin(), parsed.begin() + command.length());
+        ss >> args;
+        while(ss) {
+            ss >> temp;
+            args = args + " " + temp;
+        }
+        if (command == "ls" && args == "") {
+            args = cwd;
+        }
+        if (args.at(args.length()-1) == ' ')    
+            args.pop_back();
+        
+        return new SysCommand(command, args);
+    }
 
 }
 
@@ -360,9 +380,22 @@ HeadConnector* integrate(vector <preConnector> bigVec) {
             parsed = commandParser(argument);
 
 
-            for(int i = 0; i < parsed.size(); ++i) {
+            Command* base = getCommand(parsed.at(0));
+            Command* currentCommand = base;
+            for(int i = 1; i < parsed.size(); ++i) {
+                if(i == parsed.size()-1 and (argument.find(">") != string::npos or argument.find(">>") != string::npos)){
+                    
+                    //todo
+
+                    
+
+                }else{
+                    Command* pipeEdition = new PipeCommand(parsed.at(i), currentCommand);
+                    currentCommand = pipeEdition;
+                }
 
             }
+            current = makeConnector(connector, currentCommand, next);
 
         }else if(argument.find("<") != string::npos or argument.find(">") != string::npos or argument.find(">>") != string::npos){
             argument = com1 + " " + argument;

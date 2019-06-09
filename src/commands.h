@@ -84,9 +84,8 @@ class PipeCommand: public Command{
     private:
         Command* prev = nullptr;
     public:
-        PipeCommand(string command, string args, Command* prev){
+        PipeCommand(string command, Command* prev){
             this -> command = command;
-            this -> args = args;
             this -> prev = prev;
         }
 

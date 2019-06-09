@@ -565,11 +565,26 @@ TEST(Replace, Basic) {
 //     EXPECT_EQ(found[2], 28);
 // }
 
-TEST(Pipe, plswork) {
+TEST(PipeTest, OnePipe) {
     Command* base = new SysCommand("ls", "-a");
     PipeCommand* bob = new PipeCommand("grep", "^p", base);
 
     EXPECT_EQ(1, bob -> execute() -> getResult());
+}
+
+TEST(PipeTest, PipePipe) {
+    Command* base = new SysCommand("ls", "-a");
+    PipeCommand* bob = new PipeCommand("grep", "^", base);
+    PipeCommand* biggerBob = new PipeCommand("grep", "^p", bob);
+    EXPECT_EQ(1, biggerBob -> execute() -> getResult());
+}
+
+
+TEST(PipeTest, FailPipePipe) {
+    Command* base = new SysCommand("ls", "-a");
+    PipeCommand* bob = new PipeCommand("grep", "^", base);
+    PipeCommand* biggerBob = new PipeCommand("moreee", "", bob);
+    EXPECT_EQ(0, biggerBob -> execute() -> getResult());
 }
 
 
