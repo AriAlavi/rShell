@@ -128,13 +128,13 @@ Result* InRedir::execute() {
 
     char* args[3];
     args[0] = (char*)this -> command.c_str();
-    // if (this -> args != "") {
-    //     args[1] = (char*)this -> args.c_str();
-    //     args[2] = NULL;
-    // }
-    // else {
+    if (this -> flag != "") {
+        args[1] = (char*)this -> flag.c_str();
+        args[2] = NULL;
+    }
+    else {
         args[1] = NULL;
-    // }
+    }
     pid_t pid = fork();
     if(pid == -1){
         throw __throw_runtime_error;

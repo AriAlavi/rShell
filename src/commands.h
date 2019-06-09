@@ -70,11 +70,12 @@ class DubOutRedir: public Command{
 class InRedir: public Command{
     private:
         string file;
+        string flag;
     public:
-        InRedir(string command, string file) { 
+        InRedir(string command, string file, string flag) { 
             this -> command = command; 
             this -> file = file;
-    
+            this -> flag = flag;
         }
         Result* execute();
 };

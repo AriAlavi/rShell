@@ -254,6 +254,8 @@ Command* getCommand(string parsed) {
     int in_index = findOneString(parsed, "<"); 
     int out_index = findOneString(parsed, ">");
     int dub_out_index = findOneString(parsed, ">>");
+    int flag_index = findOneString(parsed, " -");
+
     if(in_index > 0){  //cat < input
     
         string command = parsed.substr(0,in_index-1);
@@ -261,21 +263,29 @@ Command* getCommand(string parsed) {
         string file = parsed.substr(in_index, parsed.size()-1);
         file = pythonicc_replace(file, "< ", "");
 
+        string flag = "";
+        if(flag_index > 0){
+            flag_index = findOneString(command, " -");
+            flag = command.substr(flag_index, 3);
+            flag = pythonicc_replace(flag, " ", "");
+            command.erase(command.begin() + flag_index, command.begin() + flag_index + 3);
+        }
+
         if(dub_out_index > 0){
             dub_out_index = findOneString(file, ">>");
             string newInFile = file.substr(0, dub_out_index-1);
-            Command* in = new InRedir(command, newInFile);
+            Command* in = new InRedir(command, newInFile, flag);
             string newOutFile = file.substr(dub_out_index+3, file.size());
             return new DubOutRedir(newOutFile, in);
         } 
         else if (out_index > 0) { // cat < input > output
             out_index = findOneString(file, ">");
             string newInFile = file.substr(0, out_index-1);
-            Command* in = new InRedir(command, newInFile);
+            Command* in = new InRedir(command, newInFile, flag);
             string newOutFile = file.substr(out_index+2, file.size());
             return new OutRedir(newOutFile, in);
         }  
-        Command* in = new InRedir(command, file);
+        Command* in = new InRedir(command, file, flag);
 
         return in;
     }
