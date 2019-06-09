@@ -556,6 +556,15 @@ TEST (redir_in, wc_test) {
     myfile.close();
 }
 
+TEST(Integrator, findString){
+    string base = "just another include in the in the codebase";
+    string sub = "in";
+    vector<int> found = findStrings(base, sub);
+    EXPECT_EQ(found[0], 13);
+    EXPECT_EQ(found[1], 21);
+    EXPECT_EQ(found[2], 28);
+}
+
 
 int main(int argc, char **argv){
     ::testing::InitGoogleTest(&argc, argv);

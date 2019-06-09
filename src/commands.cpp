@@ -127,7 +127,10 @@ Result* OutRedir::execute() {
 Result* InRedir::execute() {
     int fd; // 0 = stdin, 1 = stdout, 2 = stderr
     int result;
+    int result2;
+    int fd2;
     int stdin = dup(0); // save stdin to revert back later
+    int stdout = dup(1);
 
     fd = open(this -> file.c_str(),O_RDONLY); //opens input file
 
@@ -137,8 +140,11 @@ Result* InRedir::execute() {
         exit(1);
     }
 
-    result = dup2(fd, STDIN_FILENO); // replace stdin w/ file
+    if (file2 != "")
+        fd2 = open(this -> file2.c_str(), O_RDWR | O_CREAT | O_TRUNC,0666); // open output file
 
+    result = dup2(fd, STDIN_FILENO); // replace stdin w/ file
+    result2 = dup2(fd2, STDOUT_FILENO);
     if(result < 0) {
         perror("Error");
         exit(1);
@@ -163,9 +169,11 @@ Result* InRedir::execute() {
         if(returnval != 0){
             dup2(stdin, STDIN_FILENO);
             close(stdin);
+            dup2(stdout, STDOUT_FILENO);
             return new Result(false);
         }else{
             dup2(stdin, STDIN_FILENO);
+            dup2(stdout, STDOUT_FILENO);
             close(stdin);
             return new Result(true);
         }
@@ -229,4 +237,9 @@ Result* DubOutRedir::execute() {
         }        
     }
 
+}
+
+Result* PipeCommand::execute(){
+    cout << "PIPE" << endl;
+    return new Result(true);
 }

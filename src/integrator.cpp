@@ -1,10 +1,12 @@
 #include <string>
 #include <vector>
 #include <stack>
+#include <queue>
 #include <iostream>
 #include <stdio.h>
 #include <limits.h>
 #include <unistd.h>
+#include <sstream>
 
 #include "connectors.h"
 #include "commands.h"
@@ -15,6 +17,8 @@
 
 
 using namespace std;
+
+vector<string> REDIRECTIONS = {"|"};
 
 
 parenLocation findParens(vector <preConnector> given, int parenNumber){
@@ -162,6 +166,78 @@ vector<parenShading> constructShading(vector<preConnector> preConnectors){
     return returnShading;
 }
 
+vector<int> findString(string base, string find){
+    vector<int> returnVec;
+    int foundPosition = base.find(find);
+    while(foundPosition != string::npos)
+    {
+        returnVec.push_back(foundPosition);
+        foundPosition = base.find(find,foundPosition+1);
+    }
+    return returnVec;
+}
+
+queue<int> findStrings(string base, vector<string> finds){
+    vector<vector<int> > redirectorLocations;
+    vector<int> finalRedirectLocations;
+    vector<int> setRedirectLocations;
+
+    for(int i = 0; i < finds.size(); i++){
+        redirectorLocations.push_back(findString(base, finds.at(i)));
+    }
+    for(int i = 0; i < redirectorLocations.size(); i++){
+        for(int j = 0; j < redirectorLocations.at(i).size(); j++){
+            int found = redirectorLocations.at(i).at(j);
+            finalRedirectLocations.push_back(found);
+        }
+    }
+
+    for(int i = 0; i < finalRedirectLocations.size(); i++){
+        bool unique = true;
+        for(int j = 0; j < setRedirectLocations.size(); j++){
+            if(finalRedirectLocations.at(i) == finalRedirectLocations.at(j)){
+                unique = false;
+            }
+
+        }
+        if(unique){setRedirectLocations.push_back(finalRedirectLocations.at(i));};
+    }
+    sort(setRedirectLocations.begin(), setRedirectLocations.end());
+
+    queue<int> returnQ;
+    for(auto it : setRedirectLocations){
+        returnQ.push(it);
+    }
+    return returnQ;
+}
+
+vector<string> commandParser(string argument){
+    vector<string> commandParser;
+    queue<int> tokenLocations = findStrings(argument, REDIRECTIONS);
+    int nextToken = tokenLocations.front();
+    tokenLocations.pop();
+    int start = 0;
+    for(int i = 0; i < argument.size(); i++){
+        if(i == nextToken){
+            string got = argument.substr(start, nextToken-start-1);
+            commandParser.push_back(got);
+            i += 2;
+            if(tokenLocations.empty()){
+                break;
+            }
+            nextToken = tokenLocations.front();
+            tokenLocations.pop();
+            start = i;
+
+        }
+    }
+    if(nextToken+2 < argument.size()){
+        string got = argument.substr(nextToken+2, argument.size());
+        commandParser.push_back(got);
+    }
+    return commandParser;
+}
+
 HeadConnector* integrate(vector <preConnector> bigVec) {
     reverse(bigVec.begin(),bigVec.end());
 
@@ -198,45 +274,54 @@ HeadConnector* integrate(vector <preConnector> bigVec) {
         if (com1 == "ls" && argument == "") {
             argument = cwd;
         }
-        if (argument.find(">>") != string::npos) {
-            size_t pos = argument.find(">>");
-            outputfile_app = argument.substr(pos);
-            outputfile_app.erase(outputfile_app.begin(), outputfile_app.begin()+3);
-            argument.replace(pos, argument.size()-1, "");
-            argument.pop_back();
-            if (com1 == "ls" && argument == "") {
-                argument = cwd;
-            }
-            if (argument.find("<") != string::npos) {
-                argument.replace(argument.find("<"), 2, "");
-                inputfile = argument;
-                
-            }
-        }
-        else if (argument.find(">") != string::npos) {
-            size_t pos = argument.find(">");
-            outputfile = argument.substr(pos);
-            outputfile.erase(outputfile.begin(), outputfile.begin()+2);
-            argument.replace(pos, argument.size()-1, "");
-            argument.pop_back();
-            if (com1 == "ls" && argument == "") {
-                argument = cwd;
-            }
-            if (argument.find("<") != string::npos) {
-                argument.replace(argument.find("<"), 2, "");
-                inputfile = argument;
-                
-            }
+
+        vector<string> parsed;
+        if(argument.find("|") != string::npos ){
+            argument = com1 + " " + argument;
+            parsed = commandParser(argument);
 
         }
-        else if (argument.find("<") != string::npos) {
-            size_t pos = argument.find("<");
-            inputfile = argument.substr(pos);
-            inputfile.erase(inputfile.begin(), inputfile.begin()+2);
-            argument.replace(pos, argument.size()-1, "");
-            argument.pop_back();
+        cout << "end";
+        // if (argument.find(">>") != string::npos) {
+        //     size_t pos = argument.find(">>");
+        //     outputfile_app = argument.substr(pos);
+        //     outputfile_app.erase(outputfile_app.begin(), outputfile_app.begin()+3);
+        //     argument.replace(pos, argument.size()-1, "");
+        //     argument.pop_back();
+        //     if (com1 == "ls" && argument == "") {
+        //         argument = cwd;
+        //     }
+        //     if (argument.find("<") != string::npos) {
+        //         argument.replace(argument.find("<"), 2, "");
+        //         inputfile = argument;
+                
+        //     }
+        // }
+        // else if (argument.find(">") != string::npos) {
+        //     size_t pos = argument.find(">");
+        //     outputfile = argument.substr(pos);
+        //     outputfile.erase(outputfile.begin(), outputfile.begin()+2);
+        //     argument.replace(pos, argument.size()-1, "");
+        //     argument.pop_back();
+        //     if (com1 == "ls" && argument == "") {
+        //         argument = cwd;
+        //     }
+        //     if (argument.find("<") != string::npos) {
+        //         argument.replace(argument.find("<"), 2, "");
+        //         inputfile = argument;
+                
+        //     }
+
+        // }
+        // else if (argument.find("<") != string::npos) {
+        //     size_t pos = argument.find("<");
+        //     inputfile = argument.substr(pos);
+        //     inputfile.erase(inputfile.begin(), inputfile.begin()+2);
+        //     argument.replace(pos, argument.size()-1, "");
+        //     argument.pop_back();
            
-        }
+        // }
+
         if(com1 == "(" or com1 == ")"){
             if(com1 == ")"){
                 connector = ";";
@@ -279,27 +364,28 @@ HeadConnector* integrate(vector <preConnector> bigVec) {
                 current = makeConnector(connector, (new TestCommand(com1, argument)), next);
             }
         }
-
-         else{
-            if (outputfile != "" && inputfile != "") {
-                current = makeConnector(connector, (new OutRedir(com1, argument, outputfile)), next);
-            }
-            else if (outputfile_app != "" && inputfile != "") {
-                current = makeConnector(connector, (new DubOutRedir(com1, argument, outputfile_app)), next);
-            }
-            else if (outputfile != "") {
-                current = makeConnector(connector, (new OutRedir(com1, argument, outputfile)), next);
-            }
-            else if (outputfile_app != "") {
-                current = makeConnector(connector, (new DubOutRedir(com1, argument, outputfile_app)), next);
-            }
-            else if (inputfile != "") {
-                current = makeConnector(connector, (new InRedir(com1, argument, inputfile)), next);
-            }
-            else{
-                current = makeConnector(connector, (new SysCommand(com1, argument)), next); /* conn2 -> next = connector */
-            }
-        }
+        // new pipe(command, args, Command*)
+        //  else{
+        //     if (outputfile != "" && inputfile != "") {
+        //         current = makeConnector(connector, (new InRedir(com1, argument, inputfile, outputfile)), next);
+        //     }
+        //     else if (outputfile_app != "" && inputfile != "") {
+        //         current = makeConnector(connector, (new DubOutRedir(com1, argument, outputfile_app)), next);
+        //     }
+        //     else if (outputfile != "") {
+        //         current = makeConnector(connector, (new OutRedir(com1, argument, outputfile)), next);
+        //     }
+        //     else if (outputfile_app != "") {
+        //         current = makeConnector(connector, (new DubOutRedir(com1, argument, outputfile_app)), next);
+        //     }
+        //     else if (inputfile != "") {
+        //         Command* got = new InRedir(com1, argument, inputfile);
+        //         current = makeConnector(connector, got, next);
+        //     }
+        //     else{
+        //         current = makeConnector(connector, (new SysCommand(com1, argument)), next); /* conn2 -> next = connector */
+        //     }
+        // }
         next = current;
     }
 
