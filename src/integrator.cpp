@@ -284,7 +284,7 @@ Command* getCommand(string parsed) {
             Command* in = new InRedir(command, newInFile, flag);
             string newOutFile = file.substr(out_index+2, file.size());
             return new OutRedir(newOutFile, in);
-        }  
+        } 
         Command* in = new InRedir(command, file, flag);
 
         return in;
@@ -383,13 +383,26 @@ HeadConnector* integrate(vector <preConnector> bigVec) {
             Command* base = getCommand(parsed.at(0));
             Command* currentCommand = base;
             for(int i = 1; i < parsed.size(); ++i) {
-                if(i == parsed.size()-1 and (argument.find(">") != string::npos or argument.find(">>") != string::npos)){
-                    
-                    //todo
+                string end = parsed.at(parsed.size()-1);
+                if(end.find('>') && (end.find(">>") == string::npos)){
+                    string ofile = end;
+                    ofile.erase(ofile.begin(), ofile.begin()+2);
+                    Command* endout = new OutRedir(ofile, currentCommand);
+                    currentCommand = endout;
+                }
+                else if(end.find(">>")) {
+                    string dubofile = end;
+                    int index = findOneString(end,">>");
+                    end.erase(end.begin(), end.begin()+index+3);
+                    dubofile.erase(dubofile.begin()+index-1, dubofile.end());
 
+                    Command* pipeEdition = new PipeCommand(dubofile, currentCommand);
+                    currentCommand = pipeEdition;
+                    Command* endout = new DubOutRedir(end, currentCommand);
+                    currentCommand = endout;
+                }
                     
-
-                }else{
+                else{
                     Command* pipeEdition = new PipeCommand(parsed.at(i), currentCommand);
                     currentCommand = pipeEdition;
                 }

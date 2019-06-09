@@ -129,15 +129,30 @@ Result* InRedir::execute() {
         exit(1);
     }
 
-    char* args[3];
-    args[0] = (char*)this -> command.c_str();
-    if (this -> flag != "") {
-        args[1] = (char*)this -> flag.c_str();
-        args[2] = NULL;
+    this -> command = command + " " + this -> flag + " " + this -> file;
+    istringstream ss(this -> command);
+    vector<string> ssss;
+
+    while(ss) {
+        string temp;
+        ss >> temp;
+        ssss.push_back(temp);
     }
-    else {
-        args[1] = NULL;
+
+    char* arg[ssss.size()];
+    for(int i = 0; i < ssss.size(); i++){
+        arg[i] = (char*)ssss.at(i).c_str();
     }
+    arg[ssss.size()-1] = NULL;
+    // char* args[3];
+    // args[0] = (char*)this -> command.c_str();
+    // if (this -> flag != "") {
+    //     args[1] = (char*)this -> flag.c_str();
+    //     args[2] = NULL;
+    // }
+    // else {
+    //     args[1] = NULL;
+    // }
     pid_t pid = fork();
     if(pid == -1){
         throw __throw_runtime_error;
@@ -157,7 +172,7 @@ Result* InRedir::execute() {
         }
         
     }else{
-        int result = execvp(args[0], args);
+        int result = execvp(arg[0], arg);
         if(result == -1){
             perror("Error");
             exit(-1);
@@ -214,13 +229,6 @@ Result* PipeCommand::execute(){
     }
     arg[ssss.size()-1] = NULL;
 
-    // string command = "tr";
-    // string argging1 = "a-z";
-    // string argging2 = "A-Z";
-    // arg[0] = (char*)command.c_str();
-    // arg[1] = (char*)argging1.c_str();
-    // arg[2] = (char*)argging2.c_str();
-    // arg[3] = NULL;
 
     const int PIPE_WRITE = 1;
     const int PIPE_READ = 0;
@@ -269,23 +277,5 @@ Result* PipeCommand::execute(){
         return new Result(true);
     }
 
-
-    // if (pid == 0) {
-        
-    //     dup2(fds[1], 1);
-    //     close(fds[1]);
-    //     close(fds[0]);
-
-    //     Result* res = this -> prev -> execute();
-    //     return res;
-    // }   
-    // else{
-    //     cout << "LYS";
-    //     int result = execvp(arg[0], arg);
-    //     if(result == -1){
-    //         perror("Error");
-    //         exit(-1);
-    //     }        
-    // }
 
 }
