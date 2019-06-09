@@ -1,3 +1,6 @@
-[ "echo ping >> newTest1.txt; echo ping >> newTest.txt && cat newTest1.txt && echo ping"
+[ "echo ping > newTest1.txt; echo ping >> newTest1.txt && cat newTest1.txt", 
+    "ech gilmour || echo ping > newTest.txt && echo ping >> newTest.txt && cat < newTest.txt",
+    "echo ping ping > yeet.txt || echo ping > yeet.txt ; cat < yeet.txt;",
+    "echo A && (echo B || echo C && echo ping ping > test.txt) && cat < test.txt"
     
 ]

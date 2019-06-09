@@ -565,6 +565,13 @@ TEST(Replace, Basic) {
 //     EXPECT_EQ(found[2], 28);
 // }
 
+TEST(Pipe, plswork) {
+    Command* base = new SysCommand("ls", "-a");
+    PipeCommand* bob = new PipeCommand("grep", "^p", base);
+
+    EXPECT_EQ(1, bob -> execute() -> getResult());
+}
+
 
 int main(int argc, char **argv){
     ::testing::InitGoogleTest(&argc, argv);

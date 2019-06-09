@@ -165,7 +165,8 @@ def main():
 
     print("\n" + str(len(INPUTS)) + " total inputs found")
 
-    REDIRECTIONS = [x for x in INPUTS if any(y for y in REDIRECTION_TYPES if y in x)]
+    # REDIRECTIONS = [x for x in INPUTS if any(y for y in REDIRECTION_TYPES if y in x)]
+    REDIRECTIONS = []
     INPUTS = [BaseCommand(x) for x in INPUTS if (x not in REDIRECTIONS) and x]
     REDIRECTIONS = [BaseCommand(x) for x in REDIRECTIONS]
     

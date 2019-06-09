@@ -316,8 +316,6 @@ Command* getCommand(string parsed) {
         return new OutRedir(file, com1);
     }
 
-
-
 }
 
 
@@ -345,8 +343,6 @@ HeadConnector* integrate(vector <preConnector> bigVec) {
     for (int i = 0; i < bigVec.size(); ++i) {
         com1 = bigVec.at(i).command;
         argument = bigVec.at(i).argument;
-
-
 
         if(i == bigVec.size()-1){
             connector = ";";

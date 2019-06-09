@@ -193,6 +193,84 @@ Result* DubOutRedir::execute() {
 }
 
 Result* PipeCommand::execute(){
-    cout << "PIPE" << endl;
-    return new Result(true);
+    int fds[2];
+    int fds2[2];
+    char* arg[4];
+    arg[0] = (char*)command.c_str();
+    arg[1] = (char*)args.c_str();
+    arg[2] = NULL;
+    // string command = "tr";
+    // string argging1 = "a-z";
+    // string argging2 = "A-Z";
+    // arg[0] = (char*)command.c_str();
+    // arg[1] = (char*)argging1.c_str();
+    // arg[2] = (char*)argging2.c_str();
+    // arg[3] = NULL;
+
+    const int PIPE_WRITE = 1;
+    const int PIPE_READ = 0;
+
+
+    int ret = pipe(fds);
+
+    if (ret < 0) {  
+        perror("Error");
+        exit(1);
+    }
+
+    pid_t firstFork = fork();
+    if(firstFork == 0){
+        dup2(fds[1], PIPE_WRITE);
+        close(fds[0]);
+        close(fds[1]);
+        this -> prev -> execute() -> getResult();
+        exit(0);
+    }
+    pid_t secondFork = fork();
+    if(secondFork == 0){
+        dup2(fds[0], PIPE_READ);
+        close(fds[0]);
+        close(fds[1]);
+        int result = execvp(arg[0], arg);
+        if(result == -1){
+            perror("Error");
+            exit(-1);
+        }
+        exit(0);
+
+    }
+    close(fds[0]);
+    close(fds[1]);
+    int returnval = 0;
+
+    
+    waitpid(firstFork, 0, 0);
+    wait(&returnval);
+    // waitpid(secondFork, 0, 0);
+    
+    if(returnval != 0){
+        return new Result(false);
+    }else{
+        return new Result(true);
+    }
+
+
+    // if (pid == 0) {
+        
+    //     dup2(fds[1], 1);
+    //     close(fds[1]);
+    //     close(fds[0]);
+
+    //     Result* res = this -> prev -> execute();
+    //     return res;
+    // }   
+    // else{
+    //     cout << "LYS";
+    //     int result = execvp(arg[0], arg);
+    //     if(result == -1){
+    //         perror("Error");
+    //         exit(-1);
+    //     }        
+    // }
+
 }
