@@ -14,7 +14,7 @@ def runCommand(command): #takes in an a command and runs it in the base compiled
     #examples
     # runCommand('echo ping') - > return ping
 
-
+    print(command)
     commands = [COMPILED_CPLUS, command]
     try:
         output = check_output(commands, stderr=STDOUT).decode()
@@ -166,9 +166,7 @@ def main():
     print("\n" + str(len(INPUTS)) + " total inputs found")
 
     # REDIRECTIONS = [x for x in INPUTS if any(y for y in REDIRECTION_TYPES if y in x)]
-    REDIRECTIONS = []
-    INPUTS = [BaseCommand(x) for x in INPUTS if (x not in REDIRECTIONS) and x]
-    REDIRECTIONS = [BaseCommand(x) for x in REDIRECTIONS]
+    INPUTS = [BaseCommand(x) for x in INPUTS if x]
     
     while len(argv) > 1: # unittest.main() gets mad if you pass in argv, so I pop all them off
         argv.pop()
@@ -182,11 +180,6 @@ def main():
     for x in COMBINATIONS: #Actually dynamically creates the unit tests
         generated = dynamicTestingGenerator(x)
         addCommand(generated)
-
-    for x in REDIRECTIONS:
-        generated = dynamicTestingGenerator((x,))
-        addCommand(generated)
-
 
     unittest.main()
 
