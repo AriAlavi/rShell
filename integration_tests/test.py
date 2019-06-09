@@ -14,7 +14,6 @@ def runCommand(command): #takes in an a command and runs it in the base compiled
     #examples
     # runCommand('echo ping') - > return ping
 
-    print(command)
     commands = [COMPILED_CPLUS, command]
     try:
         output = check_output(commands, stderr=STDOUT).decode()
