@@ -8,6 +8,7 @@ from secrets import token_hex
 
 COMPILED_CPLUS = "../rshell"
 REDIRECTION_TYPES = ("<", "<<", ">", ">>", " | ")
+PROTECTED_TEXT_FILES = ('testfile.txt',)
 
 
 def runCommand(command): #takes in an a command and runs it in the base compiled c++ code as an argv
@@ -135,7 +136,7 @@ def dynamicTestingGenerator(input): #Where a list of tuples becomes an actual co
     if any(x for x in REDIRECTION_TYPES if x in command):
         splitboi = command.split(" ")
         files = [x for x in splitboi if ".txt" in x]
-        extraCommands = ["rm " + x.replace(";", "") + ";" for x in files]
+        extraCommands = ["rm " + x.replace(";", "") + ";" for x in files if x not in PROTECTED_TEXT_FILES]
 
     return {
         "test" : do_test_expected_creator(stringInput, extraCommands),
