@@ -2,7 +2,7 @@
     "ech gilmour || echo ping > newTest.txt && echo ping >> newTest.txt && cat < newTest.txt",
     "echo ping ping > yeet.txt || echo ping > yeet.txt ; cat < yeet.txt;",
     "echo A && (echo B || echo C && echo ping ping > test.txt) && cat < test.txt",
-    "echo ping > first.txt && echo ping > first.txt; tee second.txt < first.txt; cat < second.txt && ech ping;",
+    "echo ping > first.txt && echo ping >> first.txt; tee second.txt < first.txt; cat < second.txt && ech ping;",
     "echo Gilmour > bad.txt && echo ping ping > bad.txt && cat < bad.txt"
     
 ]
