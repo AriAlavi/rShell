@@ -20,6 +20,17 @@ Parentheses will serve as precedence operators that will give certain connectors
     B
 
 
+Our program will also include I/O redirection and pipes:
+    
+    '>': will redirect output to files. If the file does not already exist, it will be created. If the file does already exist, it will be overwritten.
+
+    '>>': will redirect output to files. If the file does not already exist, it will be created. If the file does already exist, output from the program will be appended to the end of the file.
+
+    '<': will redirect input from files to commands. This command will only work with existing files.
+
+    '|': is the symoblic representation of pipe. When it is used, the output and input will be piped between two different commands within the program.
+
+
 # Diagrams
 ![UML](images/CS100-Assignment_3-UML.jpg)
 # Classes
@@ -32,6 +43,12 @@ The command classes are classes which execute the given user's commands. They wi
 * The exit command subclass will terminate the program.
 
 * The test command subclass will check if the given file name exists (-e), is a directory (-d), or if it is a regular file (-f). If no flag is passed in, the -e flag is assumed by default. Additionally, tests commands will have a symbolic equivalent, "[]" that will work in place of the actual command "test". **For example, "[-d directory_1]".**
+
+* The input redirection command subclass will be structured like the other subclasses, however it will redirect input to a command from an existing input file using the dup2() sys call.
+
+* The output redirection, both the double and single output, will additionally take in an output file and another Command object. The output will first be redirected to the output file. Then, the Command object will execute, thus passing its output from the Command to the output file.
+
+* Pipe will work in a similar way to output redirection. However, we will duplicate the output from the first process to the second process, and read input from the second process to the first process, using the dup2() and pipe() syscalls.
 
 **Connector Classes**:
 The connector classes will be the classes which determine if the command will actually be ran. The connector also has a pointer to its next connector and will call its execute with the result of its current execution passed in as an argument. 
@@ -81,18 +98,21 @@ If a connector doesn't execute its command, it will pass in the given result int
 
 # Development and Testing Roadmap
 ## Malhar will be in charge of:
-* [Test Commands(1)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/21)
-* [Unit Tests (2)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/22)
-* [Assisting with integrator/parser changes (3)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/24)
+* [Input/Output redirection(1)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/21)
+* [Unit Tests(2)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/22)
+
+* [Integration Tests(3)] ()
+
+* [Pipe(4)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/24)
 
 
 ## Arian will be in charge of: 
-* [Updates to integrator/parser (1)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/24)
-* [Parentheses (2)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/25)
-* [Integration Tests (3)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/26)
+* [Fixing the Parentheses(1)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/24)
+* [Implementing Pipe(2)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/25)
 
-## Hussain will be in charge of:
-* [Making changes to README (1)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/23)
-* [Additional Unit Tests (2)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/22)
+* [Unit Tests (3)] ()
+* [Integration Tests (4)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/26)
+
+
 
 
