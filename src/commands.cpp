@@ -143,21 +143,27 @@ Result* InRedir::execute() {
         }
     }else{
         int spaceLocation = this -> command.find(' ');
-        string first = command;
-        string second = command;
-        first.erase(spaceLocation, first.size());
-        second.erase(0, spaceLocation+1);
-        ssss.push_back(first);
-        ssss.push_back(second);
+        if(spaceLocation > -1){
+            string first = command;
+            string second = command;
+            first.erase(spaceLocation, first.size());
+            second.erase(0, spaceLocation+1);
+            ssss.push_back((char*)first.c_str());
+            ssss.push_back((char*)second.c_str());
+        }else{
+            string first = command;
+            ssss.push_back((char*)first.c_str());
+        }
+
     }
 
 
 
-    char* arg[ssss.size()];
+    char* arg[ssss.size()+1];
     for(int i = 0; i < ssss.size(); i++){
         arg[i] = (char*)ssss.at(i).c_str();
     }
-    arg[ssss.size()-1] = NULL;
+    arg[ssss.size()] = NULL;
 
     // char* args[3];
     // args[0] = (char*)this -> command.c_str();
@@ -239,11 +245,11 @@ Result* PipeCommand::execute(){
         ssss.push_back(temp);
     }
 
-    char* arg[ssss.size()];
+    char* arg[ssss.size()+1];
     for(int i = 0; i < ssss.size(); i++){
         arg[i] = (char*)ssss.at(i).c_str();
     }
-    arg[ssss.size()-1] = NULL;
+    arg[ssss.size()] = NULL;
 
 
     const int PIPE_WRITE = 1;
