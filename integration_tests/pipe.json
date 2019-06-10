@@ -1,3 +1,8 @@
 [
-    
+    "echo PING PING | tr A-Z a-z",
+    "echo PING PING > pipeboi.txt; cat < pipeboi.txt | tr A-Z a-z",
+    "echo ping | tee destroy.txt | tr a-z a-z >> destroy.txt; cat destroy.txt",
+    "echo ping ping | tr a-z A-Z | tr A-Z a-z | cat",
+    "echo ping | tr a-z A-Z | timetoCRASH || echo ping ping",
+    "ech ping | tr a-z A-Z && echo ping ping"
 ]
