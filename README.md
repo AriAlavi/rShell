@@ -20,15 +20,15 @@ Parentheses will serve as precedence operators that will give certain connectors
     B
 
 
-Our program will also include I/O redirection and pipes:
+**Our program will also include I/O redirection and pipes:**
     
-    '>': will redirect output to files. If the file does not already exist, it will be created. If the file does already exist, it will be overwritten.
+ '>': will redirect output to files. If the file does not already exist, it will be created. If the file does already exist, it will be overwritten.
 
-    '>>': will redirect output to files. If the file does not already exist, it will be created. If the file does already exist, output from the program will be appended to the end of the file.
+'>>': will redirect output to files. If the file does not already exist, it will be created. If the file does already exist, output from the program will be appended to the end of the file.
 
-    '<': will redirect input from files to commands. This command will only work with existing files.
+'<': will redirect input from files to commands. This command will only work with existing files.
 
-    '|': is the symoblic representation of pipe. When it is used, the output and input will be piped between two different commands within the program.
+'|': is the symoblic representation of pipe. When it is used, the output and input will be piped between two different commands within the program.
 
 
 # Diagrams
@@ -98,19 +98,19 @@ If a connector doesn't execute its command, it will pass in the given result int
 
 # Development and Testing Roadmap
 ## Malhar will be in charge of:
-* [Input/Output redirection(1)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/21)
-* [Unit Tests(2)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/22)
+* [Input/Output redirection(1)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/34)
+* [Unit Tests(2)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/35)
 
-* [Integration Tests(3)] ()
+* [Integration Tests(3)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/36)
 
-* [Pipe(4)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/24)
+* [Implementing Pipe(4)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/37)
 
 
 ## Arian will be in charge of: 
-* [Fixing the Parentheses(1)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/24)
-* [Implementing Pipe(2)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/25)
+* [Fixing the Parentheses(1)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/38)
+* [Implementing Pipe(2)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/37)
 
-* [Unit Tests (3)] ()
+* [Unit Tests (3)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/35)
 * [Integration Tests (4)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/26)
 
 
