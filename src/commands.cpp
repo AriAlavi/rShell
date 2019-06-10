@@ -245,11 +245,11 @@ Result* PipeCommand::execute(){
         ssss.push_back(temp);
     }
 
-    char* arg[ssss.size()+1];
+    char* arg[ssss.size()];
     for(int i = 0; i < ssss.size(); i++){
         arg[i] = (char*)ssss.at(i).c_str();
     }
-    arg[ssss.size()] = NULL;
+    arg[ssss.size()-1] = NULL;
 
 
     const int PIPE_WRITE = 1;

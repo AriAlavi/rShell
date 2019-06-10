@@ -396,32 +396,54 @@ HeadConnector* integrate(vector <preConnector> bigVec) {
 
             Command* base = getCommand(parsed.at(0));
             Command* currentCommand = base;
-            for(int i = 1; i < parsed.size(); ++i) {
-                string end = parsed.at(parsed.size()-1);
-                if(end.find(">") != string::npos && (end.find(">>") == string::npos)){
-                    string ofile = end;
-                    ofile.erase(ofile.begin(), ofile.begin()+2);
-                    Command* endout = new OutRedir(ofile, currentCommand);
-                    currentCommand = endout;
-                }
-                else if(end.find(">>") != string::npos) {
-                    string dubofile = end;
-                    int index = findOneString(end,">>");
-                    end.erase(end.begin(), end.begin()+index+3);
-                    dubofile.erase(dubofile.begin()+index-1, dubofile.end());
+            for(int i = 1; i < parsed.size()-1; ++i) {
+                // string end = parsed.at(parsed.size()-1);
+                // if(end.find(">") != string::npos && (end.find(">>") == string::npos)){
+                //     string ofile = end;
+                //     ofile.erase(ofile.begin(), ofile.begin()+2);
+                //     Command* endout = new OutRedir(ofile, currentCommand);
+                //     currentCommand = endout;
+                // }
+                // else if(end.find(">>") != string::npos) {
+                //     string dubofile = end;
+                //     int index = findOneString(end,">>");
+                //     end.erase(end.begin(), end.begin()+index+3);
+                //     dubofile.erase(dubofile.begin()+index-1, dubofile.end());
 
-                    Command* pipeEdition = new PipeCommand(dubofile, currentCommand);
-                    currentCommand = pipeEdition;
-                    Command* endout = new DubOutRedir(end, currentCommand);
-                    currentCommand = endout;
-                }
+                //     Command* pipeEdition = new PipeCommand(dubofile, currentCommand);
+                //     currentCommand = pipeEdition;
+                //     Command* endout = new DubOutRedir(end, currentCommand);
+                //     currentCommand = endout;
+                // }
                     
-                else{
-                    Command* pipeEdition = new PipeCommand(parsed.at(i), currentCommand);
-                    currentCommand = pipeEdition;
-                }
-
+                // else{
+                //     Command* pipeEdition = new PipeCommand(parsed.at(i), currentCommand);
+                //     currentCommand = pipeEdition;
+                // }
+                string current = parsed.at(i);
+                currentCommand = new PipeCommand(current, currentCommand);
             }
+            string lastCommand = parsed.at(parsed.size()-1);
+            if(lastCommand.find(">") != string::npos or lastCommand.find(">>") != string::npos){
+                string part1 = lastCommand;
+                string part2 = lastCommand;
+                if(lastCommand.find(">>") != string::npos){
+                    int whereIs = findOneString(lastCommand, ">>");
+                    part1.erase(whereIs-2, part1.size());
+                    part2.erase(0, whereIs);
+                    currentCommand = new PipeCommand(part1, currentCommand);
+                    currentCommand = new DubOutRedir(part2, currentCommand);
+                }else{
+                    int whereIs = findOneString(lastCommand, ">");
+                    part1.erase(whereIs-1, part1.size());
+                    part2.erase(0, whereIs+2);
+                    currentCommand = new PipeCommand(part1, currentCommand);
+                    currentCommand = new DubOutRedir(part2, currentCommand);
+                }
+            }else{
+                currentCommand = new PipeCommand(lastCommand, currentCommand);
+            }
+
             current = makeConnector(connector, currentCommand, next);
 
         }else if(argument.find("<") != string::npos or argument.find(">") != string::npos or argument.find(">>") != string::npos){
