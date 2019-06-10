@@ -319,242 +319,243 @@ TEST(Replace, Basic) {
 }
 
 
-// TEST(redir_out, single_bracket_exists) {
-//     OutRedir* test = new OutRedir("echo", "hello", "toTest.txt");
-//     test -> execute();
+TEST(redir_out, single_bracket_exists) {
+    OutRedir* test = new OutRedir("toTest.txt",new SysCommand("echo", "hello"));
+    test -> execute();
 
-//     TestCommand* exists = new TestCommand("test", "-f toTest.txt");
+    TestCommand* exists = new TestCommand("test", "-f toTest.txt");
 
-//     EXPECT_EQ(1,exists->execute() -> getResult());
+    EXPECT_EQ(1,exists->execute() -> getResult());
 
-// }
+}
 
-// TEST(redir_out, single_bracket_simple) {
-//     OutRedir* test = new OutRedir("echo", "hello", "toTest.txt");
-//     test -> execute();
+TEST(redir_out, single_bracket_simple) {
+    OutRedir* test = new OutRedir("toTest.txt",new SysCommand("echo", "hello"));
+    test -> execute();
 
-//     ifstream myfile;
-//     string curr;
-//     myfile.open ("toTest.txt");
+    ifstream myfile;
+    string curr;
+    myfile.open ("toTest.txt");
 
-//     myfile >> curr;
-//     EXPECT_EQ(curr, "hello");
-//     myfile.close();
+    myfile >> curr;
+    EXPECT_EQ(curr, "hello");
+    myfile.close();
 
-// }
+}
 
-// TEST(redir_out, single_bracket_overwrite) {
-//     OutRedir* test = new OutRedir("echo", "The Wall is the best PF album", "toTest.txt");
-//     test -> execute();
-
-//     OutRedir* test2 = new OutRedir("echo", "The Division Bell is the best PF album", "toTest.txt");
-//     test2 -> execute();
-
-//     ifstream myfile;
-//     string curr;
-//     myfile.open ("toTest.txt");
-
-//     getline(myfile,curr);
-//     EXPECT_EQ(curr, "The Division Bell is the best PF album");
-//     myfile.close();
-
-// }
-
-// TEST(redir_out, double_bracket_exists) {
-//     DubOutRedir* test = new DubOutRedir("echo", "hello", "toTest2.txt");
-//     test -> execute();
-
-//     TestCommand* exists = new TestCommand("test", "-f toTest2.txt");
-
-//     EXPECT_EQ(1,exists->execute() -> getResult());
-
-// }
-
-// TEST(redir_out, double_bracket_simple) {
-//     DubOutRedir* test = new DubOutRedir("echo", "goodbye", "toTest2.txt");
-//     test -> execute();
-
-//     ifstream myfile;
-//     string curr;
-//     myfile.open ("toTest2.txt");
-
-//     myfile >> curr;
-//     EXPECT_EQ(curr, "hello");
-//     myfile >> curr;
-//     EXPECT_EQ(curr, "goodbye");
-//     myfile.close();
-
-// }
-
-// TEST(redir_out, double_bracket_append) {
-//     OutRedir* test = new OutRedir("echo", "Overhead", "toTest.txt");
-//     test -> execute();
-
-//     DubOutRedir* test2 = new DubOutRedir("echo", "the albatross", "toTest.txt");
-//     test2 -> execute();
-
-//     DubOutRedir* test3 = new DubOutRedir("echo", "hangs motionless", "toTest.txt");
-//     test3 -> execute();
-
-//     DubOutRedir* test4 = new DubOutRedir("echo", "upon the air", "toTest.txt");
-//     test4 -> execute();
-
-
-//     ifstream myfile;
-//     string curr;
-//     myfile.open ("toTest.txt");
-
-//     getline(myfile,curr);
-//     EXPECT_EQ(curr, "Overhead");
-//     curr.clear();
-//     getline(myfile,curr);
-//     EXPECT_EQ(curr, "the albatross");
-//     curr.clear();
-//     getline(myfile,curr);
-//     EXPECT_EQ(curr, "hangs motionless");
-//     curr.clear();
-//     getline(myfile,curr);
-//     EXPECT_EQ(curr, "upon the air");
-
-//     myfile.close();
-
-// }
-
-// TEST(redir_in, executes) {
-//     OutRedir* helper = new OutRedir("echo", "test", "file1.txt");
-//     helper -> execute();
-//     InRedir* test = new InRedir("cat", "","file1.txt");
-
-//     EXPECT_EQ(1, test -> execute() -> getResult());
-
-// }
-
-// TEST(redir_in, cat) {
-
-//     OutRedir* test = new OutRedir("echo", "Hello,", "toTest.txt");
-//     test -> execute();
-
-//     DubOutRedir* test2 = new DubOutRedir("echo", "this", "toTest.txt");
-//     test2 -> execute();
-
-//     DubOutRedir* test3 = new DubOutRedir("echo", "is a", "toTest.txt");
-//     test3 -> execute();
-
-//     DubOutRedir* test4 = new DubOutRedir("echo", "test", "toTest.txt");
-//     test4 -> execute();
-
-//     int fd = open("cat.txt", O_RDWR | O_CREAT | O_TRUNC,0666);
-//     int result;
-//     int stdout = dup(1);
-
-//     result = dup2(fd,1);
-
-//     InRedir* newIn = new InRedir("cat", "", "toTest.txt");
-//     newIn -> execute();
-
-//     dup2(stdout, 1);
-//     close(stdout);
+TEST(redir_out, single_bracket_overwrite) {
     
-//     ifstream myfile;
-//     string curr;
-//     myfile.open ("cat.txt");
+    OutRedir* test = new OutRedir("toTest.txt",new SysCommand("echo", "The Wall is the best PF album"));
+    test -> execute();
 
-//     getline(myfile,curr);
-//     EXPECT_EQ(curr, "Hello,");
-//     curr.clear();
-//     getline(myfile,curr);
-//     EXPECT_EQ(curr, "this");
-//     curr.clear();
-//     getline(myfile,curr);
-//     EXPECT_EQ(curr, "is a");
-//     curr.clear();
-//     getline(myfile,curr);
-//     EXPECT_EQ(curr, "test");
+    OutRedir* test2 = new OutRedir("toTest.txt",new SysCommand("echo", "The Division Bell is the best PF album"));
+    test2 -> execute();
 
-//     myfile.close();
-// }
+    ifstream myfile;
+    string curr;
+    myfile.open ("toTest.txt");
 
-// TEST(redir_in, sort) {
+    getline(myfile,curr);
+    EXPECT_EQ(curr, "The Division Bell is the best PF album");
+    myfile.close();
 
-//     OutRedir* test = new OutRedir("echo", "Zebra", "toTest.txt");
-//     test -> execute();
+}
 
-//     DubOutRedir* test2 = new DubOutRedir("echo", "Kangaroo", "toTest.txt");
-//     test2 -> execute();
+TEST(redir_out, double_bracket_exists) {
+    DubOutRedir* test = new DubOutRedir("toTest.txt",new SysCommand("echo", "hello"));
+    test -> execute();
 
-//     DubOutRedir* test3 = new DubOutRedir("echo", "Tortoise", "toTest.txt");
-//     test3 -> execute();
+    TestCommand* exists = new TestCommand("test", "-f toTest2.txt");
 
-//     DubOutRedir* test4 = new DubOutRedir("echo", "Antelope", "toTest.txt");
-//     test4 -> execute();
+    EXPECT_EQ(1,exists->execute() -> getResult());
 
-//     int fd = open("sorted.txt", O_RDWR | O_CREAT | O_TRUNC,0666);
-//     int result;
-//     int stdout = dup(1);
+}
 
-//     result = dup2(fd,1);
+TEST(redir_out, double_bracket_simple) {
+    DubOutRedir* test = new DubOutRedir("toTest.txt",new SysCommand("echo", "goodbye"));
+    test -> execute();
 
-//     InRedir* newIn = new InRedir("sort", "", "toTest.txt");
-//     newIn -> execute();
+    ifstream myfile;
+    string curr;
+    myfile.open ("toTest2.txt");
 
-//     dup2(stdout, 1);
-//     close(stdout);
+    myfile >> curr;
+    EXPECT_EQ(curr, "hello");
+    myfile >> curr;
+    EXPECT_EQ(curr, "goodbye");
+    myfile.close();
+
+}
+
+TEST(redir_out, double_bracket_append) {
+    OutRedir* test = new OutRedir("toTest.txt",new SysCommand("echo", "Overhead"));
+    test -> execute();
+
+    DubOutRedir* test2 = new DubOutRedir("toTest.txt",new SysCommand("echo", "the albatross"));
+    test2 -> execute();
+
+    DubOutRedir* test3 = new DubOutRedir("toTest.txt",new SysCommand("echo", "hangs motionless"));
+    test3 -> execute();
+
+    DubOutRedir* test4 = new DubOutRedir("toTest.txt",new SysCommand("echo", "upon the air"));
+    test4 -> execute();
+
+
+    ifstream myfile;
+    string curr;
+    myfile.open ("toTest.txt");
+
+    getline(myfile,curr);
+    EXPECT_EQ(curr, "Overhead");
+    curr.clear();
+    getline(myfile,curr);
+    EXPECT_EQ(curr, "the albatross");
+    curr.clear();
+    getline(myfile,curr);
+    EXPECT_EQ(curr, "hangs motionless");
+    curr.clear();
+    getline(myfile,curr);
+    EXPECT_EQ(curr, "upon the air");
+
+    myfile.close();
+
+}
+
+TEST(redir_in, executes) {
+    OutRedir* helper = new OutRedir("file1.txt",new SysCommand("echo", "test"));
+    helper -> execute();
+    InRedir* test = new InRedir("cat","file1.txt", "");
+
+    EXPECT_EQ(1, test -> execute() -> getResult());
+
+}
+
+TEST(redir_in, cat) {
+
+    OutRedir* test = new OutRedir("toTest.txt",new SysCommand("echo", "hello"));
+    test -> execute();
+
+    DubOutRedir* test2 = new DubOutRedir("toTest.txt",new SysCommand("echo", "this"));
+    test2 -> execute();
+
+    DubOutRedir* test3 = new DubOutRedir("toTest.txt",new SysCommand("echo", "is a"));
+    test3 -> execute();
+
+    DubOutRedir* test4 = new DubOutRedir("toTest.txt",new SysCommand("echo", "test"));
+    test4 -> execute();
+
+    int fd = open("cat.txt", O_RDWR | O_CREAT | O_TRUNC,0666);
+    int result;
+    int stdout = dup(1);
+
+    result = dup2(fd,1);
+
+    InRedir* newIn = new InRedir("cat", "toTest.txt", "");
+    newIn -> execute();
+
+    dup2(stdout, 1);
+    close(stdout);
     
-//     ifstream myfile;
-//     string curr;
-//     myfile.open ("sorted.txt");
+    ifstream myfile;
+    string curr;
+    myfile.open ("cat.txt");
 
-//     getline(myfile,curr);
-//     EXPECT_EQ(curr, "Antelope");
-//     curr.clear();
-//     getline(myfile,curr);
-//     EXPECT_EQ(curr, "Kangaroo");
-//     curr.clear();
-//     getline(myfile,curr);
-//     EXPECT_EQ(curr, "Tortoise");
-//     curr.clear();
-//     getline(myfile,curr);
-//     EXPECT_EQ(curr, "Zebra");
+    getline(myfile,curr);
+    EXPECT_EQ(curr, "hello");
+    curr.clear();
+    getline(myfile,curr);
+    EXPECT_EQ(curr, "this");
+    curr.clear();
+    getline(myfile,curr);
+    EXPECT_EQ(curr, "is a");
+    curr.clear();
+    getline(myfile,curr);
+    EXPECT_EQ(curr, "test");
 
-//     myfile.close();
-// }
+    myfile.close();
+}
 
-// TEST (redir_in, wc_test) {
-//     OutRedir* test = new OutRedir("echo", "Zebra", "toTest.txt");
-//     test -> execute();
+TEST(redir_in, sort) {
 
-//     DubOutRedir* test2 = new DubOutRedir("echo", "Kangaroo", "toTest.txt");
-//     test2 -> execute();
+    OutRedir* test = new OutRedir("toTest.txt",new SysCommand("echo", "Zebra"));
+    test -> execute();
 
-//     DubOutRedir* test3 = new DubOutRedir("echo", "Tortoise", "toTest.txt");
-//     test3 -> execute();
+    DubOutRedir* test2 = new DubOutRedir("toTest.txt",new SysCommand("echo", "Kangaroo"));
+    test2 -> execute();
 
-//     DubOutRedir* test4 = new DubOutRedir("echo", "Antelope", "toTest.txt");
-//     test4 -> execute();
+    DubOutRedir* test3 = new DubOutRedir("toTest.txt",new SysCommand("echo", "Tortoise"));
+    test3 -> execute();
 
-//     int fd = open("wordcount.txt", O_RDWR | O_CREAT | O_TRUNC,0666);
-//     int result;
-//     int stdout = dup(1);
+    DubOutRedir* test4 = new DubOutRedir("toTest.txt",new SysCommand("echo", "Antelope"));
+    test4 -> execute();
 
-//     result = dup2(fd,1);
+    int fd = open("sorted.txt", O_RDWR | O_CREAT | O_TRUNC,0666);
+    int result;
+    int stdout = dup(1);
 
-//     InRedir* newIn = new InRedir("wc", "", "toTest.txt");
-//     newIn -> execute();
+    result = dup2(fd,1);
 
-//     dup2(stdout, 1);
-//     close(stdout);
+    InRedir* newIn = new InRedir("sort", "toTest.txt", "");
+    newIn -> execute();
+
+    dup2(stdout, 1);
+    close(stdout);
     
-//     ifstream myfile;
-//     int curr;
-//     myfile.open ("wordcount.txt");
+    ifstream myfile;
+    string curr;
+    myfile.open ("sorted.txt");
 
-//     myfile >> curr;
-//     myfile >> curr;
+    getline(myfile,curr);
+    EXPECT_EQ(curr, "Antelope");
+    curr.clear();
+    getline(myfile,curr);
+    EXPECT_EQ(curr, "Kangaroo");
+    curr.clear();
+    getline(myfile,curr);
+    EXPECT_EQ(curr, "Tortoise");
+    curr.clear();
+    getline(myfile,curr);
+    EXPECT_EQ(curr, "Zebra");
 
-//     EXPECT_EQ(curr, 4); //wc outputs (# of lines, # of words, # of bytes)
+    myfile.close();
+}
 
-//     myfile.close();
-// }
+TEST (redir_in, wc_test) {
+    OutRedir* test = new OutRedir("toTest.txt",new SysCommand("echo", "Zebra"));
+    test -> execute();
+
+    DubOutRedir* test2 = new DubOutRedir("toTest.txt",new SysCommand("echo", "Kangaroo"));
+    test2 -> execute();
+
+    DubOutRedir* test3 = new DubOutRedir("toTest.txt",new SysCommand("echo", "Tortoise"));
+    test3 -> execute();
+
+    DubOutRedir* test4 = new DubOutRedir("toTest.txt",new SysCommand("echo", "Antelope"));
+    test4 -> execute();
+
+    int fd = open("wordcount.txt", O_RDWR | O_CREAT | O_TRUNC,0666);
+    int result;
+    int stdout = dup(1);
+
+    result = dup2(fd,1);
+
+    InRedir* newIn = new InRedir("wc", "toTest.txt", "");
+    newIn -> execute();
+
+    dup2(stdout, 1);
+    close(stdout);
+    
+    ifstream myfile;
+    int curr;
+    myfile.open ("wordcount.txt");
+
+    myfile >> curr;
+    myfile >> curr;
+
+    EXPECT_EQ(curr, 4); //wc outputs (# of lines, # of words, # of bytes)
+
+    myfile.close();
+}
 
 // TEST(Integrator, findString){
 //     string base = "just another include in the in the codebase";
@@ -567,23 +568,23 @@ TEST(Replace, Basic) {
 
 TEST(PipeTest, OnePipe) {
     Command* base = new SysCommand("ls", "-a");
-    PipeCommand* bob = new PipeCommand("grep", "^p", base);
+    PipeCommand* bob = new PipeCommand("grep ^p", base);
 
     EXPECT_EQ(1, bob -> execute() -> getResult());
 }
 
 TEST(PipeTest, PipePipe) {
     Command* base = new SysCommand("ls", "-a");
-    PipeCommand* bob = new PipeCommand("grep", "^", base);
-    PipeCommand* biggerBob = new PipeCommand("grep", "^p", bob);
+    PipeCommand* bob = new PipeCommand("grep ^", base);
+    PipeCommand* biggerBob = new PipeCommand("grep ^p", bob);
     EXPECT_EQ(1, biggerBob -> execute() -> getResult());
 }
 
 
 TEST(PipeTest, FailPipePipe) {
     Command* base = new SysCommand("ls", "-a");
-    PipeCommand* bob = new PipeCommand("grep", "^", base);
-    PipeCommand* biggerBob = new PipeCommand("moreee", "", bob);
+    PipeCommand* bob = new PipeCommand("grep ^", base);
+    PipeCommand* biggerBob = new PipeCommand("moreee", bob);
     EXPECT_EQ(0, biggerBob -> execute() -> getResult());
 }
 
