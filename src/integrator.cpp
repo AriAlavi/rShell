@@ -329,22 +329,27 @@ Command* getCommand(string parsed) {
     else {
         char cwd[PATH_MAX];
         getcwd(cwd, sizeof(cwd));
-        string command, temp, args="";
-        istringstream ss(parsed);
-        ss >> command;
-        parsed.erase(parsed.begin(), parsed.begin() + command.length());
-        ss >> args;
-        while(ss) {
-            ss >> temp;
-            args = args + " " + temp;
-        }
-        if (command == "ls" && args == "") {
-            args = cwd;
-        }
-        if (args.at(args.length()-1) == ' ')    
-            args.pop_back();
-        
+        string command = parsed;
+        string args=parsed;
+        int firstSpace = parsed.find(' ');
+        command.erase(firstSpace, command.size());
+        args.erase(0, firstSpace+1);
         return new SysCommand(command, args);
+        // istringstream ss(parsed);
+        // ss >> command;
+        // parsed.erase(parsed.begin(), parsed.begin() + command.length());
+        // ss >> args;
+        // while(ss) {
+        //     ss >> temp;
+        //     args = args + " " + temp;
+        // }
+        // if (command == "ls" && args == "") {
+        //     args = cwd;
+        // }
+        // if (args.at(args.length()-1) == ' ')    
+        //     args.pop_back();
+        
+        // return new SysCommand(command, args);
     }
 
 }
