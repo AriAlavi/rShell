@@ -18,7 +18,6 @@ class Command{
         
 };
 
-
 class ExitCommand: public Command{
     public:
         ExitCommand(){};
@@ -47,11 +46,11 @@ class TestCommand: public Command{
 class OutRedir: public Command{
     private:
         string file;
+        Command* prev = NULL;
     public:
-        OutRedir(string command, string args, string file) {
-            this -> command = command; 
-            this -> args = args;
+        OutRedir(string file, Command* prev) {
             this -> file = file;
+            this -> prev = prev;
         }
         Result* execute();
 };
@@ -59,11 +58,11 @@ class OutRedir: public Command{
 class DubOutRedir: public Command{
     private:
         string file;
+        Command* prev = NULL;
     public:
-        DubOutRedir(string command, string args, string file) {
-            this -> command = command; 
-            this -> args = args;
+        DubOutRedir(string file, Command* prev) {
             this -> file = file;
+            this -> prev = prev;
         }
         Result* execute();
 };
@@ -71,15 +70,27 @@ class DubOutRedir: public Command{
 class InRedir: public Command{
     private:
         string file;
+        string flag;
     public:
-        InRedir(string command,string argument, string file) { //for some reason, it does not work when args are instantiated
+        InRedir(string command, string file, string flag) { 
             this -> command = command; 
-            this -> args = argument;
             this -> file = file;
+            this -> flag = flag;
         }
         Result* execute();
 };
 
+class PipeCommand: public Command{
+    private:
+        Command* prev = nullptr;
+    public:
+        PipeCommand(string command, Command* prev){
+            this -> command = command;
+            this -> prev = prev;
+        }
+
+        Result* execute();
+};
 
 
 #endif

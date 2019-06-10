@@ -7,13 +7,13 @@ import unittest
 from secrets import token_hex
 
 COMPILED_CPLUS = "../rshell"
-REDIRECTION_TYPES = ("<", "<<", ">", ">>")
+REDIRECTION_TYPES = ("<", "<<", ">", ">>", " | ")
+PROTECTED_TEXT_FILES = ('testfile.txt',)
 
 
 def runCommand(command): #takes in an a command and runs it in the base compiled c++ code as an argv
     #examples
     # runCommand('echo ping') - > return ping
-
 
     commands = [COMPILED_CPLUS, command]
     try:
@@ -136,7 +136,7 @@ def dynamicTestingGenerator(input): #Where a list of tuples becomes an actual co
     if any(x for x in REDIRECTION_TYPES if x in command):
         splitboi = command.split(" ")
         files = [x for x in splitboi if ".txt" in x]
-        extraCommands = ["rm " + x.replace(";", "") + ";" for x in files]
+        extraCommands = ["rm " + x.replace(";", "") + ";" for x in files if x not in PROTECTED_TEXT_FILES]
 
     return {
         "test" : do_test_expected_creator(stringInput, extraCommands),
@@ -165,9 +165,8 @@ def main():
 
     print("\n" + str(len(INPUTS)) + " total inputs found")
 
-    REDIRECTIONS = [x for x in INPUTS if any(y for y in REDIRECTION_TYPES if y in x)]
-    INPUTS = [BaseCommand(x) for x in INPUTS if (x not in REDIRECTIONS) and x]
-    REDIRECTIONS = [BaseCommand(x) for x in REDIRECTIONS]
+    # REDIRECTIONS = [x for x in INPUTS if any(y for y in REDIRECTION_TYPES if y in x)]
+    INPUTS = [BaseCommand(x) for x in INPUTS if x]
     
     while len(argv) > 1: # unittest.main() gets mad if you pass in argv, so I pop all them off
         argv.pop()
@@ -181,11 +180,6 @@ def main():
     for x in COMBINATIONS: #Actually dynamically creates the unit tests
         generated = dynamicTestingGenerator(x)
         addCommand(generated)
-
-    for x in REDIRECTIONS:
-        generated = dynamicTestingGenerator((x,))
-        addCommand(generated)
-
 
     unittest.main()
 

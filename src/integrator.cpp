@@ -1,10 +1,12 @@
 #include <string>
 #include <vector>
 #include <stack>
+#include <queue>
 #include <iostream>
 #include <stdio.h>
 #include <limits.h>
 #include <unistd.h>
+#include <sstream>
 
 #include "connectors.h"
 #include "commands.h"
@@ -15,6 +17,8 @@
 
 
 using namespace std;
+
+vector<string> REDIRECTIONS = {"|"};
 
 
 parenLocation findParens(vector <preConnector> given, int parenNumber){
@@ -162,6 +166,190 @@ vector<parenShading> constructShading(vector<preConnector> preConnectors){
     return returnShading;
 }
 
+vector<int> findString(string base, string find){
+    vector<int> returnVec;
+    int foundPosition = base.find(find);
+    while(foundPosition != string::npos)
+    {
+        returnVec.push_back(foundPosition);
+        foundPosition = base.find(find,foundPosition+1);
+    }
+    return returnVec;
+}
+
+int findOneString(string base, string find){
+    vector<int> founds = findString(base, find);
+    switch(founds.size()){
+        case 0:
+            return 0;
+        case 1:
+            return founds.at(0);
+        default:
+            return founds.at(0); //How can there be two of the same redirectors in a command?
+    }
+}
+
+bool foundString(string base, string find){
+    vector<int> founds = findString(base, find);
+    switch(founds.size()){
+        case 0:
+            return false;
+            break;
+        default:
+            return true;
+    }  
+}
+
+queue<int> findStrings(string base, vector<string> finds){
+    vector<vector<int> > redirectorLocations;
+    vector<int> finalRedirectLocations;
+    vector<int> setRedirectLocations;
+
+    for(int i = 0; i < finds.size(); i++){
+        redirectorLocations.push_back(findString(base, finds.at(i)));
+    }
+    for(int i = 0; i < redirectorLocations.size(); i++){
+        for(int j = 0; j < redirectorLocations.at(i).size(); j++){
+            int found = redirectorLocations.at(i).at(j);
+            finalRedirectLocations.push_back(found);
+        }
+    }
+
+    for(int i = 0; i < finalRedirectLocations.size(); i++){
+        bool unique = true;
+        for(int j = 0; j < setRedirectLocations.size(); j++){
+            if(finalRedirectLocations.at(i) == finalRedirectLocations.at(j)){
+                unique = false;
+            }
+
+        }
+        if(unique){setRedirectLocations.push_back(finalRedirectLocations.at(i));};
+    }
+    sort(setRedirectLocations.begin(), setRedirectLocations.end());
+
+    queue<int> returnQ;
+    for(auto it : setRedirectLocations){
+        returnQ.push(it);
+    }
+    return returnQ;
+}
+
+vector<string> commandParser(string argument){
+    vector<string> commandParser;
+    queue<int> tokenLocations = findStrings(argument, REDIRECTIONS);
+    int nextToken = tokenLocations.front();
+    tokenLocations.pop();
+    int start = 0;
+    for(int i = 0; i < argument.size(); i++){
+        if(i == nextToken){
+            string got = argument.substr(start, nextToken-start-1);
+            commandParser.push_back(got);
+            i += 2;
+            if(tokenLocations.empty()){
+                break;
+            }
+            nextToken = tokenLocations.front();
+            tokenLocations.pop();
+            start = i;
+
+        }
+    }
+    if(nextToken+2 < argument.size()){
+        string got = argument.substr(nextToken+2, argument.size());
+        commandParser.push_back(got);
+    }
+    return commandParser;
+}
+
+Command* getCommand(string parsed) {
+    int in_index = findOneString(parsed, "<"); 
+    int out_index = findOneString(parsed, ">");
+    int dub_out_index = findOneString(parsed, ">>");
+    int flag_index = findOneString(parsed, " -");
+
+    if(in_index > 0){  //cat < input
+    
+        string command = parsed.substr(0,in_index-1);
+        command = pythonicc_replace(command, "< ", "");
+        string file = parsed.substr(in_index, parsed.size()-1);
+        file = pythonicc_replace(file, "< ", "");
+
+        string flag = "";
+        if(flag_index > 0){
+            flag_index = findOneString(command, " -");
+            flag = command.substr(flag_index, 3);
+            flag = pythonicc_replace(flag, " ", "");
+            command.erase(command.begin() + flag_index, command.begin() + flag_index + 3);
+        }
+
+        if(dub_out_index > 0){
+            dub_out_index = findOneString(file, ">>");
+            string newInFile = file.substr(0, dub_out_index-1);
+            Command* in = new InRedir(command, newInFile, flag);
+            string newOutFile = file.substr(dub_out_index+3, file.size());
+            return new DubOutRedir(newOutFile, in);
+        } 
+        else if (out_index > 0) { // cat < input > output
+            out_index = findOneString(file, ">");
+            string newInFile = file.substr(0, out_index-1);
+            Command* in = new InRedir(command, newInFile, flag);
+            string newOutFile = file.substr(out_index+2, file.size());
+            return new OutRedir(newOutFile, in);
+        } 
+        Command* in = new InRedir(command, file, flag);
+
+        return in;
+    }
+    else if(dub_out_index > 0){
+        string command = parsed.substr(0,out_index-1);
+        string whole = pythonicc_replace(command, ">> ", "");
+        int commandSplit = findOneString(whole, " ");
+        command = whole.substr(0, commandSplit);
+        string args = whole.substr(commandSplit+1, whole.size());
+
+        string file = parsed.substr(out_index, parsed.size()-1);
+        file = pythonicc_replace(file, ">> ", "");
+
+        Command* com1 = new SysCommand(command, args);
+        return new DubOutRedir(file, com1);       
+    }
+    else if (out_index > 0){
+        string command = parsed.substr(0,out_index-1);
+        string whole = pythonicc_replace(command, "> ", "");
+        int commandSplit = findOneString(whole, " ");
+        command = whole.substr(0, commandSplit);
+        string args = whole.substr(commandSplit+1, whole.size());
+
+        string file = parsed.substr(out_index, parsed.size()-1);
+        file = pythonicc_replace(file, "> ", "");
+
+        Command* com1 = new SysCommand(command, args);
+        return new OutRedir(file, com1);
+    }
+    else {
+        char cwd[PATH_MAX];
+        getcwd(cwd, sizeof(cwd));
+        string command, temp, args="";
+        istringstream ss(parsed);
+        ss >> command;
+        parsed.erase(parsed.begin(), parsed.begin() + command.length());
+        ss >> args;
+        while(ss) {
+            ss >> temp;
+            args = args + " " + temp;
+        }
+        if (command == "ls" && args == "") {
+            args = cwd;
+        }
+        if (args.at(args.length()-1) == ' ')    
+            args.pop_back();
+        
+        return new SysCommand(command, args);
+    }
+
+}
+
+
 HeadConnector* integrate(vector <preConnector> bigVec) {
     reverse(bigVec.begin(),bigVec.end());
 
@@ -187,8 +375,6 @@ HeadConnector* integrate(vector <preConnector> bigVec) {
         com1 = bigVec.at(i).command;
         argument = bigVec.at(i).argument;
 
-
-
         if(i == bigVec.size()-1){
             connector = ";";
         }else{
@@ -197,47 +383,53 @@ HeadConnector* integrate(vector <preConnector> bigVec) {
 
         if (com1 == "ls" && argument == "") {
             argument = cwd;
-        }
-        if (argument.find(">>") != string::npos) {
-            size_t pos = argument.find(">>");
-            outputfile_app = argument.substr(pos);
-            outputfile_app.erase(outputfile_app.begin(), outputfile_app.begin()+3);
-            argument.replace(pos, argument.size()-1, "");
-            argument.pop_back();
-            if (com1 == "ls" && argument == "") {
-                argument = cwd;
-            }
-            if (argument.find("<") != string::npos) {
-                argument.replace(argument.find("<"), 2, "");
-                inputfile = argument;
-                
-            }
-        }
-        else if (argument.find(">") != string::npos) {
-            size_t pos = argument.find(">");
-            outputfile = argument.substr(pos);
-            outputfile.erase(outputfile.begin(), outputfile.begin()+2);
-            argument.replace(pos, argument.size()-1, "");
-            argument.pop_back();
-            if (com1 == "ls" && argument == "") {
-                argument = cwd;
-            }
-            if (argument.find("<") != string::npos) {
-                argument.replace(argument.find("<"), 2, "");
-                inputfile = argument;
-                
-            }
+            current = makeConnector(connector, (new SysCommand(com1, argument)), next);
 
         }
-        else if (argument.find("<") != string::npos) {
-            size_t pos = argument.find("<");
-            inputfile = argument.substr(pos);
-            inputfile.erase(inputfile.begin(), inputfile.begin()+2);
-            argument.replace(pos, argument.size()-1, "");
-            argument.pop_back();
-           
+
+        
+        else if(argument.find("|") != string::npos ){
+            vector<string> parsed;
+            argument = com1 + " " + argument;
+            parsed = commandParser(argument);
+
+
+            Command* base = getCommand(parsed.at(0));
+            Command* currentCommand = base;
+            for(int i = 1; i < parsed.size(); ++i) {
+                string end = parsed.at(parsed.size()-1);
+                if(end.find(">") != string::npos && (end.find(">>") == string::npos)){
+                    string ofile = end;
+                    ofile.erase(ofile.begin(), ofile.begin()+2);
+                    Command* endout = new OutRedir(ofile, currentCommand);
+                    currentCommand = endout;
+                }
+                else if(end.find(">>") != string::npos) {
+                    string dubofile = end;
+                    int index = findOneString(end,">>");
+                    end.erase(end.begin(), end.begin()+index+3);
+                    dubofile.erase(dubofile.begin()+index-1, dubofile.end());
+
+                    Command* pipeEdition = new PipeCommand(dubofile, currentCommand);
+                    currentCommand = pipeEdition;
+                    Command* endout = new DubOutRedir(end, currentCommand);
+                    currentCommand = endout;
+                }
+                    
+                else{
+                    Command* pipeEdition = new PipeCommand(parsed.at(i), currentCommand);
+                    currentCommand = pipeEdition;
+                }
+
+            }
+            current = makeConnector(connector, currentCommand, next);
+
+        }else if(argument.find("<") != string::npos or argument.find(">") != string::npos or argument.find(">>") != string::npos){
+            argument = com1 + " " + argument;
+            Command* com = getCommand(argument);
+            current = makeConnector(connector, com, next);
         }
-        if(com1 == "(" or com1 == ")"){
+        else if(com1 == "(" or com1 == ")"){
             if(com1 == ")"){
                 connector = ";";
             }else if(i == bigVec.size()-1){
@@ -279,27 +471,10 @@ HeadConnector* integrate(vector <preConnector> bigVec) {
                 current = makeConnector(connector, (new TestCommand(com1, argument)), next);
             }
         }
-
-         else{
-            if (outputfile != "" && inputfile != "") {
-                current = makeConnector(connector, (new OutRedir(com1, argument, outputfile)), next);
-            }
-            else if (outputfile_app != "" && inputfile != "") {
-                current = makeConnector(connector, (new DubOutRedir(com1, argument, outputfile_app)), next);
-            }
-            else if (outputfile != "") {
-                current = makeConnector(connector, (new OutRedir(com1, argument, outputfile)), next);
-            }
-            else if (outputfile_app != "") {
-                current = makeConnector(connector, (new DubOutRedir(com1, argument, outputfile_app)), next);
-            }
-            else if (inputfile != "") {
-                current = makeConnector(connector, (new InRedir(com1, argument, inputfile)), next);
-            }
             else{
                 current = makeConnector(connector, (new SysCommand(com1, argument)), next); /* conn2 -> next = connector */
             }
-        }
+        // }
         next = current;
     }
 

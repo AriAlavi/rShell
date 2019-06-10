@@ -36,7 +36,7 @@ struct preConnector{
     paren* parentheses = nullptr;
 };
 
-string pythonicc_replace(string & original, const string arg1, const string arg2);
+string pythonicc_replace(string & original, const string replaceThis, const string replaceWith);
 vector <preConnector> parse(string s);
 
 #endif
