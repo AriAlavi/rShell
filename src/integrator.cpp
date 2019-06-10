@@ -429,8 +429,8 @@ HeadConnector* integrate(vector <preConnector> bigVec) {
                 string part2 = lastCommand;
                 if(lastCommand.find(">>") != string::npos){
                     int whereIs = findOneString(lastCommand, ">>");
-                    part1.erase(whereIs-2, part1.size());
-                    part2.erase(0, whereIs);
+                    part1.erase(whereIs-1, part1.size());
+                    part2.erase(0, whereIs+3);
                     currentCommand = new PipeCommand(part1, currentCommand);
                     currentCommand = new DubOutRedir(part2, currentCommand);
                 }else{
