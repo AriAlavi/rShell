@@ -384,13 +384,13 @@ HeadConnector* integrate(vector <preConnector> bigVec) {
             Command* currentCommand = base;
             for(int i = 1; i < parsed.size(); ++i) {
                 string end = parsed.at(parsed.size()-1);
-                if(end.find('>') && (end.find(">>") == string::npos)){
+                if(end.find('>') != string::npos && (end.find(">>") == string::npos)){
                     string ofile = end;
                     ofile.erase(ofile.begin(), ofile.begin()+2);
                     Command* endout = new OutRedir(ofile, currentCommand);
                     currentCommand = endout;
                 }
-                else if(end.find(">>")) {
+                else if(end.find(">>") != string::npos) {
                     string dubofile = end;
                     int index = findOneString(end,">>");
                     end.erase(end.begin(), end.begin()+index+3);
