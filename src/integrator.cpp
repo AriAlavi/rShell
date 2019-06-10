@@ -189,6 +189,17 @@ int findOneString(string base, string find){
     }
 }
 
+bool foundString(string base, string find){
+    vector<int> founds = findString(base, find);
+    switch(founds.size()){
+        case 0:
+            return false;
+            break;
+        default:
+            return true;
+    }  
+}
+
 queue<int> findStrings(string base, vector<string> finds){
     vector<vector<int> > redirectorLocations;
     vector<int> finalRedirectLocations;

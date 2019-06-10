@@ -11,7 +11,7 @@
 #include "results.h"
 #include "commands.h"
 #include "connectors.h"
-
+#include "integrator.h"
 
 using namespace std;
 
@@ -129,21 +129,36 @@ Result* InRedir::execute() {
         exit(1);
     }
 
-    this -> command = command + " " + this -> flag + " " + this -> file;
-    istringstream ss(this -> command);
-    vector<string> ssss;
 
-    while(ss) {
-        string temp;
-        ss >> temp;
-        ssss.push_back(temp);
+    vector<string> ssss;
+    if(foundString(this -> command, "tr")){
+        this -> command = command + " " + this -> flag + " " + this -> file;
+        istringstream ss(this -> command);
+        vector<string> ssss;
+
+        while(ss) {
+            string temp;
+            ss >> temp;
+            ssss.push_back(temp);
+        }
+    }else{
+        int spaceLocation = this -> command.find(' ');
+        string first = command;
+        string second = command;
+        first.erase(spaceLocation, first.size());
+        second.erase(0, spaceLocation+1);
+        ssss.push_back(first);
+        ssss.push_back(second);
     }
+
+
 
     char* arg[ssss.size()];
     for(int i = 0; i < ssss.size(); i++){
         arg[i] = (char*)ssss.at(i).c_str();
     }
     arg[ssss.size()-1] = NULL;
+
     // char* args[3];
     // args[0] = (char*)this -> command.c_str();
     // if (this -> flag != "") {
@@ -153,6 +168,7 @@ Result* InRedir::execute() {
     // else {
     //     args[1] = NULL;
     // }
+
     pid_t pid = fork();
     if(pid == -1){
         throw __throw_runtime_error;
