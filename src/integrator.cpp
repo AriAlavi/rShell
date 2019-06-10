@@ -372,10 +372,13 @@ HeadConnector* integrate(vector <preConnector> bigVec) {
 
         if (com1 == "ls" && argument == "") {
             argument = cwd;
+            current = makeConnector(connector, (new SysCommand(com1, argument)), next);
+
         }
 
-        vector<string> parsed;
-        if(argument.find("|") != string::npos ){
+        
+        else if(argument.find("|") != string::npos ){
+            vector<string> parsed;
             argument = com1 + " " + argument;
             parsed = commandParser(argument);
 
@@ -384,7 +387,7 @@ HeadConnector* integrate(vector <preConnector> bigVec) {
             Command* currentCommand = base;
             for(int i = 1; i < parsed.size(); ++i) {
                 string end = parsed.at(parsed.size()-1);
-                if(end.find('>') != string::npos && (end.find(">>") == string::npos)){
+                if(end.find(">") != string::npos && (end.find(">>") == string::npos)){
                     string ofile = end;
                     ofile.erase(ofile.begin(), ofile.begin()+2);
                     Command* endout = new OutRedir(ofile, currentCommand);

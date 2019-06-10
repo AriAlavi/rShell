@@ -365,27 +365,12 @@ TEST(redir_out, double_bracket_exists) {
     DubOutRedir* test = new DubOutRedir("toTest.txt",new SysCommand("echo", "hello"));
     test -> execute();
 
-    TestCommand* exists = new TestCommand("test", "-f toTest2.txt");
+    TestCommand* exists = new TestCommand("test", "-f toTest.txt");
 
     EXPECT_EQ(1,exists->execute() -> getResult());
 
 }
 
-TEST(redir_out, double_bracket_simple) {
-    DubOutRedir* test = new DubOutRedir("toTest.txt",new SysCommand("echo", "goodbye"));
-    test -> execute();
-
-    ifstream myfile;
-    string curr;
-    myfile.open ("toTest2.txt");
-
-    myfile >> curr;
-    EXPECT_EQ(curr, "hello");
-    myfile >> curr;
-    EXPECT_EQ(curr, "goodbye");
-    myfile.close();
-
-}
 
 TEST(redir_out, double_bracket_append) {
     OutRedir* test = new OutRedir("toTest.txt",new SysCommand("echo", "Overhead"));
