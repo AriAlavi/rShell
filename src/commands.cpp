@@ -143,12 +143,18 @@ Result* InRedir::execute() {
         }
     }else{
         int spaceLocation = this -> command.find(' ');
-        string first = command;
-        string second = command;
-        first.erase(spaceLocation, first.size());
-        second.erase(0, spaceLocation+1);
-        ssss.push_back((char*)first.c_str());
-        ssss.push_back((char*)second.c_str());
+        if(spaceLocation > -1){
+            string first = command;
+            string second = command;
+            first.erase(spaceLocation, first.size());
+            second.erase(0, spaceLocation+1);
+            ssss.push_back((char*)first.c_str());
+            ssss.push_back((char*)second.c_str());
+        }else{
+            string first = command;
+            ssss.push_back((char*)first.c_str());
+        }
+
     }
 
 
