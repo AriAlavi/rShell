@@ -32,7 +32,9 @@ Parentheses will serve as precedence operators that will give certain connectors
 
 
 # Diagrams
-![UML](images/CS100-Assignment_3-UML.jpg)
+
+![UML](images/CS100-Assignment_4-UML.png)
+
 # Classes
 
 **Command Classes**:
