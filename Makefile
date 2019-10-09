@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/malhar15/Desktop/CS100/spring-2019-assignment-echo-ping-ping-ping
+CMAKE_SOURCE_DIR = /home/ari/Desktop/spring-2019-assignment-echo-ping-ping-ping
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/malhar15/Desktop/CS100/spring-2019-assignment-echo-ping-ping-ping
+CMAKE_BINARY_DIR = /home/ari/Desktop/spring-2019-assignment-echo-ping-ping-ping
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -126,9 +126,9 @@ install/fast: preinstall/fast
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/malhar15/Desktop/CS100/spring-2019-assignment-echo-ping-ping-ping/CMakeFiles /home/malhar15/Desktop/CS100/spring-2019-assignment-echo-ping-ping-ping/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ari/Desktop/spring-2019-assignment-echo-ping-ping-ping/CMakeFiles /home/ari/Desktop/spring-2019-assignment-echo-ping-ping-ping/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/malhar15/Desktop/CS100/spring-2019-assignment-echo-ping-ping-ping/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ari/Desktop/spring-2019-assignment-echo-ping-ping-ping/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
