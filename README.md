@@ -98,23 +98,4 @@ If a connector doesn't execute its command, it will pass in the given result int
 * " | | " : will be used to run a subsequent process only if the process before it was unsuccessful 
 
 
-# Development and Testing Roadmap
-## Malhar will be in charge of:
-* [Input/Output redirection(1)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/34)
-* [Unit Tests(2)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/35)
-
-* [Integration Tests(3)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/36)
-
-* [Implementing Pipe(4)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/37)
-
-
-## Arian will be in charge of: 
-* [Fixing the Parentheses(1)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/38)
-* [Implementing Pipe(2)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/37)
-
-* [Unit Tests (3)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/35)
-* [Integration Tests (4)](https://github.com/cs100/spring-2019-assignment-echo-ping-ping-ping/issues/26)
-
-
-
 
